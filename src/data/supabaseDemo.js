@@ -4,7 +4,7 @@ export const supabaseDemo = {
   businesses: [
     {
       id: 'b1',
-      name: 'Art Stores',
+      name: 'Art Store',
       slug: 'artstore',
       description: 'Handcrafted masterpieces for your collection.',
       about: 'Welcome to Art Store! We specialize in contemporary oil paintings and digital art. Every piece is unique and made with passion.',

@@ -57,6 +57,28 @@ const BusinessHome = () => {
           ))}
         </div>
       </section>
+      {/* 3. Featured Banner Section */}
+      <section className="section-featured-banner">
+        <div className="featured-banner-container" style={{ backgroundImage: `url(${business.banner})` }}>
+          {/* Content Overlay */}
+          <div className="featured-banner-content">
+            <h2 className="featured-banner-h2">effortless beauty, timeless charm.</h2>
+            <p className="featured-banner-p">new arrivals now in stock</p>
+            <Link to={`/${slug}/products`} className="btn-shop-dark">shop now</Link>
+          </div>
+        </div>
+
+        {/* 4. Marquee Ticker (Nested for width matching) */}
+        <div className="marquee-ticker">
+          <div className="marquee-scroll">
+            {[...Array(15)].map((_, i) => (
+              <span key={i} className="marquee-text">
+                orders over $50 <span>✿</span> free shipping on orders over $50 <span>✿</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
