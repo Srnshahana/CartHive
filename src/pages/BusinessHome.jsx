@@ -5,6 +5,7 @@ import { supabaseDemo } from '../data/supabaseDemo';
 const BusinessHome = () => {
   const { slug } = useParams();
   const business = supabaseDemo.businesses.find(b => b.slug === slug);
+  const businessProducts = supabaseDemo.products.filter(p => p.business_id === business?.id);
 
   if (!business) return (
     <div className="container section-padding" style={{ textAlign: 'center' }}>
