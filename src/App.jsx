@@ -10,6 +10,7 @@ import Admin from './pages/Admin';
 import './App.css';
 
 function App() {
+
   return (
     <Router>
       <div className="app-shell">
@@ -18,11 +19,11 @@ function App() {
           {/* Dev landing page to list business URLs */}
           <Route path="/" element={<Urls />} />
           <Route path="/urls" element={<Navigate to="/" replace />} />
-          
+
           {/* Global Tracking and Admin */}
           <Route path="/track" element={<TrackOrder />} />
           <Route path="/admin" element={<Admin />} />
-          
+
           {/* Business specific routes */}
           <Route path="/:slug" element={<BusinessHome />} />
           <Route path="/:slug/product/:productId" element={<ProductDetails />} />
