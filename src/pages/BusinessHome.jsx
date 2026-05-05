@@ -79,6 +79,45 @@ const BusinessHome = () => {
           </div>
         </div>
       </section>
+
+      {/* 5. Shop by Category Section */}
+      <section className="section-categories">
+        <div className="section-header">
+          <h2 className="section-title">shop by category</h2>
+          <Link to={`/${slug}/products`} className="btn-view-more">shop now</Link>
+        </div>
+
+        <div className="categories-grid">
+          {[...new Set(businessProducts.map(p => p.category))].slice(0, 3).map((category, index) => {
+            const firstProductInCategory = businessProducts.find(p => p.category === category);
+            return (
+              <Link 
+                key={category} 
+                to={`/${slug}/products?category=${category}`} 
+                className="category-card"
+              >
+                <div className="category-image-wrapper">
+                  <img src={firstProductInCategory?.image} alt={category} />
+                </div>
+                <div className="btn-category">
+                  {category}
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* 6. Our Story Section */}
+      <section className="section-our-story">
+        <div className="story-container">
+          <h2 className="story-title">our story</h2>
+          <p className="story-main-text">
+            born from a passion for beauty rituals, we celebrate individuality and bring radiant confidence to everyone
+          </p>
+          <p className="story-subtext">for every body, anywhere</p>
+        </div>
+      </section>
     </div>
   );
 };
