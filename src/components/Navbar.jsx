@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { ShoppingCart, User, LogOut, LayoutDashboard, LogIn, Search, Menu, Heart } from 'lucide-react';
+import { ShoppingCart, User, LogOut, LayoutDashboard, LogIn, Search, Menu, Heart, ShoppingBag } from 'lucide-react';
+import { useCart } from '../context/CartContext';
 
 const Navbar = () => {
   const [business, setBusiness] = useState(null);
   const [branding, setBranding] = useState(null);
   const [user, setUser] = useState(null);
+  const { cartCount } = useCart();
   const location = useLocation();
   const navigate = useNavigate();
   const pathParts = location.pathname.split('/').filter(Boolean);
@@ -23,6 +25,14 @@ const Navbar = () => {
       setBusiness(null);
       setBranding(null);
     }
+
+    const handleLogoUpdate = (e) => {
+      if (e.detail) setBranding(prev => ({ ...(prev || {}), logo_url: e.detail }));
+    };
+    window.addEventListener('carthive-logo-update', handleLogoUpdate);
+    return () => {
+      window.removeEventListener('carthive-logo-update', handleLogoUpdate);
+    };
   }, [location.pathname, slug]);
 
   const fetchBusinessInfo = async () => {
@@ -31,8 +41,29 @@ const Navbar = () => {
       if (biz) {
         setBusiness(biz);
         // Only fetch columns we know exist to avoid schema cache errors
-        const { data: brand } = await supabase.from('homepage_content').select('*').eq('business_id', biz.id).single();
-        if (brand) setBranding(brand);
+        let brandContent = null;
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('preview') === 'true') {
+          const previewData = localStorage.getItem(`carthive_preview_${slug}`);
+          if (previewData) {
+            try {
+              brandContent = JSON.parse(previewData);
+            } catch(e) {}
+          }
+        }
+        
+        if (!brandContent) {
+          const { data: brand } = await supabase.from('homepage_content').select('*').eq('business_id', biz.id).single();
+          brandContent = brand;
+        }
+
+        // Normalize logo from all possible sources
+        const logo = brandContent?.logo_url || brandContent?.logo || biz.logo_url || biz.logo || biz.store_logo || biz.avatar_url;
+        if (logo) {
+          setBranding({ ...(brandContent || {}), logo_url: logo });
+        } else {
+          setBranding(brandContent);
+        }
       }
     } catch (err) {
       console.error('Navbar fetch error:', err);
@@ -48,14 +79,19 @@ const Navbar = () => {
         {/* Left Side: Logo */}
         <Link to={slug ? `/${slug}` : "/"} className="nav-logo">
           <div className="nav-logo-icon">
-            {branding?.logo_url ? (
-              <img src={branding.logo_url} alt={business?.name} style={{ height: '24px', width: '24px', borderRadius: '6px', objectFit: 'cover' }} />
+            {(branding?.logo_url || business?.logo_url || business?.logo || business?.store_logo || business?.avatar_url) ? (
+              <img 
+                src={branding?.logo_url || business?.logo_url || business?.logo || business?.store_logo || business?.avatar_url} 
+                alt={business?.name} 
+                style={{ height: '32px', width: '32px', borderRadius: '4px', objectFit: 'contain' }} 
+              />
             ) : (
               <StoreIcon />
             )}
           </div>
           <span className="nav-logo-text">
             {business?.name || 'carthive'}
+            {/* DEBUG: {!branding && !business?.logo_url && '(no db logo)'} */}
           </span>
         </Link>
 
@@ -70,10 +106,14 @@ const Navbar = () => {
           )}
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: '#1e293b' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer' }}>
-              <Heart size={20} />
-              <span style={{ background: '#1e293b', color: 'white', fontSize: '0.7rem', width: '18px', height: '18px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>0</span>
-            </div>
+            {slug && (
+              <Link to={`/${slug}/cart`} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}>
+                <ShoppingBag size={20} />
+                <span style={{ background: '#1e293b', color: 'white', fontSize: '0.7rem', width: '18px', height: '18px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800' }}>
+                  {cartCount}
+                </span>
+              </Link>
+            )}
             
             <div className="nav-search-btn">
               <span>Search</span>
@@ -92,8 +132,11 @@ const Navbar = () => {
 
 const StoreIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" fill="#1e293b" />
-    <path d="M12 17C14.7614 17 17 14.7614 17 12C17 9.23858 14.7614 7 12 7C9.23858 7 7 9.23858 7 12C7 14.7614 9.23858 17 12 17Z" fill="white" />
+    <path d="M12 2L3 7V17L12 22L21 17V7L12 2Z" fill="#3b82f6" fillOpacity="0.1" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M12 22V12" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M21 7L12 12L3 7" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M12 12L21 17" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M12 12L3 17" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 

@@ -17,7 +17,9 @@ const Products = ({ products, categories, handleFileUpload, uploadingMap, refres
     is_bestseller: false
   });
 
-  const [newCategory, setNewCategory] = useState('');
+  const [newCategory, setNewCategory] = useState({ name: '', discription: '', cover_img: '' });
+  const [editingCategory, setEditingCategory] = useState(null);
+  const [editCategoryName, setEditCategoryName] = useState('');
 
   const handleLocalUpload = async (file) => {
     console.log('Starting upload for file:', file.name);
@@ -29,6 +31,17 @@ const Products = ({ products, categories, handleFileUpload, uploadingMap, refres
       }
     } catch (err) {
       console.error('Local upload handler error:', err);
+    }
+  };
+
+  const handleCategoryUpload = async (file) => {
+    try {
+      const url = await handleFileUpload(file, true, 'products', 'new_category_image');
+      if (url) {
+        setNewCategory(prev => ({ ...prev, cover_img: url }));
+      }
+    } catch (err) {
+      console.error('Category upload handler error:', err);
     }
   };
 
@@ -66,20 +79,50 @@ const Products = ({ products, categories, handleFileUpload, uploadingMap, refres
     }
   };
 
-  const addCategory = async (catName) => {
-    const nameToUse = catName || newCategory;
-    if (!nameToUse) return;
+  const addCategory = async () => {
+    if (!newCategory.name) return;
     try {
       const { data, error } = await supabase.from('categories').insert({
         business_id: businessId,
-        name: nameToUse
+        name: newCategory.name,
+        discription: newCategory.discription,
+        cover_img: newCategory.cover_img
       }).select().single();
       if (error) throw error;
-      setNewCategory('');
+      setNewCategory({ name: '', discription: '', cover_img: '' });
       refreshData();
       return data;
     } catch (err) {
       alert('Error adding category: ' + err.message);
+    }
+  };
+
+  const deleteCategory = async (id) => {
+    const hasProducts = products.some(p => p.category_id === id);
+    if (hasProducts) {
+      alert('Cannot delete this category because it contains products. Please delete or reassign the products first.');
+      return;
+    }
+
+    if (!window.confirm('Are you sure you want to delete this category?')) return;
+    try {
+      const { error } = await supabase.from('categories').delete().eq('id', id);
+      if (error) throw error;
+      refreshData();
+    } catch (err) {
+      alert('Error deleting category: ' + err.message);
+    }
+  };
+
+  const saveEditCategory = async (id) => {
+    if (!editCategoryName.trim()) return;
+    try {
+      const { error } = await supabase.from('categories').update({ name: editCategoryName }).eq('id', id);
+      if (error) throw error;
+      setEditingCategory(null);
+      refreshData();
+    } catch (err) {
+      alert('Error updating category: ' + err.message);
     }
   };
 
@@ -297,14 +340,76 @@ const Products = ({ products, categories, handleFileUpload, uploadingMap, refres
           <div className="admin-modal" style={{ maxWidth: '500px' }}>
             <button className="nav-menu-close" onClick={() => setShowCatModal(false)}><X /></button>
             <h2 style={{ marginBottom: '2rem', fontSize: '1.5rem', fontWeight: '900' }}>Manage <span className="gradient-text">Categories</span></h2>
-            <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
-              <input type="text" className="form-input" style={{ flex: 1 }} placeholder="New category name..." value={newCategory} onChange={(e) => setNewCategory(e.target.value)} />
-              <button className="btn-shop-dark" style={{ padding: '0 1.5rem' }} onClick={() => addCategory()}>Add</button>
+            <div style={{ background: '#f8fafc', padding: '1.5rem', borderRadius: '15px', marginBottom: '2rem', border: '1px solid #e2e8f0' }}>
+              <h3 style={{ fontSize: '1rem', fontWeight: '800', marginBottom: '1rem' }}>Add New Category</h3>
+              <div className="form-group" style={{ marginBottom: '1rem' }}>
+                <label>Category Name</label>
+                <input type="text" className="form-input" placeholder="e.g. Skin Care" value={newCategory.name} onChange={(e) => setNewCategory({...newCategory, name: e.target.value})} />
+              </div>
+              <div className="form-group" style={{ marginBottom: '1rem' }}>
+                <label>Description</label>
+                <textarea className="form-input" rows="2" placeholder="Brief description..." value={newCategory.discription} onChange={(e) => setNewCategory({...newCategory, discription: e.target.value})} />
+              </div>
+              <div className="form-group" style={{ marginBottom: '1rem' }}>
+                <label>Cover Image</label>
+                <div 
+                  onClick={() => document.getElementById('category-image-upload').click()}
+                  style={{ 
+                    width: '100%', height: '120px', background: '#fff', border: '2px dashed #cbd5e1', 
+                    borderRadius: '10px', display: 'flex', flexDirection: 'column', alignItems: 'center', 
+                    justifyContent: 'center', cursor: 'pointer', overflow: 'hidden', position: 'relative'
+                  }}
+                >
+                  {uploadingMap['new_category_image'] ? (
+                    <div style={{ textAlign: 'center' }}>
+                      <Loader2 className="spin" size={24} color="#3b82f6" />
+                    </div>
+                  ) : newCategory.cover_img ? (
+                    <img src={newCategory.cover_img} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Preview" />
+                  ) : (
+                    <>
+                      <Upload size={24} color="#94a3b8" />
+                      <p style={{ marginTop: '0.5rem', fontSize: '0.75rem', color: '#94a3b8' }}>Upload Cover</p>
+                    </>
+                  )}
+                </div>
+                <input 
+                  id="category-image-upload"
+                  type="file" 
+                  accept="image/*" 
+                  hidden 
+                  onChange={(e) => {
+                    if (e.target.files[0]) handleCategoryUpload(e.target.files[0]);
+                  }} 
+                />
+              </div>
+              <button className="btn-shop-dark" style={{ width: '100%', padding: '0.75rem' }} onClick={() => addCategory()} disabled={!newCategory.name}>Add Category</button>
             </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               {categories.map(cat => (
-                <div key={cat.id} style={{ background: '#f1f5f9', padding: '0.5rem 1rem', borderRadius: '50px', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  {cat.name}
+                <div key={cat.id} style={{ background: '#f1f5f9', padding: '0.5rem 1rem', borderRadius: '12px', fontSize: '0.9rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
+                  {editingCategory === cat.id ? (
+                    <div style={{ display: 'flex', gap: '0.5rem', width: '100%', alignItems: 'center' }}>
+                      <input 
+                        type="text" 
+                        className="form-input" 
+                        style={{ flex: 1, padding: '0.25rem 0.5rem', minHeight: 'auto' }} 
+                        value={editCategoryName} 
+                        onChange={(e) => setEditCategoryName(e.target.value)}
+                        autoFocus
+                      />
+                      <button className="nav-btn-link" style={{ padding: '0.25rem', color: '#10b981', display: 'flex' }} onClick={() => saveEditCategory(cat.id)}><Save size={16} /></button>
+                      <button className="nav-btn-link" style={{ padding: '0.25rem', color: '#64748b', display: 'flex' }} onClick={() => setEditingCategory(null)}><X size={16} /></button>
+                    </div>
+                  ) : (
+                    <>
+                      <span style={{ fontWeight: '600' }}>{cat.name}</span>
+                      <div style={{ display: 'flex', gap: '0.25rem' }}>
+                        <button className="nav-btn-link" style={{ padding: '0.25rem', display: 'flex' }} onClick={() => { setEditingCategory(cat.id); setEditCategoryName(cat.name); }}><Edit3 size={16} /></button>
+                        <button className="nav-btn-link" style={{ padding: '0.25rem', color: '#ff4444', display: 'flex' }} onClick={() => deleteCategory(cat.id)}><Trash2 size={16} /></button>
+                      </div>
+                    </>
+                  )}
                 </div>
               ))}
               {categories.length === 0 && (

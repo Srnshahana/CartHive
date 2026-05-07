@@ -27,11 +27,33 @@ const BusinessHome = () => {
         setBusiness(biz);
 
         // 2. Fetch Homepage Content
-        const { data: homeContent, error: homeErr } = await supabase
-          .from('homepage_content')
+        let homeContent = null;
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('preview') === 'true') {
+          const previewData = localStorage.getItem(`carthive_preview_${slug}`);
+          if (previewData) {
+            try {
+              homeContent = JSON.parse(previewData);
+            } catch(e) {}
+          }
+        }
+
+        if (!homeContent) {
+          const { data: dbContentList } = await supabase
+            .from('homepage_content')
+            .select('*')
+            .eq('business_id', biz.id)
+            .order('created_at', { ascending: false })
+            .limit(1);
+          homeContent = dbContentList?.[0] || null;
+        }
+
+        // 3. Fetch Products
+        const { data: prods } = await supabase
+          .from('products')
           .select('*')
-          .eq('business_id', biz.id)
-          .single();
+          .eq('business_id', biz.id);
+        setProducts(prods || []);
 
         // 4. Fetch Categories
         const { data: cats } = await supabase
@@ -39,8 +61,6 @@ const BusinessHome = () => {
           .select('*')
           .eq('business_id', biz.id);
         setCategories(cats || []);
-
-        setProducts(prods || []);
         
         // Use database content if available, otherwise fall back to demo reference
         if (homeContent) {
@@ -49,8 +69,8 @@ const BusinessHome = () => {
           // Fallback to reference Art Store values as requested
           setConfig({
             hero_image: 'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=1200&h=600&fit=crop',
-            hero_heading: 'shine on',
-            hero_subtext: 'beauty that reflects your spirit',
+            hero_heading: 'shine on the',
+            hero_subtext: 'beauty that reflects your spirits',
             banner_image: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=1200&h=600&fit=crop',
             banner_title: 'effortless beauty, timeless charm.',
             banner_subtitle: 'new arrivals now in stock',
@@ -79,13 +99,39 @@ const BusinessHome = () => {
     fetchData();
   }, [slug]);
 
+  useEffect(() => {
+    if (config?.logo_url || config?.logo) {
+      window.dispatchEvent(new CustomEvent('carthive-logo-update', { 
+        detail: config.logo_url || config.logo 
+      }));
+    }
+  }, [config]);
+
+  const [activePolicy, setActivePolicy] = useState(null); // { title: string, content: string }
+
   if (loading) return <div className="container section-padding" style={{ textAlign: 'center' }}><p>Loading store...</p></div>;
   if (error) return <div className="container section-padding" style={{ textAlign: 'center' }}><h1>{error}</h1><Link to="/">Go back home</Link></div>;
 
   const bestSellers = products.filter(p => p.is_bestseller);
 
+  const openPolicy = (title, content) => {
+    // If content is empty, provide professional defaults based on title
+    if (!content || content.trim() === '') {
+      const defaults = {
+        'terms & conditions': `Welcome to our store. By accessing this website, you agree to be bound by these Terms and Conditions. All content is owned by ${business.name}. We reserve the right to modify these terms at any time.`,
+        'privacy policy': `We respect your privacy. We only collect information necessary to process your orders and improve your shopping experience. We never sell your personal data to third parties.`,
+        'shipping policy': `We strive to ship all orders within 2-3 business days. Shipping rates are calculated at checkout. You will receive a tracking number once your order is on its way.`,
+        'refund policy': `We want you to be completely satisfied with your purchase. We accept returns within 30 days of purchase. Items must be in original condition. Please contact our support team to initiate a return process.`
+      };
+      content = defaults[title.toLowerCase()] || 'Policy content coming soon...';
+    }
+    setActivePolicy({ title, content });
+  };
+
+  const isPreview = new URLSearchParams(window.location.search).get('preview') === 'true';
+
   return (
-    <div className="wix-layout">
+    <div className={`wix-layout ${isPreview ? 'preview-mode' : ''}`}>
       {/* 1. Hero Section */}
       <section className="hero-container">
         <img 
@@ -102,36 +148,7 @@ const BusinessHome = () => {
         </div>
       </section>
 
-      {/* 2. Shop by Category */}
-      {categories.length > 0 && (
-        <section className="section-categories">
-          <div className="section-header">
-            <h2 className="section-title">shop by category</h2>
-          </div>
-          <div className="categories-scroll">
-            {categories.map(cat => {
-              // Find the first product in this category to use its image as a thumbnail
-              const sampleProduct = products.find(p => p.category_id === cat.id);
-              return (
-                <Link key={cat.id} to={`/${slug}/products?category=${cat.id}`} className="category-card">
-                  <div className="category-card-image">
-                    {sampleProduct ? (
-                      <img src={sampleProduct.image} alt={cat.name} />
-                    ) : (
-                      <div className="category-placeholder">
-                        <span style={{ fontSize: '2rem', opacity: 0.2 }}>{cat.name[0]}</span>
-                      </div>
-                    )}
-                  </div>
-                  <h3 className="category-card-name">{cat.name}</h3>
-                </Link>
-              );
-            })}
-          </div>
-        </section>
-      )}
-
-      {/* 3. Best Sellers Section - Strictly based on is_bestseller */}
+      {/* 2. Best Sellers Section - Strictly based on is_bestseller */}
       {bestSellers.length > 0 && (
         <section className="section-best-sellers">
           <div className="section-header">
@@ -191,23 +208,64 @@ const BusinessHome = () => {
         </div>
       </section>
 
+      {/* 4. Shop by Category - Screenshot Match (Moved Below Banner) */}
+      {categories.length > 0 && (
+        <section className="section-categories">
+          <div className="category-section-header">
+            <h2>shop by category</h2>
+            <Link to={`/${slug}/products`} className="btn-shop-now-outline">shop now</Link>
+          </div>
+          <div className="categories-grid-screenshot">
+            {categories.map(cat => {
+              // Find the first product in this category to use its image as a thumbnail fallback
+              const sampleProduct = products.find(p => p.category_id === cat.id);
+              const displayImage = cat.cover_img || (sampleProduct ? sampleProduct.image : null);
+              
+              return (
+                <Link key={cat.id} to={`/${slug}/products?category=${cat.id}`} className="category-card-screenshot">
+                  <div className="category-image-container">
+                    {displayImage ? (
+                      <img src={displayImage} alt={cat.name} />
+                    ) : (
+                      <div className="category-placeholder-custom">
+                        <span style={{ fontSize: '3rem', opacity: 0.1 }}>{cat.name[0]}</span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="category-label-pill">
+                    {cat.name}
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
       {/* 5. Our Story Section */}
       <section className="section-our-story">
         <div className="story-container">
           <h2 className="story-title">our story</h2>
-          <p className="story-main-text">{config.footer_about}</p>
+          <p className="story-main-text">{config.our_story || config.footer_about}</p>
         </div>
       </section>
 
       {/* 6. Instagram Section */}
       <section className="section-instagram">
         <div className="instagram-content">
-          <div className="instagram-icon">
-            <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-          </div>
-          <h2 className="instagram-h2">Follow Us on Instagram</h2>
-          <a href="#" className="instagram-hashtag">
-            #{business.name.toLowerCase().replace(/\s/g, '_')}_beauty
+          <a 
+            href={config.instagram_link || '#'} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+          >
+            <div className="instagram-icon">
+              <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+            </div>
+            <h2 className="instagram-h2">Follow Us on Instagram</h2>
+            <span className="instagram-hashtag">
+              #{business.name.toLowerCase().replace(/\s/g, '_')}_beauty
+            </span>
           </a>
         </div>
 
@@ -233,10 +291,44 @@ const BusinessHome = () => {
       <footer className="footer-simple">
         <div className="footer-grid">
           <div className="footer-col">
-            <Link to={`/${slug}`} className="footer-simple-logo">
+            <Link to={`/${slug}`} className="footer-simple-logo" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              {(config.logo_url || business.logo_url || business.logo || business.avatar_url) && (
+                <img 
+                  src={config.logo_url || business.logo_url || business.logo || business.avatar_url} 
+                  alt={business.name} 
+                  style={{ height: '40px', width: '40px', borderRadius: '4px', objectFit: 'contain' }} 
+                />
+              )}
               {business.name}
             </Link>
-            <p>{config.footer_about?.substring(0, 80)}...</p>
+            <p>{config.footer_about?.substring(0, 120)}...</p>
+            <div className="footer-social-icons" style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
+              {config.instagram_link && (
+                <a href={config.instagram_link} target="_blank" rel="noopener noreferrer" className="footer-social-link">
+                  <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                </a>
+              )}
+              {config.facebook_link && (
+                <a href={config.facebook_link} target="_blank" rel="noopener noreferrer" className="footer-social-link">
+                  <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                </a>
+              )}
+              {config.twitter_link && (
+                <a href={config.twitter_link} target="_blank" rel="noopener noreferrer" className="footer-social-link">
+                  <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
+                </a>
+              )}
+              {config.linkedin_link && (
+                <a href={config.linkedin_link} target="_blank" rel="noopener noreferrer" className="footer-social-link">
+                  <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                </a>
+              )}
+              {config.whatsapp_link && (
+                <a href={config.whatsapp_link} target="_blank" rel="noopener noreferrer" className="footer-social-link">
+                  <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 1 1-7.6-11.7 8.38 8.38 0 0 1 3.8.9L21 3z"></path></svg>
+                </a>
+              )}
+            </div>
           </div>
 
           <div className="footer-col">
@@ -258,8 +350,10 @@ const BusinessHome = () => {
           <div className="footer-col">
             <h4>legal</h4>
             <ul>
-              <li><a href="#">privacy policy</a></li>
-              <li><a href="#">refund policy</a></li>
+              <li><button onClick={() => openPolicy('terms & conditions', config.terms_and_conditions)} className="footer-link-btn">terms & conditions</button></li>
+              <li><button onClick={() => openPolicy('privacy policy', config.privacy_policy)} className="footer-link-btn">privacy policy</button></li>
+              <li><button onClick={() => openPolicy('shipping policy', config.shipping_policy)} className="footer-link-btn">shipping policy</button></li>
+              <li><button onClick={() => openPolicy('refund policy', config.refund_policy)} className="footer-link-btn">refund policy</button></li>
             </ul>
           </div>
         </div>
@@ -271,6 +365,65 @@ const BusinessHome = () => {
           </div>
         </div>
       </footer>
+
+      {/* Policy Modal */}
+      {activePolicy && (
+        <div 
+          style={{ 
+            position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', 
+            background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000,
+            padding: '2rem'
+          }}
+          onClick={() => setActivePolicy(null)}
+        >
+          <div 
+            style={{ 
+              background: '#fff', width: '100%', maxWidth: '800px', maxHeight: '80vh', 
+              borderRadius: '24px', padding: '3rem', position: 'relative', overflowY: 'auto',
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button 
+              onClick={() => setActivePolicy(null)}
+              style={{ 
+                position: 'absolute', top: '1.5rem', right: '1.5rem', 
+                background: '#f1f5f9', border: 'none', width: '40px', height: '40px', 
+                borderRadius: '50%', cursor: 'pointer', display: 'flex', 
+                alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' 
+              }}
+            >
+              ×
+            </button>
+            <h2 style={{ fontSize: '2rem', fontWeight: '800', marginBottom: '2rem', textTransform: 'lowercase' }}>{activePolicy.title}</h2>
+            <div style={{ lineHeight: '1.8', color: '#475569', whiteSpace: 'pre-wrap' }}>
+              {activePolicy.content}
+            </div>
+          </div>
+        </div>
+      )}
+
+      <style>{`
+        .footer-link-btn {
+          background: none;
+          border: none;
+          padding: 0;
+          color: inherit;
+          font: inherit;
+          cursor: pointer;
+          text-align: left;
+          transition: all 0.2s;
+        }
+        .footer-link-btn:hover {
+          text-decoration: underline;
+          opacity: 0.8;
+        }
+        .preview-mode a, .preview-mode button {
+          pointer-events: none !important;
+          cursor: default !important;
+        }
+      `}</style>
     </div>
   );
 };

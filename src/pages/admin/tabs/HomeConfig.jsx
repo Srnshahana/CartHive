@@ -1,73 +1,98 @@
 import React from 'react';
-import { Type, Tag, ImageIcon, MapPin, Mail, Phone, Upload, Loader2 } from 'lucide-react';
+import { Type, Tag, ImageIcon, MapPin, Mail, Phone, Upload, Loader2, Heart } from 'lucide-react';
 
-const ImageUploadField = ({ label, value, onUpload, uploading, bucket }) => (
-  <div className="form-group">
-    <label style={{ display: 'flex', justifyContent: 'space-between' }}>
-      {label}
-      {uploading && <Loader2 size={14} className="spin" />}
-    </label>
-    <div style={{ display: 'flex', gap: '0.75rem' }}>
-      <textarea 
-        className="form-input" 
-        value={value} 
-        onChange={(e) => onUpload(e.target.value, false)} 
-        rows="1" 
-        style={{ flex: 1 }}
-        placeholder="Paste URL or upload image..."
+const ImageUploadField = ({ label, value, onUpload, uploading, bucket, width = '100%', height = '140px', objectFit = 'contain' }) => {
+  const fileInputId = `upload-${label.replace(/\s+/g, '-').toLowerCase()}`;
+  return (
+    <div className="form-group">
+      <label>{label}</label>
+      <div
+        onClick={() => document.getElementById(fileInputId).click()}
+        style={{
+          width: width, height: height, background: '#f8fafc', border: '2px dashed #e2e8f0',
+          borderRadius: '12px', display: 'flex', flexDirection: 'column', alignItems: 'center',
+          justifyContent: 'center', cursor: 'pointer', overflow: 'hidden', position: 'relative'
+        }}
+      >
+        {uploading ? (
+          <div style={{ textAlign: 'center' }}>
+            <Loader2 className="spin" size={24} color="#3b82f6" />
+          </div>
+        ) : value ? (
+
+          <img src={value} style={{ width: '100%', height: '100%', objectFit: objectFit, padding: '0.5rem' }} alt={label} />
+        ) : (
+          <>
+            <Upload size={24} color="#94a3b8" />
+            <p style={{ marginTop: '0.5rem', fontSize: '0.75rem', color: '#94a3b8' }}>Click to upload</p>
+          </>
+        )}
+      </div>
+      <input
+        id={fileInputId}
+        type="file"
+        accept="image/*"
+        hidden
+        onChange={(e) => {
+          const file = e.target.files[0];
+          if (file) onUpload(file, true, bucket);
+        }}
       />
-      <label className="upload-btn">
-        <Upload size={18} />
-        <input 
-          type="file" 
-          accept="image/*" 
-          hidden 
-          onChange={(e) => {
-            const file = e.target.files[0];
-            if (file) onUpload(file, true, bucket);
-          }} 
-        />
-      </label>
     </div>
-  </div>
-);
+  );
+};
 
-const HomeConfig = ({ homeConfig, handleConfigChange, handleSocialImageChange, businessSlug, handleFileUpload, uploadingMap }) => {
+const HomeConfig = ({ homeConfig, handleConfigChange, handleSocialImageChange, businessSlug, handleFileUpload, uploadingMap, publishChanges, publishing }) => {
+  const [previewKey, setPreviewKey] = React.useState(0);
+
+  const handleApply = () => {
+    localStorage.setItem(`carthive_preview_${businessSlug}`, JSON.stringify(homeConfig));
+    setPreviewKey(k => k + 1);
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem', width: '100%', maxWidth: '100%' }}>
-      
+
       {/* Scrollable Container */}
-      <div 
+      <div
         className="custom-scrollbar"
-        style={{ 
-          width: '100%', 
-          overflowX: 'auto', 
-          display: 'flex', 
+        style={{
+          width: '100%',
+          overflowX: 'auto',
+          display: 'flex',
           gap: '2.5rem',
           paddingBottom: '2rem',
           scrollSnapType: 'x mandatory'
         }}
       >
-        
+
         {/* Branding Section */}
         <div className="admin-table-container" style={{ minWidth: '600px', flexShrink: 0, padding: '2.5rem', scrollSnapAlign: 'start' }}>
-          <h4 style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '1.2rem', fontWeight: '800' }}>
-            <Type size={22} color="#3b82f6" /> Store Branding
+          <h4 style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '1.2rem', fontWeight: '800' }}>
+              <Type size={22} color="#3b82f6" /> Store Branding
+            </span>
+            <button className="btn-shop-dark" style={{ padding: '0.4rem 1rem', fontSize: '0.85rem' }} onClick={handleApply}>
+              Apply
+            </button>
           </h4>
           <div className="admin-form" style={{ gap: '2rem' }}>
-            <ImageUploadField 
-              label="Store Logo" 
-              value={homeConfig.logo_url} 
+            <ImageUploadField
+              label="Store Logo"
+              value={homeConfig.logo_url}
               onUpload={(val, isFile) => handleFileUpload(val, isFile, 'logos', 'logo_url')}
               uploading={uploadingMap['logo_url']}
               bucket="logos"
+              width="140px"
             />
-            <ImageUploadField 
-              label="Hero Image" 
-              value={homeConfig.hero_image} 
+            <ImageUploadField
+              label="Hero Image"
+              value={homeConfig.hero_image}
               onUpload={(val, isFile) => handleFileUpload(val, isFile, 'homepage', 'hero_image')}
               uploading={uploadingMap['hero_image']}
               bucket="homepage"
+              width="240px"
+              height="140px"
             />
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
               <div className="form-group">
@@ -84,16 +109,23 @@ const HomeConfig = ({ homeConfig, handleConfigChange, handleSocialImageChange, b
 
         {/* Banners Section */}
         <div className="admin-table-container" style={{ minWidth: '500px', flexShrink: 0, padding: '2.5rem', scrollSnapAlign: 'start' }}>
-          <h4 style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '1.2rem', fontWeight: '800' }}>
-            <Tag size={22} color="#3b82f6" /> Banners & Ticker
+          <h4 style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '1.2rem', fontWeight: '800' }}>
+              <Tag size={22} color="#3b82f6" /> Banners & Ticker
+            </span>
+            <button className="btn-shop-dark" style={{ padding: '0.4rem 1rem', fontSize: '0.85rem' }} onClick={handleApply}>
+              Apply
+            </button>
           </h4>
           <div className="admin-form" style={{ gap: '2rem' }}>
-            <ImageUploadField 
-              label="Banner Image" 
-              value={homeConfig.banner_image} 
+            <ImageUploadField
+              label="Banner Image"
+              value={homeConfig.banner_image}
               onUpload={(val, isFile) => handleFileUpload(val, isFile, 'homepage', 'banner_image')}
               uploading={uploadingMap['banner_image']}
               bucket="homepage"
+              width="240px"
+              height="140px"
             />
             <div className="form-group">
               <label>Banner Title</label>
@@ -106,37 +138,83 @@ const HomeConfig = ({ homeConfig, handleConfigChange, handleSocialImageChange, b
           </div>
         </div>
 
-        {/* Social Section */}
-        <div className="admin-table-container" style={{ minWidth: '650px', flexShrink: 0, padding: '2.5rem', scrollSnapAlign: 'start' }}>
-          <h4 style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '1.2rem', fontWeight: '800' }}>
-            <ImageIcon size={22} color="#3b82f6" /> Social Gallery
+        {/* Story Section */}
+        <div className="admin-table-container" style={{ minWidth: '500px', flexShrink: 0, padding: '2.5rem', scrollSnapAlign: 'start' }}>
+          <h4 style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '1.2rem', fontWeight: '800' }}>
+              <Heart size={22} color="#3b82f6" /> Our Story
+            </span>
+            <button className="btn-shop-dark" style={{ padding: '0.4rem 1rem', fontSize: '0.85rem' }} onClick={handleApply}>
+              Apply
+            </button>
           </h4>
           <div className="admin-form" style={{ gap: '2rem' }}>
-            <label style={{ fontSize: '0.9rem', fontWeight: '800' }}>Instagram Images (6 Slots)</label>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
-              {homeConfig.instagram_images?.map((img, i) => (
-                <div key={i} style={{ position: 'relative' }}>
-                  <textarea 
-                    className="form-input" 
-                    placeholder={`URL ${i+1}`} 
-                    value={img} 
-                    onChange={(e) => handleSocialImageChange(i, e.target.value)} 
-                    rows="1" 
-                    style={{ fontSize: '0.8rem', paddingRight: '2.5rem' }} 
-                  />
-                  <label style={{ position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)', cursor: 'pointer', color: '#94a3b8' }}>
-                    {uploadingMap[`insta_${i}`] ? <Loader2 size={14} className="spin" /> : <Upload size={14} />}
-                    <input 
-                      type="file" 
-                      accept="image/*" 
-                      hidden 
-                      onChange={(e) => {
-                        const file = e.target.files[0];
-                        if (file) handleFileUpload(file, true, 'homepage', `insta_${i}`, i);
-                      }} 
-                    />
-                  </label>
+            <div className="form-group">
+              <label>Our Story Text</label>
+              <textarea 
+                className="form-input" 
+                name="our_story" 
+                value={homeConfig.our_story || ''} 
+                onChange={handleConfigChange} 
+                rows="6" 
+                placeholder="Tell your brand's story..."
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Social Section */}
+        <div className="admin-table-container" style={{ minWidth: '500px', flexShrink: 0, padding: '2.5rem', scrollSnapAlign: 'start' }}>
+          <h4 style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '1.2rem', fontWeight: '800' }}>
+              <ImageIcon size={22} color="#3b82f6" /> Social Gallery
+            </span>
+            <button className="btn-shop-dark" style={{ padding: '0.4rem 1rem', fontSize: '0.85rem' }} onClick={handleApply}>
+              Apply
+            </button>
+          </h4>
+          <div className="admin-form" style={{ gap: '1.5rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div className="form-group">
+                <label style={{ fontSize: '0.75rem', color: '#64748b' }}>Instagram</label>
+                <input className="form-input" name="instagram_link" value={homeConfig.instagram_link || ''} onChange={handleConfigChange} placeholder="https://instagram.com/..." />
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div className="form-group">
+                  <label style={{ fontSize: '0.75rem', color: '#64748b' }}>Facebook</label>
+                  <input className="form-input" name="facebook_link" value={homeConfig.facebook_link || ''} onChange={handleConfigChange} placeholder="Facebook URL" />
                 </div>
+                <div className="form-group">
+                  <label style={{ fontSize: '0.75rem', color: '#64748b' }}>Twitter</label>
+                  <input className="form-input" name="twitter_link" value={homeConfig.twitter_link || ''} onChange={handleConfigChange} placeholder="Twitter URL" />
+                </div>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div className="form-group">
+                  <label style={{ fontSize: '0.75rem', color: '#64748b' }}>LinkedIn</label>
+                  <input className="form-input" name="linkedin_link" value={homeConfig.linkedin_link || ''} onChange={handleConfigChange} placeholder="LinkedIn URL" />
+                </div>
+                <div className="form-group">
+                  <label style={{ fontSize: '0.75rem', color: '#64748b' }}>WhatsApp</label>
+                  <input className="form-input" name="whatsapp_link" value={homeConfig.whatsapp_link || ''} onChange={handleConfigChange} placeholder="WhatsApp number/link" />
+                </div>
+              </div>
+            </div>
+            
+            <label style={{ fontSize: '0.9rem', fontWeight: '800', marginTop: '1rem', display: 'block' }}>Instagram Images (6 Slots)</label>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', width: 'fit-content' }}>
+              {homeConfig.instagram_images?.map((img, i) => (
+                <ImageUploadField 
+                  key={i}
+                  label={`Image ${i + 1}`}
+                  value={img}
+                  onUpload={(val, isFile) => handleFileUpload(val, isFile, 'homepage', `insta_${i}`, i)}
+                  uploading={uploadingMap[`insta_${i}`]}
+                  bucket="homepage"
+                  width="150px"
+                  height="100px"
+                  objectFit="cover"
+                />
               ))}
             </div>
           </div>
@@ -144,8 +222,13 @@ const HomeConfig = ({ homeConfig, handleConfigChange, handleSocialImageChange, b
 
         {/* Footer Section */}
         <div className="admin-table-container" style={{ minWidth: '550px', flexShrink: 0, padding: '2.5rem', scrollSnapAlign: 'start' }}>
-          <h4 style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '1.2rem', fontWeight: '800' }}>
-            <MapPin size={22} color="#3b82f6" /> Footer & Support
+          <h4 style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '1.2rem', fontWeight: '800' }}>
+              <MapPin size={22} color="#3b82f6" /> Footer & Support
+            </span>
+            <button className="btn-shop-dark" style={{ padding: '0.4rem 1rem', fontSize: '0.85rem' }} onClick={handleApply} disabled={publishing}>
+              {publishing ? 'Applying...' : 'Apply'}
+            </button>
           </h4>
           <div className="admin-form" style={{ gap: '1.5rem' }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
@@ -162,6 +245,28 @@ const HomeConfig = ({ homeConfig, handleConfigChange, handleSocialImageChange, b
               <label>About Text</label>
               <textarea className="form-input" name="footer_about" value={homeConfig.footer_about} onChange={handleConfigChange} rows="3" />
             </div>
+
+            <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '1.5rem', marginTop: '0.5rem' }}>
+              <label style={{ fontSize: '0.9rem', fontWeight: '800', marginBottom: '1.5rem', display: 'block' }}>Store Policies</label>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                <div className="form-group">
+                  <label>Terms & Conditions</label>
+                  <textarea className="form-input" name="terms_and_conditions" value={homeConfig.terms_and_conditions || ''} onChange={handleConfigChange} rows="4" placeholder="Enter terms..." />
+                </div>
+                <div className="form-group">
+                  <label>Privacy Policy</label>
+                  <textarea className="form-input" name="privacy_policy" value={homeConfig.privacy_policy || ''} onChange={handleConfigChange} rows="4" placeholder="Enter privacy policy..." />
+                </div>
+                <div className="form-group">
+                  <label>Shipping Policy</label>
+                  <textarea className="form-input" name="shipping_policy" value={homeConfig.shipping_policy || ''} onChange={handleConfigChange} rows="4" placeholder="Enter shipping policy..." />
+                </div>
+                <div className="form-group">
+                  <label>Refund Policy</label>
+                  <textarea className="form-input" name="refund_policy" value={homeConfig.refund_policy || ''} onChange={handleConfigChange} rows="4" placeholder="Enter refund policy..." />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -170,7 +275,7 @@ const HomeConfig = ({ homeConfig, handleConfigChange, handleSocialImageChange, b
       <div style={{ marginTop: '2rem' }}>
         <h3 style={{ marginBottom: '2rem', fontSize: '1.5rem', fontWeight: '800' }}>Live <span className="gradient-text">Store Preview</span></h3>
         <div style={{ border: '12px solid #1e293b', borderRadius: '40px', overflow: 'hidden', height: '800px', width: '100%', background: '#fff', boxShadow: '0 40px 100px rgba(0,0,0,0.2)' }}>
-          <iframe src={`/${businessSlug}`} style={{ width: '100%', height: '100%', border: 'none' }} title="Preview" />
+          <iframe key={previewKey} src={`/${businessSlug}?preview=true&k=${previewKey}`} style={{ width: '100%', height: '100%', border: 'none' }} title="Preview" />
         </div>
       </div>
       <style>{`

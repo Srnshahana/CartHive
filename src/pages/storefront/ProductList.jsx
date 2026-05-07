@@ -44,8 +44,8 @@ const ProductList = () => {
     fetchData();
   }, [slug, location.search]);
 
-  const filteredProducts = selectedCategory === 'all' 
-    ? products 
+  const filteredProducts = selectedCategory === 'all'
+    ? products
     : products.filter(p => p.category_id === selectedCategory);
 
   if (loading) return (
@@ -81,10 +81,10 @@ const ProductList = () => {
                 <Filter size={18} /> Categories
               </h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                <button 
+                <button
                   onClick={() => setSelectedCategory('all')}
-                  style={{ 
-                    background: 'none', border: 'none', textAlign: 'left', padding: '0.5rem 0', 
+                  style={{
+                    background: 'none', border: 'none', textAlign: 'left', padding: '0.5rem 0',
                     fontSize: '1rem', fontWeight: selectedCategory === 'all' ? '800' : '500',
                     color: selectedCategory === 'all' ? '#3b82f6' : '#64748b', cursor: 'pointer',
                     transition: 'all 0.2s'
@@ -93,11 +93,11 @@ const ProductList = () => {
                   All Products
                 </button>
                 {categories.map(cat => (
-                  <button 
+                  <button
                     key={cat.id}
                     onClick={() => setSelectedCategory(cat.id)}
-                    style={{ 
-                      background: 'none', border: 'none', textAlign: 'left', padding: '0.5rem 0', 
+                    style={{
+                      background: 'none', border: 'none', textAlign: 'left', padding: '0.5rem 0',
                       fontSize: '1rem', fontWeight: selectedCategory === cat.id ? '800' : '500',
                       color: selectedCategory === cat.id ? '#3b82f6' : '#64748b', cursor: 'pointer',
                       transition: 'all 0.2s'

@@ -62,7 +62,11 @@ const LandingPage = () => {
             {businesses.map(biz => (
               <Link key={biz.id} to={`/${biz.slug}`} className="store-card">
                 <div className="store-card-icon">
-                  {biz.name.charAt(0).toUpperCase()}
+                  {biz.logo_url ? (
+                    <img src={biz.logo_url} alt={biz.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                  ) : (
+                    biz.name.charAt(0).toUpperCase()
+                  )}
                 </div>
                 <div>
                   <h3 className="store-card-title">{biz.name}</h3>

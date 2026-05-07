@@ -1,104 +1,153 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import { ArrowLeft, ShoppingCart, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, ShoppingBag, ShieldCheck, Minus, Plus, Heart } from 'lucide-react';
+import { useCart } from '../../context/CartContext';
 
 const ProductDetails = () => {
-  const { slug, id } = useParams(); // URL pattern is /:slug/product/:id
+  const { slug, id } = useParams();
   const [product, setProduct] = useState(null);
   const [business, setBusiness] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [quantity, setQuantity] = useState(1);
+  const { addToCart } = useCart();
 
   useEffect(() => {
     const fetchProductData = async () => {
       try {
         setLoading(true);
-        
-        // 1. Fetch Business
-        const { data: biz } = await supabase
-          .from('businesses')
-          .select('*')
-          .eq('slug', slug)
-          .single();
+        const { data: biz } = await supabase.from('businesses').select('*').eq('slug', slug).single();
         setBusiness(biz);
-
-        // 2. Fetch Product
         if (biz) {
-          const { data: prod } = await supabase
-            .from('products')
-            .select('*')
-            .eq('id', id)
-            .single();
+          const { data: prod } = await supabase.from('products').select('*, categories(*)').eq('id', id).single();
           setProduct(prod);
         }
       } catch (err) {
-        console.error('Error fetching product details:', err);
+        console.error('Error:', err);
       } finally {
         setLoading(false);
       }
     };
-
     fetchProductData();
   }, [slug, id]);
 
-  if (loading) return <div className="container section">Loading details...</div>;
-  if (!product || !business) return <div className="container section">Product not found</div>;
+  if (loading) return (
+    <div style={{ height: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div className="loading-spinner"></div>
+    </div>
+  );
+  if (!product || !business) return <div className="container" style={{ padding: '10rem 0', textAlign: 'center' }}><h1>Product not found</h1><Link to={`/${slug}`}>Return to store</Link></div>;
 
   return (
-    <div className="section">
+    <div className="product-details-page" style={{ padding: '140px 5% 8rem', background: '#fcfcfc', minHeight: '100vh' }}>
       <div className="container">
-        <Link to={`/${slug}`} className="btn btn-glass" style={{ marginBottom: '2rem', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none', color: 'inherit' }}>
-          <ArrowLeft size={18} /> Back to Store
+        {/* Navigation */}
+        <Link to={`/${slug}/products`} className="back-link-hover" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: '#64748b', textDecoration: 'none', fontWeight: '600', marginBottom: '3rem', textTransform: 'lowercase', fontSize: '0.9rem' }}>
+          <ArrowLeft size={16} /> back to collection
         </Link>
 
-        <div className="grid grid-cols-2" style={{ alignItems: 'start', gap: '4rem' }}>
-          <div className="glass-card" style={{ padding: '1rem', borderRadius: '30px', overflow: 'hidden' }}>
-            <img 
-              src={product.image} 
-              alt={product.name} 
-              style={{ width: '100%', height: 'auto', borderRadius: '20px', objectFit: 'cover', display: 'block' }} 
-            />
+        <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '6rem', alignItems: 'start' }}>
+          {/* Image Side */}
+          <div style={{ position: 'sticky', top: '140px' }}>
+            <div className="product-image-container" style={{ borderRadius: '48px', overflow: 'hidden', background: '#f8fafc', position: 'relative', boxShadow: '0 20px 60px rgba(0,0,0,0.05)' }}>
+              {product.is_bestseller && (
+                <div style={{ position: 'absolute', top: '30px', left: '30px', zIndex: 10, background: '#000', color: 'white', padding: '8px 18px', borderRadius: '50px', fontSize: '0.75rem', fontWeight: '900', letterSpacing: '0.1em' }}>BEST SELLER</div>
+              )}
+              <img
+                src={product.image}
+                alt={product.name}
+                style={{ width: '100%', height: 'auto', display: 'block', objectFit: 'cover' }}
+              />
+              <button className="heart-btn" style={{ position: 'absolute', top: '30px', right: '30px', background: '#fff', border: 'none', width: '50px', height: '50px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 10px 20px rgba(0,0,0,0.05)', transition: 'all 0.3s ease' }}>
+                <Heart size={20} color="#94a3b8" />
+              </button>
+            </div>
           </div>
 
-          <div style={{ padding: '1rem' }}>
-            <span style={{ 
-              color: '#3b82f6', 
-              fontWeight: '800', 
-              fontSize: '0.9rem', 
-              textTransform: 'uppercase', 
-              letterSpacing: '1px' 
-            }}>
-              {product.category || 'Product'}
-            </span>
-            <h1 style={{ fontSize: '3.5rem', margin: '0.5rem 0 1rem', fontWeight: '800', letterSpacing: '-1px' }}>{product.name}</h1>
-            
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: '1rem', marginBottom: '2rem' }}>
-              <p style={{ fontSize: '2.5rem', fontWeight: '900', color: '#1a1a1a' }}>${Number(product.offer_price || product.price).toFixed(2)}</p>
-              {product.offer_price && (
-                <p style={{ fontSize: '1.2rem', color: '#999', textDecoration: 'line-through' }}>${Number(product.price).toFixed(2)}</p>
-              )}
-            </div>
-            
-            <p style={{ color: '#64748b', fontSize: '1.2rem', marginBottom: '2.5rem', lineHeight: '1.8' }}>
-              {product.description}
-            </p>
+          {/* Info Side */}
+          <div style={{ padding: '1rem 0' }}>
+            <div style={{ marginBottom: '3rem' }}>
+              <p style={{ color: '#3b82f6', fontWeight: '900', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '1rem' }}>
+                {product.categories?.name || 'exclusive collection'}
+              </p>
+              <h1 style={{ fontSize: 'clamp(3rem, 5vw, 4.5rem)', fontWeight: '900', letterSpacing: '-3px', lineHeight: 0.9, marginBottom: '2rem', textTransform: 'lowercase' }}>
+                {product.name}
+              </h1>
 
-            <div style={{ background: '#f0f9ff', border: '1px solid #e0f2fe', padding: '1.5rem', borderRadius: '20px', marginBottom: '2.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <ShieldCheck size={24} color="#0ea5e9" />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '2rem' }}>
+                <p style={{ fontSize: '2.5rem', fontWeight: '900', color: '#0f172a' }}>${Number(product.price).toFixed(2)}</p>
+                {product.offer_price && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <p style={{ fontSize: '1.4rem', color: '#94a3b8', textDecoration: 'line-through' }}>${Number(product.offer_price).toFixed(2)}</p>
+                    <span style={{ background: '#fef2f2', color: '#ef4444', padding: '4px 12px', borderRadius: '50px', fontSize: '0.85rem', fontWeight: '800' }}>SALE</span>
+                  </div>
+                )}
+              </div>
+
+              <p style={{ color: '#64748b', fontSize: '1.2rem', lineHeight: 1.6, marginBottom: '3rem' }}>
+                {product.description}
+              </p>
+            </div>
+
+            {/* Actions */}
+            <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '3rem' }}>
+              <div style={{
+                display: 'flex', alignItems: 'center', background: '#fff',
+                border: '1px solid #e2e8f0', borderRadius: '24px', padding: '0.5rem'
+              }}>
+                <button
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  style={{ width: '50px', height: '50px', borderRadius: '20px', border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                >
+                  <Minus size={18} />
+                </button>
+                <span style={{ width: '40px', textAlign: 'center', fontWeight: '800', fontSize: '1.2rem' }}>{quantity}</span>
+                <button
+                  onClick={() => setQuantity(quantity + 1)}
+                  style={{ width: '50px', height: '50px', borderRadius: '20px', border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                >
+                  <Plus size={18} />
+                </button>
+              </div>
+              <button
+                onClick={() => addToCart(product, quantity)}
+                className="btn-shop-dark"
+                style={{ flex: 1, borderRadius: '24px', fontSize: '1.1rem', padding: '0 2rem', height: '66px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}
+              >
+                <ShoppingBag size={20} /> add to cart
+              </button>
+            </div>
+
+            {/* Trust Badge */}
+            <div style={{ background: '#f8fafc', padding: '2rem', borderRadius: '32px', border: '1px solid #f1f5f9', display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+              <div style={{ width: '56px', height: '56px', background: '#fff', borderRadius: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 10px 20px rgba(0,0,0,0.03)' }}>
+                <ShieldCheck size={28} color="#10b981" />
+              </div>
               <div>
-                <span style={{ display: 'block', fontSize: '1rem', fontWeight: '700', color: '#0369a1' }}>Authentic product</span>
-                <span style={{ fontSize: '0.85rem', color: '#0ea5e9' }}>Sold and fulfilled by {business.name}</span>
+                <h4 style={{ fontSize: '1rem', fontWeight: '800', color: '#0f172a', marginBottom: '0.25rem' }}>secure purchase</h4>
+                <p style={{ fontSize: '0.9rem', color: '#64748b' }}>fully authenticated and fulfilled by {business.name}.</p>
               </div>
             </div>
-
-            <button className="btn-shop-dark" style={{ width: '100%', padding: '1.5rem', fontSize: '1.2rem', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
-              <ShoppingCart size={24} /> Add to Cart
-            </button>
           </div>
         </div>
       </div>
+
+      <style>{`
+        .heart-btn:hover {
+          transform: scale(1.1);
+          background: #ef4444 !important;
+        }
+        .heart-btn:hover svg {
+          color: #fff !important;
+        }
+        .back-link-hover:hover {
+          color: #0f172a !important;
+          transform: translateX(-5px);
+        }
+      `}</style>
     </div>
   );
 };
 
 export default ProductDetails;
+
