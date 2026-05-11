@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
+import { ShoppingCart, User, Menu, X, Search } from 'lucide-react';
 
 const BusinessHome = () => {
   const { slug } = useParams();
@@ -10,6 +11,7 @@ const BusinessHome = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -127,7 +129,22 @@ const BusinessHome = () => {
   if (loading) return <div className="container section-padding" style={{ textAlign: 'center' }}><p>Loading store...</p></div>;
   if (error) return <div className="container section-padding" style={{ textAlign: 'center' }}><h1>{error}</h1><Link to="/">Go back home</Link></div>;
 
-  const bestSellers = products.filter(p => p.is_bestseller);
+  const MOCK_PRODUCTS = [
+    { id: 'm1', name: 'Summer Whisper', price: 450, image: 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=600&h=800&fit=crop', is_bestseller: true, description: 'A light, airy abstract piece with soft pastel strokes and bright accents.' },
+    { id: 'm2', name: 'Morning Dew', price: 320, image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&h=800&fit=crop', is_bestseller: true, description: 'Fresh and vibrant floral study capturing the first light of day.' },
+    { id: 'm3', name: 'Azure Horizon', price: 280, image: 'https://images.unsplash.com/photo-1549490349-8643362247b5?w=600&h=800&fit=crop', is_bestseller: true, description: 'Minimalist coastal abstract with soothing blue and white tones.' },
+    { id: 'm4', name: 'Golden Glow', price: 550, image: 'https://images.unsplash.com/photo-1541963463532-d68292c34b19?w=600&h=800&fit=crop', is_bestseller: true, description: 'Radiant abstract composition celebrating warmth and light.' }
+  ];
+
+  const MOCK_CATEGORIES = [
+    { id: 'c1', name: 'modern abstract', cover_img: 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=600&h=800&fit=crop' },
+    { id: 'c2', name: 'minimalist', cover_img: 'https://images.unsplash.com/photo-1549490349-8643362247b5?w=600&h=800&fit=crop' },
+    { id: 'c3', name: 'floral studies', cover_img: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&h=800&fit=crop' }
+  ];
+
+  const displayProducts = products.length > 0 ? products : MOCK_PRODUCTS;
+  const displayCategories = categories.length > 0 ? categories : MOCK_CATEGORIES;
+  const bestSellers = displayProducts.filter(p => p.is_bestseller).slice(0, 4);
 
   const openPolicy = (title, content) => {
     // If content is empty, provide professional defaults based on title
@@ -168,7 +185,7 @@ const BusinessHome = () => {
         <section className="section-best-sellers">
           <div className="section-best-sellers-content">
             <div className="section-header">
-              <h2 className="section-title">best sellers</h2>
+              <h2 className="section-title">Best Sellers</h2>
               <Link to={`/${slug}/products`} className="btn-view-more">view more</Link>
             </div>
 
@@ -176,11 +193,11 @@ const BusinessHome = () => {
               {bestSellers.map(product => (
                 <Link
                   key={product.id}
-                  to={`/${slug}/product/${product.id}`}
+                  to={product.id.startsWith('m') ? '#' : `/${slug}/product/${product.id}`}
                   className="product-item"
                 >
                   <div className="product-item-image">
-                    <span className="badge-best-seller">best seller</span>
+                    <span className="badge-best-seller">Best Sellers</span>
                     {product.offer_price && <span className="offer-badge">SALE</span>}
                     <img src={product.image} alt={product.name} />
                   </div>
@@ -188,10 +205,10 @@ const BusinessHome = () => {
                     <h3>{product.name}</h3>
                     <p className="product-item-description">{product.description}</p>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                      <p className="product-item-price">${Number(product.price).toFixed(2)}</p>
+                      <p className="product-item-price">₹{Number(product.price).toFixed(2)}</p>
                       {product.offer_price && (
                         <p style={{ color: '#ef4444', textDecoration: 'line-through', fontSize: '0.9rem', opacity: 0.6 }}>
-                          ${Number(product.offer_price).toFixed(2)}
+                          ₹{Number(product.offer_price).toFixed(2)}
                         </p>
                       )}
                     </div>
@@ -213,6 +230,38 @@ const BusinessHome = () => {
           </div>
         </div>
 
+        {/* Navbar - Fixed Pill Overlay */}
+        <nav className={`nav-pill ${menuOpen ? 'nav-open' : ''}`}>
+          <div className="nav-logo-store">
+            {config?.logo_url ? (
+              <img src={config.logo_url} alt={business?.name} style={{ height: '32px' }} />
+            ) : (
+              <span>{business?.name || 'carthive'}</span>
+            )}
+          </div>
+
+          {/* Mobile Menu Toggle */}
+          <button className="mobile-menu-toggle" onClick={() => setMenuOpen(!menuOpen)}>
+            {menuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+
+          <div className={`nav-links ${menuOpen ? 'active' : ''}`}>
+            <Link to={`/${slug}`} onClick={() => setMenuOpen(false)}>home</Link>
+            <Link to={`/${slug}/products`} onClick={() => setMenuOpen(false)}>shop all</Link>
+            {/* <Link to={`/${slug}/categories`} onClick={() => setMenuOpen(false)}>categories</Link> */}
+            <Link to={`/${slug}/about`} onClick={() => setMenuOpen(false)}>our story</Link>
+          </div>
+
+          <div className="nav-icons">
+            <button className="search-trigger-pill"><Search size={20} /></button>
+            <Link to={`/${slug}/account`} className="nav-icon-link"><User size={20} /></Link>
+            <Link to={`/${slug}/cart`} className="nav-icon-link cart-icon">
+              <ShoppingCart size={20} />
+              <span className="cart-badge">0</span>
+            </Link>
+          </div>
+        </nav>
+
         {/* 4. Marquee Ticker */}
         <div className="marquee-ticker">
           <div className="marquee-scroll">
@@ -226,38 +275,37 @@ const BusinessHome = () => {
       </section>
 
       {/* 4. Shop by Category - Screenshot Match (Moved Below Banner) */}
-      {categories.length > 0 && (
-        <section className="section-categories">
-          <div className="category-section-header">
-            <h2>shop by category</h2>
-            <Link to={`/${slug}/products`} className="btn-shop-now-outline">shop now</Link>
-          </div>
-          <div className="categories-grid-screenshot">
-            {categories.map(cat => {
-              // Find the first product in this category to use its image as a thumbnail fallback
-              const sampleProduct = products.find(p => p.category_id === cat.id);
-              const displayImage = cat.cover_img || (sampleProduct ? sampleProduct.image : null);
+      <section className="section-categories">
+        <div className="category-section-header">
+          <h2>shop by category</h2>
+          <Link to={`/${slug}/products`} className="btn-shop-now-outline">shop now</Link>
+        </div>
+        <div className="categories-grid-screenshot">
+          {displayCategories.map(cat => {
+            // Find the first product in this category to use its image as a thumbnail fallback
+            const sampleProduct = displayProducts.find(p => p.category_id === cat.id);
+            const displayImage = cat.cover_img || (sampleProduct ? sampleProduct.image : null);
 
-              return (
-                <Link key={cat.id} to={`/${slug}/products?category=${cat.id}`} className="category-card-screenshot">
-                  <div className="category-image-container">
-                    {displayImage ? (
-                      <img src={displayImage} alt={cat.name} />
-                    ) : (
-                      <div className="category-placeholder-custom">
-                        <span style={{ fontSize: '3rem', opacity: 0.1 }}>{cat.name[0]}</span>
-                      </div>
-                    )}
-                  </div>
-                  <div className="category-label-pill">
-                    {cat.name}
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </section>
-      )}
+            return (
+              <Link key={cat.id} to={cat.id.startsWith('c') ? '#' : `/${slug}/products?category=${cat.id}`} className="category-card-screenshot">
+                <div className="category-image-container">
+                  {displayImage ? (
+                    <img src={displayImage} alt={cat.name} />
+                  ) : (
+                    <div className="category-placeholder-custom">
+                      <span style={{ fontSize: '3rem', opacity: 0.1 }}>{cat.name[0]}</span>
+                    </div>
+                  )}
+                </div>
+                <div className="category-label-pill">
+                  {cat.name}
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      </section>
+
 
       {/* 5. Our Story Section */}
       <section className="section-our-story">

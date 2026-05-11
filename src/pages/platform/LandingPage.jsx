@@ -1,16 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import { ArrowRight, Store, Rocket, Globe, ShieldCheck, ChevronRight } from 'lucide-react';
+import { ArrowRight, Store, Rocket, Globe, Shield, Lock, X, Loader2, ChevronRight } from 'lucide-react';
 
 const LandingPage = () => {
+  const navigate = useNavigate();
   const [businesses, setBusinesses] = useState([]);
   const [loading, setLoading] = useState(true);
+  
+  // Founder Login State
+  const [isFounderLoginOpen, setIsFounderLoginOpen] = useState(false);
+  const [founderCreds, setFounderCreds] = useState({ username: '', password: '' });
+  const [loginError, setLoginError] = useState('');
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   useEffect(() => {
     const fetchBusinesses = async () => {
       try {
-        const { data, error } = await supabase.from('businesses').select('*');
+        const { data, error } = await supabase
+          .from('businesses')
+          .select('*')
+          .eq('is_active', true);
         if (error) throw error;
         setBusinesses(data || []);
       } catch (err) {
@@ -43,7 +53,7 @@ const LandingPage = () => {
             CartHive empowers creators and small businesses to launch stunning, high-performance online stores with zero friction.
           </p>
           <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center' }}>
-            <Link to="/admin" className="btn-shop-dark" style={{ padding: '1.2rem 3rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <Link to="/launch" className="btn-shop-dark" style={{ padding: '1.2rem 3rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               Launch your store <ArrowRight size={20} />
             </Link>
           </div>
@@ -85,7 +95,7 @@ const LandingPage = () => {
                 <Store size={48} color="#94a3b8" style={{ marginBottom: '1.5rem' }} />
                 <h3 style={{ fontSize: '1.75rem', color: '#0f172a', fontWeight: '800', marginBottom: '0.5rem' }}>No stores live yet</h3>
                 <p style={{ color: '#64748b', marginBottom: '2.5rem', fontSize: '1.1rem' }}>Be the first to launch your brand on CartHive!</p>
-                <Link to="/admin" className="btn-shop-dark">Start Building Your Empire</Link>
+                <Link to="/launch" className="btn-shop-dark">Start Building Your Empire</Link>
               </div>
             )}
           </div>
@@ -116,8 +126,109 @@ const LandingPage = () => {
       </section>
 
       <footer style={{ padding: '4rem 5%', textAlign: 'center', background: 'white', borderTop: '1px solid #f1f5f9' }}>
-        <p style={{ color: '#94a3b8', fontSize: '0.9rem' }}>© 2026 CartHive Platform. Powered by Advanced Agentic Coding.</p>
+        <button 
+          onClick={() => setIsFounderLoginOpen(true)}
+          style={{ color: '#94a3b8', fontSize: '0.9rem', textDecoration: 'none', background: 'none', border: 'none', cursor: 'pointer' }}
+        >
+          © 2026 CartHive Platform. Powered by Advanced Agentic Coding.
+        </button>
       </footer>
+
+      {/* Founder Login Modal */}
+      {isFounderLoginOpen && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(15, 23, 42, 0.4)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, padding: '1rem' }}>
+          <div style={{ background: 'white', borderRadius: '32px', padding: '3rem', maxWidth: '450px', width: '100%', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)', position: 'relative' }}>
+            <button 
+              onClick={() => setIsFounderLoginOpen(false)}
+              style={{ position: 'absolute', right: '1.5rem', top: '1.5rem', border: 'none', background: 'none', color: '#94a3b8', cursor: 'pointer' }}
+            >
+              <X size={24} />
+            </button>
+
+            <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+              <div style={{ width: '64px', height: '64px', borderRadius: '20px', background: '#eff6ff', color: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
+                <Shield size={32} />
+              </div>
+              <h2 style={{ fontSize: '1.75rem', fontWeight: '900', color: '#0f172a', marginBottom: '0.5rem' }}>Founder Portal</h2>
+              <p style={{ color: '#64748b' }}>Enter your administrative credentials.</p>
+            </div>
+
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              setLoginError('');
+              setIsLoggingIn(true);
+              
+              setTimeout(() => {
+                if (founderCreds.username === 'founder' && founderCreds.password === '111111') {
+                  navigate('/founder');
+                } else {
+                  setLoginError('Invalid administrative credentials.');
+                  setIsLoggingIn(false);
+                }
+              }, 800);
+            }} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+              
+              {loginError && (
+                <div style={{ background: '#fef2f2', border: '1px solid #fee2e2', padding: '1rem', borderRadius: '16px', color: '#ef4444', fontSize: '0.9rem', fontWeight: '600' }}>
+                  {loginError}
+                </div>
+              )}
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                <label style={{ fontWeight: '700', color: '#334155', fontSize: '0.9rem' }}>Username</label>
+                <div style={{ position: 'relative' }}>
+                  <Shield size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
+                  <input 
+                    required
+                    type="text" 
+                    placeholder="Admin username"
+                    value={founderCreds.username}
+                    onChange={(e) => setFounderCreds({...founderCreds, username: e.target.value})}
+                    style={{ width: '100%', padding: '1rem 1rem 1rem 3rem', borderRadius: '14px', border: '2px solid #e2e8f0', outline: 'none', fontSize: '1rem' }}
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                <label style={{ fontWeight: '700', color: '#334155', fontSize: '0.9rem' }}>Password</label>
+                <div style={{ position: 'relative' }}>
+                  <Lock size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
+                  <input 
+                    required
+                    type="password" 
+                    placeholder="••••••••"
+                    value={founderCreds.password}
+                    onChange={(e) => setFounderCreds({...founderCreds, password: e.target.value})}
+                    style={{ width: '100%', padding: '1rem 1rem 1rem 3rem', borderRadius: '14px', border: '2px solid #e2e8f0', outline: 'none', fontSize: '1rem' }}
+                  />
+                </div>
+              </div>
+
+              <button 
+                type="submit"
+                disabled={isLoggingIn}
+                style={{ 
+                  marginTop: '1rem',
+                  padding: '1.2rem', 
+                  borderRadius: '14px', 
+                  border: 'none', 
+                  background: '#0f172a', 
+                  color: 'white', 
+                  fontWeight: '800', 
+                  fontSize: '1.1rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.75rem'
+                }}
+              >
+                {isLoggingIn ? <Loader2 size={20} className="animate-spin" /> : 'Enter Portal'}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

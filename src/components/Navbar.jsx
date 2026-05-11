@@ -12,7 +12,7 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const pathParts = location.pathname.split('/').filter(Boolean);
-  
+
   const slug = pathParts.length > 0 && !['admin', 'login', 'cart', 'track'].includes(pathParts[0]) ? pathParts[0] : null;
 
   useEffect(() => {
@@ -48,10 +48,10 @@ const Navbar = () => {
           if (previewData) {
             try {
               brandContent = JSON.parse(previewData);
-            } catch(e) {}
+            } catch (e) { }
           }
         }
-        
+
         if (!brandContent) {
           const { data: brand } = await supabase.from('homepage_content').select('*').eq('business_id', biz.id).single();
           brandContent = brand;
@@ -87,7 +87,7 @@ const Navbar = () => {
       </Link>
 
       {/* Center: Nav Links */}
-      <div style={{ display: 'flex', gap: '2rem' }}>
+      {/* <div style={{ display: 'flex', gap: '2rem' }}>
         {['home', 'shop', 'about', 'blog'].map(item => (
           <Link 
             key={item} 
@@ -99,29 +99,31 @@ const Navbar = () => {
             {item}
           </Link>
         ))}
-      </div>
+      </div> */}
 
       {/* Right: Actions */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+      <div className="nav-icons">
         {user ? (
-          <Link to="/admin" style={{ fontSize: '0.85rem', color: '#0f172a', fontWeight: '800', textDecoration: 'none' }}>dashboard</Link>
-        ) : (
-          <Link to="/login" style={{ fontSize: '0.85rem', color: '#0f172a', fontWeight: '800', textDecoration: 'none' }}>log in</Link>
-        )}
-        
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', color: '#0f172a' }}>
-          <Heart size={20} style={{ cursor: 'pointer' }} />
-          <Link to={`/${slug}/cart`} style={{ position: 'relative', color: 'inherit', display: 'flex' }}>
-            <ShoppingBag size={20} />
-            <span style={{ position: 'absolute', top: '-5px', right: '-8px', background: '#0f172a', color: 'white', fontSize: '0.65rem', width: '16px', height: '16px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '900' }}>
-              {cartCount}
-            </span>
+          <Link to="/admin" className="nav-icon-link" style={{ fontSize: '0.85rem', fontWeight: '800', textDecoration: 'none', color: '#0f172a' }}>
+            <LayoutDashboard size={20} />
+            <span className="auth-label-mobile">dashboard</span>
           </Link>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', background: '#f1f5f9', padding: '0.4rem 1rem', borderRadius: '50px' }}>
-            <span style={{ fontSize: '0.85rem', fontWeight: '700', color: '#64748b' }}>Search</span>
-            <Search size={16} color="#64748b" />
-          </div>
+        ) : (
+          <Link to="/login" className="nav-icon-link" style={{ fontSize: '0.85rem', fontWeight: '800', textDecoration: 'none', color: '#0f172a' }}>
+            <User size={20} />
+            <span className="auth-label-mobile">login</span>
+          </Link>
+        )}
+
+        <div className="nav-icon-link search-trigger-pill">
+          <span className="search-label-mobile">Search</span>
+          <Search size={18} />
         </div>
+
+        <Link to={`/${slug}/cart`} className="nav-icon-link cart-icon">
+          <ShoppingBag size={20} />
+          <span className="cart-badge">{cartCount}</span>
+        </Link>
       </div>
     </nav>
   );
@@ -129,11 +131,11 @@ const Navbar = () => {
 
 const StoreIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M12 2L3 7V17L12 22L21 17V7L12 2Z" fill="#3b82f6" fillOpacity="0.1" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M12 22V12" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M21 7L12 12L3 7" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M12 12L21 17" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M12 12L3 17" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M12 2L3 7V17L12 22L21 17V7L12 2Z" fill="#3b82f6" fillOpacity="0.1" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M12 22V12" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M21 7L12 12L3 7" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M12 12L21 17" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M12 12L3 17" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
 

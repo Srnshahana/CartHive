@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { uploadImage } from '../../lib/storage';
-import { LayoutDashboard, ShoppingBag, Edit3, LogOut, Package, User, Layout, Save, Plus, Loader2 } from 'lucide-react';
+import { LayoutDashboard, ShoppingBag, Edit3, LogOut, Package, User, Layout, Save, Plus, Loader2, Menu, X, ArrowLeft } from 'lucide-react';
 
 // Import Tabs
 import Dashboard from './tabs/Dashboard';
@@ -22,6 +22,7 @@ const AdminPortal = () => {
   const [currentBusiness, setCurrentBusiness] = useState(null);
   const [homeConfig, setHomeConfig] = useState(null);
   const [user, setUser] = useState(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     // Initial fetch with full loading state
@@ -354,21 +355,47 @@ const AdminPortal = () => {
   if (loading) return <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Loading...</div>;
 
   return (
-    <div className="admin-layout">
+    <div className={`admin-layout ${mobileMenuOpen ? 'sidebar-open' : ''}`}>
+      {/* Mobile Overlay */}
+      {mobileMenuOpen && (
+        <div className="admin-sidebar-overlay" onClick={() => setMobileMenuOpen(false)} />
+      )}
+
       <aside className="admin-sidebar">
-        <div className="admin-logo">carthive admin</div>
+        <div className="admin-sidebar-header">
+          <div className="admin-logo" style={{ textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.9rem', color: '#3b82f6' }}>Admin Dashboard</div>
+          <button className="admin-mobile-close" onClick={() => setMobileMenuOpen(false)}>
+            <X size={24} />
+          </button>
+        </div>
         <nav className="admin-nav">
-          <button className={`admin-nav-item ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => setActiveTab('dashboard')}><LayoutDashboard size={20} /> dashboard</button>
-          <button className={`admin-nav-item ${activeTab === 'orders' ? 'active' : ''}`} onClick={() => setActiveTab('orders')}><ShoppingBag size={20} /> orders</button>
-          <button className={`admin-nav-item ${activeTab === 'products' ? 'active' : ''}`} onClick={() => setActiveTab('products')}><Package size={20} /> products</button>
-          <button className={`admin-nav-item ${activeTab === 'home_screen' ? 'active' : ''}`} onClick={() => setActiveTab('home_screen')}><Layout size={20} /> home screen</button>
+          <button className={`admin-nav-item ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => { setActiveTab('dashboard'); setMobileMenuOpen(false); }}><LayoutDashboard size={20} /> dashboard</button>
+          <button className={`admin-nav-item ${activeTab === 'orders' ? 'active' : ''}`} onClick={() => { setActiveTab('orders'); setMobileMenuOpen(false); }}><ShoppingBag size={20} /> orders</button>
+          <button className={`admin-nav-item ${activeTab === 'products' ? 'active' : ''}`} onClick={() => { setActiveTab('products'); setMobileMenuOpen(false); }}><Package size={20} /> products</button>
+          <button className={`admin-nav-item ${activeTab === 'home_screen' ? 'active' : ''}`} onClick={() => { setActiveTab('home_screen'); setMobileMenuOpen(false); }}><Layout size={20} /> store design</button>
+          <div style={{ borderTop: '1px solid #e2e8f0', margin: '1rem 0', paddingTop: '1rem' }}>
+            <button 
+              onClick={() => navigate(`/${currentBusiness?.slug}`)} 
+              className="admin-nav-item" 
+              style={{ color: '#64748b' }}
+            >
+              <ArrowLeft size={20} /> back to store
+            </button>
+          </div>
         </nav>
         <button onClick={() => { localStorage.removeItem('carthive_user'); navigate('/login'); }} className="admin-nav-item" style={{ color: '#ff4444', marginTop: 'auto' }}><LogOut size={20} /> logout</button>
       </aside>
 
       <main className="admin-content">
         <header className="admin-header">
-          <h2 style={{ textTransform: 'lowercase' }}>{activeTab}</h2>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <button className="admin-mobile-menu-btn" onClick={() => setMobileMenuOpen(true)}>
+              <Menu size={24} />
+            </button>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: '800', color: '#0f172a' }}>
+              {activeTab === 'home_screen' ? 'Store Design' : activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
+            </h2>
+          </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             {homeConfig?.logo_url ? (
               <img src={homeConfig.logo_url} alt={currentBusiness?.name} style={{ height: '40px', width: '40px', borderRadius: '4px', objectFit: 'contain' }} />

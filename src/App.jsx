@@ -4,6 +4,8 @@ import Navbar from './components/Navbar';
 
 // Platform Pages
 import LandingPage from './pages/platform/LandingPage';
+import CreateStore from './pages/platform/CreateStore';
+import FounderDashboard from './pages/platform/FounderDashboard';
 
 // Storefront Pages
 import StoreHome from './pages/storefront/StoreHome';
@@ -20,14 +22,16 @@ import './index.css';
 
 function App() {
   const location = useLocation();
-  const isAdminPage = location.pathname.startsWith('/admin') || location.pathname.startsWith('/login');
+  const hideNavbar = location.pathname === '/' || location.pathname === '/launch' || location.pathname === '/founder' || location.pathname.startsWith('/admin') || location.pathname.startsWith('/login');
 
   return (
     <div className="app-shell">
-      {!isAdminPage && <Navbar />}
+      {!hideNavbar && <Navbar />}
       <Routes>
         {/* Main Landing Page (Platform) */}
         <Route path="/" element={<LandingPage />} />
+        <Route path="/launch" element={<CreateStore />} />
+        <Route path="/founder" element={<FounderDashboard />} />
         
         {/* Admin Flow */}
         <Route path="/login" element={<Login />} />
