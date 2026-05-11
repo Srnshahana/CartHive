@@ -11,6 +11,8 @@ const Navbar = () => {
   const { cartCount } = useCart();
   const location = useLocation();
   const navigate = useNavigate();
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const pathParts = location.pathname.split('/').filter(Boolean);
 
   const slug = pathParts.length > 0 && !['admin', 'login', 'cart', 'track'].includes(pathParts[0]) ? pathParts[0] : null;
@@ -26,11 +28,17 @@ const Navbar = () => {
       setBranding(null);
     }
 
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+
     const handleLogoUpdate = (e) => {
       if (e.detail) setBranding(prev => ({ ...(prev || {}), logo_url: e.detail }));
     };
     window.addEventListener('carthive-logo-update', handleLogoUpdate);
     return () => {
+      window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('carthive-logo-update', handleLogoUpdate);
     };
   }, [location.pathname, slug]);
@@ -73,9 +81,9 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="nav-pill">
+    <nav className={`nav-pill ${scrolled ? 'scrolled' : ''} ${menuOpen ? 'nav-open' : ''}`}>
       {/* Left: Logo & Branding */}
-      <Link to={slug ? `/${slug}` : "/"} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none', color: '#0f172a' }}>
+      <Link to={slug ? `/${slug}` : "/"} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none', color: '#0f172a', zIndex: 10001 }}>
         <div style={{ background: '#0f172a', width: '32px', height: '32px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           {(branding?.logo_url || business?.logo_url) ? (
             <img src={branding?.logo_url || business?.logo_url} style={{ width: '20px', height: '20px', objectFit: 'contain' }} alt="" />
@@ -86,20 +94,14 @@ const Navbar = () => {
         <span style={{ fontWeight: '900', fontSize: '1.2rem', letterSpacing: '-1px' }}>{business?.name || 'carthive'}</span>
       </Link>
 
-      {/* Center: Nav Links */}
-      {/* <div style={{ display: 'flex', gap: '2rem' }}>
-        {['home', 'shop', 'about', 'blog'].map(item => (
-          <Link 
-            key={item} 
-            to={item === 'home' ? `/${slug}` : `/${slug}/${item}`} 
-            style={{ textDecoration: 'none', color: '#64748b', fontWeight: '700', fontSize: '0.9rem', transition: 'color 0.2s' }}
-            onMouseOver={(e) => e.target.style.color = '#0f172a'}
-            onMouseOut={(e) => e.target.style.color = '#64748b'}
-          >
-            {item}
-          </Link>
-        ))}
-      </div> */}
+      {/* Mobile Menu Toggle */}
+      <button 
+        className="mobile-menu-toggle" 
+        onClick={() => setMenuOpen(!menuOpen)}
+        style={{ background: 'none', border: 'none', color: '#0f172a', cursor: 'pointer', zIndex: 10001 }}
+      >
+        {menuOpen ? <X size={24} /> : <Menu size={24} />}
+      </button>
 
       {/* Right: Actions */}
       <div className="nav-icons">

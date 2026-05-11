@@ -63,9 +63,9 @@ const LandingPage = () => {
       {/* Featured Stores Section */}
       <section className="section-padding" style={{ background: 'white' }}>
         <div className="container" id="explore">
-          <div style={{ textAlign: 'center', marginBottom: '5rem' }}>
-            <h2 style={{ fontSize: '3rem', fontWeight: '900', marginBottom: '1rem', letterSpacing: '-1px' }}>Explore <span className="gradient-text">featured stores</span></h2>
-            <p style={{ color: '#64748b', fontSize: '1.2rem', maxWidth: '600px', margin: '0 auto' }}>Discover unique brands and products from our thriving community of businesses.</p>
+          <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+            <h2 style={{ fontSize: '2.2rem', fontWeight: '900', marginBottom: '0.75rem', letterSpacing: '-0.75px' }}>Explore <span className="gradient-text">featured stores</span></h2>
+            <p style={{ color: '#64748b', fontSize: '1.05rem', maxWidth: '550px', margin: '0 auto' }}>Discover unique brands and products from our thriving community of businesses.</p>
           </div>
 
           <div className="featured-stores-grid">
@@ -107,19 +107,19 @@ const LandingPage = () => {
         <div className="container">
           <div className="grid grid-cols-3" style={{ gap: '4rem' }}>
             <div className="feature-item">
-              <div style={{ color: '#3b82f6', marginBottom: '1.5rem', background: 'white', width: '64px', height: '64px', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 10px 20px rgba(0,0,0,0.05)' }}><Globe size={32} /></div>
-              <h4 style={{ fontSize: '1.5rem', fontWeight: '900', marginBottom: '1rem', letterSpacing: '-0.5px' }}>Global Reach</h4>
-              <p style={{ color: '#64748b', lineHeight: '1.7', fontSize: '1.05rem' }}>Sell to customers anywhere in the world with our globally distributed, lightning-fast storefronts.</p>
+              <div style={{ color: '#3b82f6', marginBottom: '1.2rem', background: 'white', width: '50px', height: '50px', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 16px rgba(0,0,0,0.04)' }}><Globe size={24} /></div>
+              <h4 style={{ fontSize: '1.25rem', fontWeight: '900', marginBottom: '0.75rem', letterSpacing: '-0.4px' }}>Global Reach</h4>
+              <p style={{ color: '#64748b', lineHeight: '1.6', fontSize: '0.95rem' }}>Sell to customers anywhere in the world with our globally distributed, lightning-fast storefronts.</p>
             </div>
             <div className="feature-item">
-              <div style={{ color: '#3b82f6', marginBottom: '1.5rem', background: 'white', width: '64px', height: '64px', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 10px 20px rgba(0,0,0,0.05)' }}><ShieldCheck size={32} /></div>
-              <h4 style={{ fontSize: '1.5rem', fontWeight: '900', marginBottom: '1rem', letterSpacing: '-0.5px' }}>Secure & Trusted</h4>
-              <p style={{ color: '#64748b', lineHeight: '1.7', fontSize: '1.05rem' }}>Enterprise-grade security and real-time inventory management for your peace of mind.</p>
+              <div style={{ color: '#3b82f6', marginBottom: '1.2rem', background: 'white', width: '50px', height: '50px', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 16px rgba(0,0,0,0.04)' }}><ShieldCheck size={24} /></div>
+              <h4 style={{ fontSize: '1.25rem', fontWeight: '900', marginBottom: '0.75rem', letterSpacing: '-0.4px' }}>Secure & Trusted</h4>
+              <p style={{ color: '#64748b', lineHeight: '1.6', fontSize: '0.95rem' }}>Enterprise-grade security and real-time inventory management for your peace of mind.</p>
             </div>
             <div className="feature-item">
-              <div style={{ color: '#3b82f6', marginBottom: '1.5rem', background: 'white', width: '64px', height: '64px', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 10px 20px rgba(0,0,0,0.05)' }}><Store size={32} /></div>
-              <h4 style={{ fontSize: '1.5rem', fontWeight: '900', marginBottom: '1rem', letterSpacing: '-0.5px' }}>Zero Code</h4>
-              <p style={{ color: '#64748b', lineHeight: '1.7', fontSize: '1.05rem' }}>Customize your entire store branding, banners, and social galleries without touching a single line of code.</p>
+              <div style={{ color: '#3b82f6', marginBottom: '1.2rem', background: 'white', width: '50px', height: '50px', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 16px rgba(0,0,0,0.04)' }}><Store size={24} /></div>
+              <h4 style={{ fontSize: '1.25rem', fontWeight: '900', marginBottom: '0.75rem', letterSpacing: '-0.4px' }}>Zero Code</h4>
+              <p style={{ color: '#64748b', lineHeight: '1.6', fontSize: '0.95rem' }}>Customize your entire store branding, banners, and social galleries without touching a single line of code.</p>
             </div>
           </div>
         </div>

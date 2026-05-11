@@ -23,6 +23,15 @@ const FounderDashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState('all');
   const [rejectModal, setRejectModal] = useState({ isOpen: false, biz: null });
+  const [alertConfig, setAlertConfig] = useState({ visible: false, title: '', message: '' });
+
+  const showAlert = (message, title = 'Alert') => {
+    setAlertConfig({ visible: true, title, message });
+  };
+
+  const closeAlert = () => {
+    setAlertConfig({ ...alertConfig, visible: false });
+  };
 
   const fetchBusinesses = async () => {
     setLoading(true);
@@ -58,7 +67,7 @@ const FounderDashboard = () => {
         b.id === id ? { ...b, is_active: !currentStatus } : b
       ));
     } catch (err) {
-      alert('Error updating status: ' + err.message);
+      showAlert(err.message, 'Status Update Error');
     }
   };
 
@@ -90,7 +99,7 @@ const FounderDashboard = () => {
       setBusinesses(businesses.filter(b => b.id !== biz.id));
       setRejectModal({ isOpen: false, biz: null });
     } catch (err) {
-      alert('Error rejecting request: ' + err.message);
+      showAlert(err.message, 'Rejection Error');
     }
   };
 
@@ -345,6 +354,18 @@ const FounderDashboard = () => {
           </div>
         )}
       </div>
+      {/* Custom Alert Modal */}
+      {alertConfig.visible && (
+        <div className="admin-alert-overlay">
+          <div className="admin-alert-modal">
+            <h3 className="admin-alert-title">{alertConfig.title}</h3>
+            <p className="admin-alert-message">{alertConfig.message}</p>
+            <button className="admin-alert-btn" onClick={closeAlert}>
+              Okay
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

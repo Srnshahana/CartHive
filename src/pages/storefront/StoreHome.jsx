@@ -11,7 +11,28 @@ const BusinessHome = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const observerOptions = {
+      threshold: 0.15,
+      rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('reveal-active');
+        }
+      });
+    }, observerOptions);
+
+    const revealElements = document.querySelectorAll('.reveal-on-scroll');
+    revealElements.forEach(el => observer.observe(el));
+
+    return () => {
+      revealElements.forEach(el => observer.unobserve(el));
+    };
+  }, [loading, products]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -70,9 +91,9 @@ const BusinessHome = () => {
           hero_heading: 'shine on the',
           hero_subtext: 'beauty that reflects your spirits',
           banner_image: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=1200&h=600&fit=crop',
-          banner_title: 'effortless beauty, timeless charm.',
+          banner_title: 'effortless beauty, timeless charm ahead.',
           banner_subtitle: 'new arrivals now in stock',
-          ticker_text: 'orders over $50 ✿ free shipping on orders over $50 ✿',
+          ticker_text: 'effortless beauty, timeless charm ahead • new arrivals now in stock • effortless beauty, timeless charm ahead • new arrivals now in stock • ',
           footer_about: 'born from a passion for beauty rituals, we celebrate individuality and bring radiant confidence to everyone',
           support_email: `support@${slug}.com`,
           support_phone: '+1 123 456 7890',
@@ -133,7 +154,13 @@ const BusinessHome = () => {
     { id: 'm1', name: 'Summer Whisper', price: 450, image: 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=600&h=800&fit=crop', is_bestseller: true, description: 'A light, airy abstract piece with soft pastel strokes and bright accents.' },
     { id: 'm2', name: 'Morning Dew', price: 320, image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&h=800&fit=crop', is_bestseller: true, description: 'Fresh and vibrant floral study capturing the first light of day.' },
     { id: 'm3', name: 'Azure Horizon', price: 280, image: 'https://images.unsplash.com/photo-1549490349-8643362247b5?w=600&h=800&fit=crop', is_bestseller: true, description: 'Minimalist coastal abstract with soothing blue and white tones.' },
-    { id: 'm4', name: 'Golden Glow', price: 550, image: 'https://images.unsplash.com/photo-1541963463532-d68292c34b19?w=600&h=800&fit=crop', is_bestseller: true, description: 'Radiant abstract composition celebrating warmth and light.' }
+    { id: 'm4', name: 'Golden Glow', price: 550, image: 'https://images.unsplash.com/photo-1541963463532-d68292c34b19?w=600&h=800&fit=crop', is_bestseller: true, description: 'Radiant abstract composition celebrating warmth and light.' },
+    { id: 'm5', name: 'Ocean Breath', price: 390, image: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600&h=800&fit=crop', is_bestseller: true, description: 'A calming abstract with deep oceanic blues.' },
+    { id: 'm6', name: 'Velvet Sky', price: 420, image: 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=600&h=800&fit=crop', is_bestseller: true, description: 'Soft purples and deep indigos.' },
+    { id: 'm7', name: 'Sunbeam', price: 290, image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&h=800&fit=crop', is_bestseller: true, description: 'Bright yellow energy on canvas.' },
+    { id: 'm8', name: 'Earthly Ties', price: 310, image: 'https://images.unsplash.com/photo-1549490349-8643362247b5?w=600&h=800&fit=crop', is_bestseller: true, description: 'Organic textures and tones.' },
+    { id: 'm9', name: 'Forest Echo', price: 480, image: 'https://images.unsplash.com/photo-1541963463532-d68292c34b19?w=600&h=800&fit=crop', is_bestseller: true, description: 'Deep greens and misty grays.' },
+    { id: 'm10', name: 'Lunar Path', price: 360, image: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600&h=800&fit=crop', is_bestseller: true, description: 'Monochrome abstract moonlight.' }
   ];
 
   const MOCK_CATEGORIES = [
@@ -144,7 +171,7 @@ const BusinessHome = () => {
 
   const displayProducts = products.length > 0 ? products : MOCK_PRODUCTS;
   const displayCategories = categories.length > 0 ? categories : MOCK_CATEGORIES;
-  const bestSellers = displayProducts.filter(p => p.is_bestseller).slice(0, 4);
+  const bestSellers = displayProducts.filter(p => p.is_bestseller).slice(0, 5);
 
   const openPolicy = (title, content) => {
     // If content is empty, provide professional defaults based on title
@@ -182,33 +209,35 @@ const BusinessHome = () => {
 
       {/* 2. Best Sellers Section - Strictly based on is_bestseller */}
       {bestSellers.length > 0 && (
-        <section className="section-best-sellers">
+        <section className="section-best-sellers reveal-on-scroll">
           <div className="section-best-sellers-content">
-            <div className="section-header">
+            <div className="section-header reveal-on-scroll stagger-1">
               <h2 className="section-title">Best Sellers</h2>
               <Link to={`/${slug}/products`} className="btn-view-more">view more</Link>
             </div>
 
             <div className="best-sellers-grid">
-              {bestSellers.map(product => (
+              {bestSellers.map((product, idx) => (
                 <Link
                   key={product.id}
                   to={product.id.startsWith('m') ? '#' : `/${slug}/product/${product.id}`}
-                  className="product-item"
+                  className={`category-card-screenshot reveal-on-scroll stagger-${idx + 1}`}
+                  style={{ alignItems: 'flex-start', textAlign: 'left' }}
                 >
-                  <div className="product-item-image">
-                    <span className="badge-best-seller">Best Sellers</span>
+                  <div className="category-image-container" style={{ marginBottom: '1.2rem' }}>
                     {product.offer_price && <span className="offer-badge">SALE</span>}
                     <img src={product.image} alt={product.name} />
                   </div>
-                  <div className="product-item-info">
-                    <h3>{product.name}</h3>
-                    <p className="product-item-description">{product.description}</p>
+                  <div className="product-item-info" style={{ padding: '0 0.5rem' }}>
+                    <h3 style={{ fontSize: '1rem', marginBottom: '0.3rem' }}>{product.name}</h3>
+                    <p className="product-item-description" style={{ fontSize: '0.85rem', marginBottom: '0.8rem', display: '-webkit-box', WebkitLineClamp: '2', WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                      {product.description}
+                    </p>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                      <p className="product-item-price">₹{Number(product.price).toFixed(2)}</p>
+                      <p className="product-item-price" style={{ fontWeight: '800', fontSize: '1.1rem' }}>₹{Number(product.price).toFixed(0)}</p>
                       {product.offer_price && (
                         <p style={{ color: '#ef4444', textDecoration: 'line-through', fontSize: '0.9rem', opacity: 0.6 }}>
-                          ₹{Number(product.offer_price).toFixed(2)}
+                          ₹{Number(product.offer_price).toFixed(0)}
                         </p>
                       )}
                     </div>
@@ -224,43 +253,11 @@ const BusinessHome = () => {
       <section className="section-featured-banner">
         <div className="featured-banner-container" style={{ backgroundImage: `url(${config.banner_image})` }}>
           <div className="featured-banner-content">
-            <h2 className="featured-banner-h2">{config.banner_title}</h2>
-            <p className="featured-banner-p">{config.banner_subtitle}</p>
-            <Link to={`/${slug}/products`} className="btn-shop-dark">shop now</Link>
+            <h2 className="featured-banner-h2">{config.banner_title || 'shine on'}</h2>
+            <p className="featured-banner-p">{config.banner_subtitle || 'beauty that reflects your spirits'}</p>
+            <Link to={`/${slug}/products`} className="btn-shop-dark" style={{ background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(15px)', border: '1px solid rgba(255,255,255,0.2)' }}>shop now</Link>
           </div>
         </div>
-
-        {/* Navbar - Fixed Pill Overlay */}
-        <nav className={`nav-pill ${menuOpen ? 'nav-open' : ''}`}>
-          <div className="nav-logo-store">
-            {config?.logo_url ? (
-              <img src={config.logo_url} alt={business?.name} style={{ height: '32px' }} />
-            ) : (
-              <span>{business?.name || 'carthive'}</span>
-            )}
-          </div>
-
-          {/* Mobile Menu Toggle */}
-          <button className="mobile-menu-toggle" onClick={() => setMenuOpen(!menuOpen)}>
-            {menuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-
-          <div className={`nav-links ${menuOpen ? 'active' : ''}`}>
-            <Link to={`/${slug}`} onClick={() => setMenuOpen(false)}>home</Link>
-            <Link to={`/${slug}/products`} onClick={() => setMenuOpen(false)}>shop all</Link>
-            {/* <Link to={`/${slug}/categories`} onClick={() => setMenuOpen(false)}>categories</Link> */}
-            <Link to={`/${slug}/about`} onClick={() => setMenuOpen(false)}>our story</Link>
-          </div>
-
-          <div className="nav-icons">
-            <button className="search-trigger-pill"><Search size={20} /></button>
-            <Link to={`/${slug}/account`} className="nav-icon-link"><User size={20} /></Link>
-            <Link to={`/${slug}/cart`} className="nav-icon-link cart-icon">
-              <ShoppingCart size={20} />
-              <span className="cart-badge">0</span>
-            </Link>
-          </div>
-        </nav>
 
         {/* 4. Marquee Ticker */}
         <div className="marquee-ticker">
@@ -311,8 +308,22 @@ const BusinessHome = () => {
       <section className="section-our-story">
         <div className="section-our-story-content">
           <div className="story-container">
-            <h2 className="story-title">our story</h2>
-            <p className="story-main-text">{config.our_story || config.footer_about}</p>
+            <div className="story-decor-1">
+              <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M50 80c0-20 0-40 0-40M50 40c8-15 25-15 25 0s-17 15-25 0M50 40c-8-15-25-15-25 0s17 15 25 0M50 40c15-8 15-25 0-25s-15 17-0 25M50 40c15 8 15 25 0 25s-15-17-0-25" />
+                <path d="M50 60c5 0 10-5 10-10M50 70c-5 0-10-5-10-10" />
+              </svg>
+            </div>
+            <div className="story-decor-2">
+              <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M30 80c10-10 20-30 40-40M70 40c5-10 15-10 15 0s-10 15-15 0M70 40c-5-10-15-10-15 0s10 15 15 0" />
+                <path d="M40 60c-5 5-15 5-15 0s5-15 15-0M50 50c5 5 15 5 15 0s-5-15-15-0" />
+              </svg>
+            </div>
+            <h2 className="story-title reveal-on-scroll reveal-drop-in stagger-1">our story</h2>
+            <p className="story-main-text reveal-on-scroll reveal-drop-in stagger-2">
+              {config.our_story || config.footer_about}
+            </p>
           </div>
         </div>
       </section>
@@ -326,11 +337,11 @@ const BusinessHome = () => {
             rel="noopener noreferrer"
             style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
           >
-            <div className="instagram-icon">
+            <div className="instagram-icon reveal-on-scroll stagger-1">
               <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
             </div>
-            <h2 className="instagram-h2">Follow Us on Instagram</h2>
-            <span className="instagram-hashtag">
+            <h2 className="instagram-h2 reveal-on-scroll stagger-2">Follow Us on Instagram</h2>
+            <span className="instagram-hashtag reveal-on-scroll stagger-3">
               #{business.name.toLowerCase().replace(/\s/g, '_')}_beauty
             </span>
           </a>

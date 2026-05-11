@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { supabase } from '../../../lib/supabase';
 import { Package, Plus, Search, Tag, Edit3, Trash2, X, Upload, Loader2, Save, FolderPlus, AlertCircle, Star } from 'lucide-react';
 
-const Products = ({ products, categories, handleFileUpload, uploadingMap, refreshData, businessId }) => {
+const Products = ({ products, categories, handleFileUpload, uploadingMap, refreshData, businessId, showAlert }) => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showCatModal, setShowCatModal] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -16,6 +16,8 @@ const Products = ({ products, categories, handleFileUpload, uploadingMap, refres
     image: '',
     is_bestseller: false
   });
+
+  const [editingId, setEditingId] = useState(null);
 
   const [newCategory, setNewCategory] = useState({ name: '', discription: '', cover_img: '' });
   const [editingCategory, setEditingCategory] = useState(null);
@@ -47,20 +49,32 @@ const Products = ({ products, categories, handleFileUpload, uploadingMap, refres
 
   const saveProduct = async () => {
     if (!newProduct.name || !newProduct.price) {
-      alert('Please fill in name and price');
+      showAlert('Please fill in name and price', 'Validation Error');
       return;
     }
     setSaving(true);
     try {
-      const { error } = await supabase.from('products').insert({
+      const payload = {
         business_id: businessId,
         ...newProduct,
         price: parseFloat(newProduct.price),
         offer_price: newProduct.offer_price ? parseFloat(newProduct.offer_price) : null
-      });
+      };
+
+      let error;
+      if (editingId) {
+        // UPDATE
+        const { error: err } = await supabase.from('products').update(payload).eq('id', editingId);
+        error = err;
+      } else {
+        // INSERT
+        const { error: err } = await supabase.from('products').insert(payload);
+        error = err;
+      }
+
       if (error) throw error;
       
-      // Reset form state after successful save
+      // Reset form state
       setNewProduct({
         name: '',
         description: '',
@@ -70,14 +84,28 @@ const Products = ({ products, categories, handleFileUpload, uploadingMap, refres
         image: '',
         is_bestseller: false
       });
-      
+      setEditingId(null);
       setShowAddModal(false);
       refreshData();
     } catch (err) {
-      alert('Error saving product: ' + err.message);
+      showAlert(err.message, 'Error saving product');
     } finally {
       setSaving(false);
     }
+  };
+
+  const startEditProduct = (product) => {
+    setNewProduct({
+      name: product.name,
+      description: product.description || '',
+      price: product.price.toString(),
+      offer_price: product.offer_price ? product.offer_price.toString() : '',
+      category_id: product.category_id,
+      image: product.image,
+      is_bestseller: product.is_bestseller
+    });
+    setEditingId(product.id);
+    setShowAddModal(true);
   };
 
   const deleteProduct = async (id) => {
@@ -87,7 +115,7 @@ const Products = ({ products, categories, handleFileUpload, uploadingMap, refres
       if (error) throw error;
       refreshData();
     } catch (err) {
-      alert('Error deleting product: ' + err.message);
+      showAlert(err.message, 'Error deleting product');
     }
   };
 
@@ -105,14 +133,14 @@ const Products = ({ products, categories, handleFileUpload, uploadingMap, refres
       refreshData();
       return data;
     } catch (err) {
-      alert('Error adding category: ' + err.message);
+      showAlert(err.message, 'Error adding category');
     }
   };
 
   const deleteCategory = async (id) => {
     const hasProducts = products.some(p => p.category_id === id);
     if (hasProducts) {
-      alert('Cannot delete this category because it contains products. Please delete or reassign the products first.');
+      showAlert('Cannot delete this category because it contains products. Please delete or reassign the products first.', 'Action Blocked');
       return;
     }
 
@@ -122,7 +150,7 @@ const Products = ({ products, categories, handleFileUpload, uploadingMap, refres
       if (error) throw error;
       refreshData();
     } catch (err) {
-      alert('Error deleting category: ' + err.message);
+      showAlert(err.message, 'Error deleting category');
     }
   };
 
@@ -134,7 +162,7 @@ const Products = ({ products, categories, handleFileUpload, uploadingMap, refres
       setEditingCategory(null);
       refreshData();
     } catch (err) {
-      alert('Error updating category: ' + err.message);
+      showAlert(err.message, 'Error updating category');
     }
   };
 
@@ -144,7 +172,7 @@ const Products = ({ products, categories, handleFileUpload, uploadingMap, refres
       if (error) throw error;
       refreshData();
     } catch (err) {
-      alert('Error updating bestseller status: ' + err.message);
+      showAlert(err.message, 'Error updating bestseller status');
     }
   };
 
@@ -203,13 +231,20 @@ const Products = ({ products, categories, handleFileUpload, uploadingMap, refres
                 </td>
                 <td>
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <span style={{ fontWeight: '800' }}>${product.price}</span>
-                    {product.offer_price && <span style={{ color: '#ef4444', fontSize: '0.75rem', fontWeight: '700' }}>Sale: ${product.offer_price}</span>}
+                    <span style={{ fontWeight: '800' }}>₹{product.price}</span>
+                    {product.offer_price && <span style={{ color: '#ef4444', fontSize: '0.75rem', fontWeight: '700' }}>Sale: ₹{product.offer_price}</span>}
                   </div>
                 </td>
                 <td>
                   <div style={{ display: 'flex', gap: '0.5rem' }}>
-                    <button className="nav-btn-link" style={{ padding: '0.5rem' }} title="Edit"><Edit3 size={16} /></button>
+                    <button 
+                      className="nav-btn-link" 
+                      style={{ padding: '0.5rem' }} 
+                      title="Edit"
+                      onClick={() => startEditProduct(product)}
+                    >
+                      <Edit3 size={16} />
+                    </button>
                     <button 
                       className="nav-btn-link" 
                       style={{ padding: '0.5rem', color: '#ff4444' }} 
@@ -230,8 +265,10 @@ const Products = ({ products, categories, handleFileUpload, uploadingMap, refres
       {showAddModal && (
         <div className="admin-modal-overlay">
           <div className="admin-modal" style={{ maxWidth: '800px' }}>
-            <button className="nav-menu-close" onClick={() => setShowAddModal(false)}><X /></button>
-            <h2 style={{ marginBottom: '2rem', fontSize: '1.8rem', fontWeight: '900' }}>Add <span className="gradient-text">New Product</span></h2>
+            <button className="nav-menu-close" onClick={() => { setShowAddModal(false); setEditingId(null); setNewProduct({ name: '', description: '', price: '', offer_price: '', category_id: '', image: '', is_bestseller: false }); }}><X /></button>
+            <h2 style={{ marginBottom: '2rem', fontSize: '1.8rem', fontWeight: '900' }}>
+              {editingId ? 'Edit' : 'Add'} <span className="gradient-text">{editingId ? 'Product' : 'New Product'}</span>
+            </h2>
             
             <div className="grid grid-cols-2" style={{ gap: '2rem' }}>
               <div className="admin-form">
@@ -274,12 +311,12 @@ const Products = ({ products, categories, handleFileUpload, uploadingMap, refres
                 </div>
                 <div className="grid grid-cols-2" style={{ gap: '1rem' }}>
                   <div className="form-group">
-                    <label>Price ($)</label>
-                    <input type="number" className="form-input" placeholder="29.99" value={newProduct.price} onChange={(e) => setNewProduct({...newProduct, price: e.target.value})} />
+                    <label>Price (₹)</label>
+                    <input type="number" className="form-input" placeholder="450" value={newProduct.price} onChange={(e) => setNewProduct({...newProduct, price: e.target.value})} />
                   </div>
                   <div className="form-group">
-                    <label>Offer Price ($)</label>
-                    <input type="number" className="form-input" placeholder="19.99" value={newProduct.offer_price} onChange={(e) => setNewProduct({...newProduct, offer_price: e.target.value})} />
+                    <label>Offer Price (₹)</label>
+                    <input type="number" className="form-input" placeholder="320" value={newProduct.offer_price} onChange={(e) => setNewProduct({...newProduct, offer_price: e.target.value})} />
                   </div>
                 </div>
                 <div className="form-group" style={{ flexDirection: 'row', alignItems: 'center', gap: '0.75rem', marginTop: '1rem' }}>
@@ -337,9 +374,9 @@ const Products = ({ products, categories, handleFileUpload, uploadingMap, refres
             </div>
 
             <div style={{ marginTop: '3rem', display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
-              <button className="btn-shop-dark" style={{ background: '#f1f5f9', color: '#1e293b', border: 'none' }} onClick={() => setShowAddModal(false)}>Cancel</button>
+              <button className="btn-shop-dark" style={{ background: '#f1f5f9', color: '#1e293b', border: 'none' }} onClick={() => { setShowAddModal(false); setEditingId(null); setNewProduct({ name: '', description: '', price: '', offer_price: '', category_id: '', image: '', is_bestseller: false }); }}>Cancel</button>
               <button className="btn-shop-dark" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }} onClick={saveProduct} disabled={saving || categories.length === 0}>
-                <Save size={18} /> {saving ? 'Saving...' : 'Save Product'}
+                <Save size={18} /> {saving ? 'Saving...' : editingId ? 'Update Product' : 'Save Product'}
               </button>
             </div>
           </div>

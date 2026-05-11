@@ -19,10 +19,19 @@ const AdminPortal = () => {
   const [uploadingMap, setUploadingMap] = useState({});
   const navigate = useNavigate();
 
+  const showAlert = (message, title = 'Alert') => {
+    setAlertConfig({ visible: true, title, message });
+  };
+
+  const closeAlert = () => {
+    setAlertConfig({ ...alertConfig, visible: false });
+  };
+
   const [currentBusiness, setCurrentBusiness] = useState(null);
   const [homeConfig, setHomeConfig] = useState(null);
   const [user, setUser] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [alertConfig, setAlertConfig] = useState({ visible: false, title: '', message: '' });
 
   useEffect(() => {
     // Initial fetch with full loading state
@@ -199,7 +208,7 @@ const AdminPortal = () => {
       return publicUrl;
     } catch (err) {
       console.error('CRITICAL UPLOAD ERROR:', err);
-      alert('Upload failed: ' + err.message);
+      showAlert(err.message, 'Upload failed');
       return null;
     } finally {
       setUploadingMap(prev => ({ ...prev, [fieldKey]: false }));
@@ -270,11 +279,11 @@ const AdminPortal = () => {
       // Sync local state and re-fetch to be 100% sure
       await refreshAllData();
 
-      if (!silent) alert('Changes published successfully!');
+      if (!silent) showAlert('Changes published successfully!', 'Success');
       return true;
     } catch (err) {
       console.error('Publishing error:', err);
-      if (!silent) alert('Error: ' + err.message);
+      if (!silent) showAlert(err.message, 'Error');
       return false;
     } finally {
       setPublishing(false);
@@ -294,9 +303,9 @@ const AdminPortal = () => {
 
       // 3. Reload everything
       await refreshAllData();
-      alert('Design reset to defaults successfully!');
+      showAlert('Design reset to defaults successfully!', 'Success');
     } catch (err) {
-      alert('Error resetting design: ' + err.message);
+      showAlert(err.message, 'Error resetting design');
     } finally {
       setPublishing(false);
     }
@@ -344,9 +353,9 @@ const AdminPortal = () => {
       if (error) throw error;
 
       await refreshAllData();
-      alert('Default configuration created successfully!');
+      showAlert('Default configuration created successfully!', 'Success');
     } catch (err) {
-      alert('Error creating defaults: ' + err.message);
+      showAlert(err.message, 'Error creating defaults');
     } finally {
       setPublishing(false);
     }
@@ -436,6 +445,7 @@ const AdminPortal = () => {
             uploadingMap={uploadingMap}
             refreshData={refreshAllData}
             businessId={currentBusiness?.id}
+            showAlert={showAlert}
           />
         )}
         {activeTab === 'home_screen' && homeConfig && (
@@ -453,6 +463,19 @@ const AdminPortal = () => {
           />
         )}
       </main>
+
+      {/* Custom Alert Modal */}
+      {alertConfig.visible && (
+        <div className="admin-alert-overlay">
+          <div className="admin-alert-modal">
+            <h3 className="admin-alert-title">{alertConfig.title}</h3>
+            <p className="admin-alert-message">{alertConfig.message}</p>
+            <button className="admin-alert-btn" onClick={closeAlert}>
+              Okay
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
