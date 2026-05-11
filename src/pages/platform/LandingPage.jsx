@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import { ArrowRight, Store, Rocket, Globe, Shield, Lock, X, Loader2, ChevronRight } from 'lucide-react';
+import { ArrowRight, Store, Rocket, Globe, Shield, Lock, X, Loader2, ChevronRight, ShieldCheck } from 'lucide-react';
 
 const LandingPage = () => {
   const navigate = useNavigate();
   const [businesses, setBusinesses] = useState([]);
   const [loading, setLoading] = useState(true);
-  
+
   // Founder Login State
   const [isFounderLoginOpen, setIsFounderLoginOpen] = useState(false);
   const [founderCreds, setFounderCreds] = useState({ username: '', password: '' });
@@ -126,7 +126,7 @@ const LandingPage = () => {
       </section>
 
       <footer style={{ padding: '4rem 5%', textAlign: 'center', background: 'white', borderTop: '1px solid #f1f5f9' }}>
-        <button 
+        <button
           onClick={() => setIsFounderLoginOpen(true)}
           style={{ color: '#94a3b8', fontSize: '0.9rem', textDecoration: 'none', background: 'none', border: 'none', cursor: 'pointer' }}
         >
@@ -138,7 +138,7 @@ const LandingPage = () => {
       {isFounderLoginOpen && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(15, 23, 42, 0.4)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, padding: '1rem' }}>
           <div style={{ background: 'white', borderRadius: '32px', padding: '3rem', maxWidth: '450px', width: '100%', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)', position: 'relative' }}>
-            <button 
+            <button
               onClick={() => setIsFounderLoginOpen(false)}
               style={{ position: 'absolute', right: '1.5rem', top: '1.5rem', border: 'none', background: 'none', color: '#94a3b8', cursor: 'pointer' }}
             >
@@ -157,7 +157,7 @@ const LandingPage = () => {
               e.preventDefault();
               setLoginError('');
               setIsLoggingIn(true);
-              
+
               setTimeout(() => {
                 if (founderCreds.username === 'founder' && founderCreds.password === '111111') {
                   navigate('/founder');
@@ -167,7 +167,7 @@ const LandingPage = () => {
                 }
               }, 800);
             }} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-              
+
               {loginError && (
                 <div style={{ background: '#fef2f2', border: '1px solid #fee2e2', padding: '1rem', borderRadius: '16px', color: '#ef4444', fontSize: '0.9rem', fontWeight: '600' }}>
                   {loginError}
@@ -178,12 +178,12 @@ const LandingPage = () => {
                 <label style={{ fontWeight: '700', color: '#334155', fontSize: '0.9rem' }}>Username</label>
                 <div style={{ position: 'relative' }}>
                   <Shield size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
-                  <input 
+                  <input
                     required
-                    type="text" 
+                    type="text"
                     placeholder="Admin username"
                     value={founderCreds.username}
-                    onChange={(e) => setFounderCreds({...founderCreds, username: e.target.value})}
+                    onChange={(e) => setFounderCreds({ ...founderCreds, username: e.target.value })}
                     style={{ width: '100%', padding: '1rem 1rem 1rem 3rem', borderRadius: '14px', border: '2px solid #e2e8f0', outline: 'none', fontSize: '1rem' }}
                   />
                 </div>
@@ -193,28 +193,28 @@ const LandingPage = () => {
                 <label style={{ fontWeight: '700', color: '#334155', fontSize: '0.9rem' }}>Password</label>
                 <div style={{ position: 'relative' }}>
                   <Lock size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
-                  <input 
+                  <input
                     required
-                    type="password" 
+                    type="password"
                     placeholder="••••••••"
                     value={founderCreds.password}
-                    onChange={(e) => setFounderCreds({...founderCreds, password: e.target.value})}
+                    onChange={(e) => setFounderCreds({ ...founderCreds, password: e.target.value })}
                     style={{ width: '100%', padding: '1rem 1rem 1rem 3rem', borderRadius: '14px', border: '2px solid #e2e8f0', outline: 'none', fontSize: '1rem' }}
                   />
                 </div>
               </div>
 
-              <button 
+              <button
                 type="submit"
                 disabled={isLoggingIn}
-                style={{ 
+                style={{
                   marginTop: '1rem',
-                  padding: '1.2rem', 
-                  borderRadius: '14px', 
-                  border: 'none', 
-                  background: '#0f172a', 
-                  color: 'white', 
-                  fontWeight: '800', 
+                  padding: '1.2rem',
+                  borderRadius: '14px',
+                  border: 'none',
+                  background: '#0f172a',
+                  color: 'white',
+                  fontWeight: '800',
                   fontSize: '1.1rem',
                   cursor: 'pointer',
                   display: 'flex',

@@ -2076,6 +2076,7 @@ body {
   transform: translateY(-60px) !important;
   transition: all 1.8s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
+
 .reveal-drop-in.reveal-active {
   opacity: 1 !important;
   transform: translateY(0) !important;
@@ -2130,4 +2131,543 @@ body {
     transform: translateY(0);
     opacity: 1;
   }
+}
+
+/* ==========================================================================
+   Catalog Page Styles (Boutique Edition)
+   ========================================================================== */
+.all-products-page {
+  padding: 40px 40px 40px 20px;
+  /* Reduced left padding to pull it more to the edge */
+  background-color: #fff;
+  min-height: 100vh;
+}
+
+.all-products-page .container {
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.catalog-header {
+  margin-bottom: 2.5rem;
+}
+
+.catalog-title {
+  font-size: 2rem;
+  /* Compact for boutique look */
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 0.4rem;
+  color: #111;
+  text-transform: lowercase;
+}
+
+.catalog-subtitle {
+  color: #888;
+  font-size: 0.95rem;
+  font-family: var(--font-sans);
+}
+
+.catalog-layout {
+  display: flex;
+  gap: 3.5rem;
+  /* Integrated side space */
+  align-items: flex-start;
+}
+
+.catalog-sidebar {
+  width: 180px;
+  /* Slimmer sidebar */
+  flex-shrink: 0;
+  position: sticky;
+  top: 40px;
+  /* Anchored to top-left area */
+}
+
+.catalog-sidebar h3 {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #999;
+  margin-bottom: 2rem;
+  font-weight: 700;
+}
+
+.category-filter-btn {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 0.6rem 0;
+  font-size: 0.95rem;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-bottom: 1px solid transparent;
+  text-transform: lowercase;
+}
+
+.category-filter-btn:hover {
+  color: #111;
+  padding-left: 5px;
+}
+
+.category-filter-btn.active {
+  color: #111;
+  font-weight: 700;
+  border-bottom: 1px solid #111;
+}
+
+.catalog-main {
+  flex: 1;
+}
+
+/* Boutique Product Grid */
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 3rem 2rem;
+}
+
+.product-card-boutique {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.product-card-boutique:hover {
+  transform: translateY(-10px);
+}
+
+.pc-image-wrapper {
+  aspect-ratio: 4/5;
+  border-radius: 24px;
+  overflow: hidden;
+  background: #f7f7f7;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.pc-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.product-card-boutique:hover .pc-image-wrapper img {
+  transform: scale(1.08);
+}
+
+.pc-info {
+  padding: 0 0.5rem;
+}
+
+.pc-category {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #999;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.pc-title {
+  font-size: 1.1rem;
+  /* Reduced as requested */
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+  color: #111;
+  line-height: 1.3;
+}
+
+.pc-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.pc-price {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111;
+}
+
+.pc-old-price {
+  font-size: 0.9rem;
+  color: #999;
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+.pc-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: white;
+  color: black;
+  padding: 6px 12px;
+  border-radius: 30px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+@media (max-width: 992px) {
+  .catalog-layout {
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .catalog-sidebar {
+    width: 100%;
+    position: relative;
+    top: 0;
+    display: flex;
+    overflow-x: auto;
+    gap: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .catalog-sidebar h3 {
+    display: none;
+  }
+
+  .category-filter-btn {
+    white-space: nowrap;
+    width: auto;
+    padding: 0.5rem 1rem;
+    background: #f7f7f7;
+    border-radius: 20px;
+  }
+
+  .category-filter-btn.active {
+    background: #111;
+    color: white;
+  }
+}
+
+/* ==========================================================================
+   Catalog Page (Onsko Inspo - Restored)
+   ========================================================================== */
+.all-products-page {
+  padding: 140px 40px 60px 40px;
+  background-color: #f1f0ea;
+  /* Onsko beige */
+  min-height: 100vh;
+}
+
+.catalog-layout {
+  display: flex;
+  gap: 60px;
+  align-items: flex-start;
+}
+
+/* Sidebar */
+.catalog-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 140px;
+}
+
+.sidebar-section {
+  margin-bottom: 3rem;
+}
+
+.sidebar-section h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #1a1a1a;
+  text-transform: lowercase;
+}
+
+.sidebar-divider {
+  height: 1px;
+  background: #dcdbd5;
+  margin-bottom: 1.5rem;
+}
+
+.sidebar-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.sidebar-link {
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 0;
+  font-size: 0.95rem;
+  color: #1a1a1a;
+  cursor: pointer;
+  text-decoration: none;
+  text-transform: lowercase;
+  transition: all 0.2s ease;
+}
+
+.sidebar-link:hover {
+  opacity: 0.7;
+}
+
+.sidebar-link.active {
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+/* Product Grid */
+.catalog-main {
+  flex: 1;
+}
+
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px 20px;
+}
+
+.onsko-card {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.onsko-image-box {
+  aspect-ratio: 0.85;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #a5b4cc;
+  /* Onsko blue-gray */
+  margin-bottom: 1.2rem;
+  position: relative;
+}
+
+.onsko-image-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  mix-blend-mode: multiply;
+}
+
+.onsko-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(4px);
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  text-transform: lowercase;
+}
+
+.onsko-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.onsko-title {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #1a1a1a;
+  text-transform: lowercase;
+}
+
+.onsko-price {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #1a1a1a;
+  opacity: 0.8;
+}
+
+/* Search Sidebar Component */
+.onsko-search-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: transparent;
+  border-bottom: 1px solid #dcdbd5;
+  padding: 0 0 12px 0;
+  color: #1a1a1a;
+  transition: border-color 0.3s ease;
+}
+
+.onsko-search-wrapper:focus-within {
+  border-color: #111;
+}
+
+.onsko-search-input {
+  background: none;
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 0.95rem;
+  color: #1a1a1a;
+  text-transform: lowercase;
+  font-family: var(--font-main);
+}
+
+.onsko-search-input::placeholder {
+  color: #aaa;
+}
+
+/* ==========================================================================
+   Platform Landing Page - Premium Aesthetics
+   ========================================================================== */
+
+.platform-landing {
+  background-color: #ffffff;
+  overflow-x: hidden;
+}
+
+/* Moving Grains & Blobs */
+.hero-bg-blobs {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+  filter: blur(100px);
+  opacity: 0.6;
+}
+
+.blob {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
+  animation: blobMove 20s infinite alternate;
+}
+
+.blob-1 {
+  top: -100px;
+  left: -100px;
+  background: rgba(59, 130, 246, 0.2);
+}
+
+.blob-2 {
+  bottom: -100px;
+  right: -100px;
+  background: rgba(236, 72, 153, 0.15);
+  animation-delay: -5s;
+}
+
+.blob-3 {
+  top: 20%;
+  right: 20%;
+  background: rgba(168, 85, 247, 0.1);
+  animation-delay: -10s;
+}
+
+@keyframes blobMove {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  33% {
+    transform: translate(100px, 50px) scale(1.2);
+  }
+
+  66% {
+    transform: translate(-50px, 150px) scale(0.8);
+  }
+
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+/* Grain Texture Overlay */
+.grain-overlay {
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  z-index: 100;
+  pointer-events: none;
+  background-image: url('https://grainy-gradients.vercel.app/noise.svg');
+  opacity: 0.05;
+  animation: grainShift 8s steps(10) infinite;
+}
+
+@keyframes grainShift {
+
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  10% {
+    transform: translate(-5%, -10%);
+  }
+
+  30% {
+    transform: translate(-15%, -20%);
+  }
+
+  50% {
+    transform: translate(-5%, -10%);
+  }
+
+  70% {
+    transform: translate(-15%, -20%);
+  }
+
+  90% {
+    transform: translate(-5%, -10%);
+  }
+}
+
+.hero-platform {
+  position: relative;
+  padding: 12rem 5% 10rem;
+  text-align: center;
+  background: transparent;
+}
+
+.hero-h1-platform {
+  font-size: clamp(3.5rem, 8vw, 6rem);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+  margin-bottom: 2rem;
+  color: #0f172a;
+}
+
+.hero-p-platform {
+  font-size: 1.25rem;
+  color: #475569;
+  max-width: 650px;
+  margin: 0 auto 4rem;
+  line-height: 1.6;
+}
+
+/* Premium Card Refinements */
+.store-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  padding: 3rem 2.5rem;
+  border-radius: 40px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02);
+}
+
+.store-card:hover {
+  background: #fff;
+  border-color: #3b82f6;
+  box-shadow: 0 40px 100px rgba(59, 130, 246, 0.08);
 }

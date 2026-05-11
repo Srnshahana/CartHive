@@ -94,14 +94,6 @@ const Navbar = () => {
         <span style={{ fontWeight: '900', fontSize: '1.2rem', letterSpacing: '-1px' }}>{business?.name || 'carthive'}</span>
       </Link>
 
-      {/* Mobile Menu Toggle */}
-      <button 
-        className="mobile-menu-toggle" 
-        onClick={() => setMenuOpen(!menuOpen)}
-        style={{ background: 'none', border: 'none', color: '#0f172a', cursor: 'pointer', zIndex: 10001 }}
-      >
-        {menuOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
 
       {/* Right: Actions */}
       <div className="nav-icons">
@@ -117,10 +109,6 @@ const Navbar = () => {
           </Link>
         )}
 
-        <div className="nav-icon-link search-trigger-pill">
-          <span className="search-label-mobile">Search</span>
-          <Search size={18} />
-        </div>
 
         <Link to={`/${slug}/cart`} className="nav-icon-link cart-icon">
           <ShoppingBag size={20} />
