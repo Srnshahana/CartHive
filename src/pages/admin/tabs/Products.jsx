@@ -59,6 +59,18 @@ const Products = ({ products, categories, handleFileUpload, uploadingMap, refres
         offer_price: newProduct.offer_price ? parseFloat(newProduct.offer_price) : null
       });
       if (error) throw error;
+      
+      // Reset form state after successful save
+      setNewProduct({
+        name: '',
+        description: '',
+        price: '',
+        offer_price: '',
+        category_id: '',
+        image: '',
+        is_bestseller: false
+      });
+      
       setShowAddModal(false);
       refreshData();
     } catch (err) {

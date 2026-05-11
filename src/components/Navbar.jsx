@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { ShoppingCart, User, LogOut, LayoutDashboard, LogIn, Search, Menu, Heart, ShoppingBag } from 'lucide-react';
+import { ShoppingCart, User, LogOut, LayoutDashboard, LogIn, Search, Menu, Heart, ShoppingBag, Flower } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 
 const Navbar = () => {
@@ -73,56 +73,53 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="nav-main">
-      <div className="nav-container">
-        
-        {/* Left Side: Logo */}
-        <Link to={slug ? `/${slug}` : "/"} className="nav-logo">
-          <div className="nav-logo-icon">
-            {(branding?.logo_url || business?.logo_url || business?.logo || business?.store_logo || business?.avatar_url) ? (
-              <img 
-                src={branding?.logo_url || business?.logo_url || business?.logo || business?.store_logo || business?.avatar_url} 
-                alt={business?.name} 
-                style={{ height: '32px', width: '32px', borderRadius: '4px', objectFit: 'contain' }} 
-              />
-            ) : (
-              <StoreIcon />
-            )}
-          </div>
-          <span className="nav-logo-text">
-            {business?.name || 'carthive'}
-            {/* DEBUG: {!branding && !business?.logo_url && '(no db logo)'} */}
-          </span>
-        </Link>
-
-        {/* Right Side: Actions */}
-        <div className="nav-actions-group">
-          {user ? (
-            <Link to="/admin" className="admin-pill-link">
-              dashboard
-            </Link>
+    <nav className="nav-pill">
+      {/* Left: Logo & Branding */}
+      <Link to={slug ? `/${slug}` : "/"} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none', color: '#0f172a' }}>
+        <div style={{ background: '#0f172a', width: '32px', height: '32px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {(branding?.logo_url || business?.logo_url) ? (
+            <img src={branding?.logo_url || business?.logo_url} style={{ width: '20px', height: '20px', objectFit: 'contain' }} alt="" />
           ) : (
-            <Link to="/login" className="nav-link-item" style={{ fontSize: '0.95rem' }}>log in</Link>
+            <Flower size={18} color="white" />
           )}
+        </div>
+        <span style={{ fontWeight: '900', fontSize: '1.2rem', letterSpacing: '-1px' }}>{business?.name || 'carthive'}</span>
+      </Link>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: '#1e293b' }}>
-            {slug && (
-              <Link to={`/${slug}/cart`} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}>
-                <ShoppingBag size={20} />
-                <span style={{ background: '#1e293b', color: 'white', fontSize: '0.7rem', width: '18px', height: '18px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800' }}>
-                  {cartCount}
-                </span>
-              </Link>
-            )}
-            
-            <div className="nav-search-btn">
-              <span>Search</span>
-              <Search size={18} />
-            </div>
+      {/* Center: Nav Links */}
+      <div style={{ display: 'flex', gap: '2rem' }}>
+        {['home', 'shop', 'about', 'blog'].map(item => (
+          <Link 
+            key={item} 
+            to={item === 'home' ? `/${slug}` : `/${slug}/${item}`} 
+            style={{ textDecoration: 'none', color: '#64748b', fontWeight: '700', fontSize: '0.9rem', transition: 'color 0.2s' }}
+            onMouseOver={(e) => e.target.style.color = '#0f172a'}
+            onMouseOut={(e) => e.target.style.color = '#64748b'}
+          >
+            {item}
+          </Link>
+        ))}
+      </div>
 
-            <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#1e293b', display: 'flex' }}>
-              <Menu size={24} />
-            </button>
+      {/* Right: Actions */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+        {user ? (
+          <Link to="/admin" style={{ fontSize: '0.85rem', color: '#0f172a', fontWeight: '800', textDecoration: 'none' }}>dashboard</Link>
+        ) : (
+          <Link to="/login" style={{ fontSize: '0.85rem', color: '#0f172a', fontWeight: '800', textDecoration: 'none' }}>log in</Link>
+        )}
+        
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', color: '#0f172a' }}>
+          <Heart size={20} style={{ cursor: 'pointer' }} />
+          <Link to={`/${slug}/cart`} style={{ position: 'relative', color: 'inherit', display: 'flex' }}>
+            <ShoppingBag size={20} />
+            <span style={{ position: 'absolute', top: '-5px', right: '-8px', background: '#0f172a', color: 'white', fontSize: '0.65rem', width: '16px', height: '16px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '900' }}>
+              {cartCount}
+            </span>
+          </Link>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', background: '#f1f5f9', padding: '0.4rem 1rem', borderRadius: '50px' }}>
+            <span style={{ fontSize: '0.85rem', fontWeight: '700', color: '#64748b' }}>Search</span>
+            <Search size={16} color="#64748b" />
           </div>
         </div>
       </div>

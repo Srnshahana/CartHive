@@ -15,7 +15,7 @@ const BusinessHome = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        
+
         // 1. Fetch Business
         const { data: biz, error: bizErr } = await supabase
           .from('businesses')
@@ -34,7 +34,7 @@ const BusinessHome = () => {
           if (previewData) {
             try {
               homeContent = JSON.parse(previewData);
-            } catch(e) {}
+            } catch (e) { }
           }
         }
 
@@ -61,34 +61,49 @@ const BusinessHome = () => {
           .select('*')
           .eq('business_id', biz.id);
         setCategories(cats || []);
-        
-        // Use database content if available, otherwise fall back to demo reference
+
+        // Define the beautiful default/fallback content
+        const defaults = {
+          hero_image: 'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=1200&h=600&fit=crop',
+          hero_heading: 'shine on the',
+          hero_subtext: 'beauty that reflects your spirits',
+          banner_image: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=1200&h=600&fit=crop',
+          banner_title: 'effortless beauty, timeless charm.',
+          banner_subtitle: 'new arrivals now in stock',
+          ticker_text: 'orders over $50 ✿ free shipping on orders over $50 ✿',
+          footer_about: 'born from a passion for beauty rituals, we celebrate individuality and bring radiant confidence to everyone',
+          support_email: `support@${slug}.com`,
+          support_phone: '+1 123 456 7890',
+          physical_address: '123 Creative Lane, Art City',
+          instagram_images: [
+            'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600&h=600&fit=crop',
+            'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=600&h=600&fit=crop',
+            'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=1200&h=600&fit=crop',
+            'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=400&h=400&fit=crop',
+            'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600&h=600&fit=crop',
+            'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=600&h=600&fit=crop'
+          ]
+        };
+
+        // Combine defaults with real data
+        const finalConfig = { ...defaults };
         if (homeContent) {
-          setConfig(homeContent);
-        } else {
-          // Fallback to reference Art Store values as requested
-          setConfig({
-            hero_image: 'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=1200&h=600&fit=crop',
-            hero_heading: 'shine on the',
-            hero_subtext: 'beauty that reflects your spirits',
-            banner_image: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=1200&h=600&fit=crop',
-            banner_title: 'effortless beauty, timeless charm.',
-            banner_subtitle: 'new arrivals now in stock',
-            ticker_text: 'orders over $50 ✿ free shipping on orders over $50 ✿',
-            footer_about: 'born from a passion for beauty rituals, we celebrate individuality and bring radiant confidence to everyone',
-            support_email: `support@${slug}.com`,
-            support_phone: '+1 123 456 7890',
-            physical_address: '123 Creative Lane, Art City',
-            instagram_images: [
-              'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600&h=600&fit=crop',
-              'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=600&h=600&fit=crop',
-              'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=1200&h=600&fit=crop',
-              'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=400&h=400&fit=crop',
-              'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600&h=600&fit=crop',
-              'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=600&h=600&fit=crop'
-            ]
+          // Priority: homeContent values, then defaults
+          Object.keys(defaults).forEach(key => {
+            if (homeContent[key] && homeContent[key] !== '') {
+              finalConfig[key] = homeContent[key];
+            }
+          });
+
+          // Also include any extra fields from homeContent (like logos or custom links)
+          Object.keys(homeContent).forEach(key => {
+            if (!defaults[key] && homeContent[key]) {
+              finalConfig[key] = homeContent[key];
+            }
           });
         }
+
+        setConfig(finalConfig);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -101,8 +116,8 @@ const BusinessHome = () => {
 
   useEffect(() => {
     if (config?.logo_url || config?.logo) {
-      window.dispatchEvent(new CustomEvent('carthive-logo-update', { 
-        detail: config.logo_url || config.logo 
+      window.dispatchEvent(new CustomEvent('carthive-logo-update', {
+        detail: config.logo_url || config.logo
       }));
     }
   }, [config]);
@@ -134,9 +149,9 @@ const BusinessHome = () => {
     <div className={`wix-layout ${isPreview ? 'preview-mode' : ''}`}>
       {/* 1. Hero Section */}
       <section className="hero-container">
-        <img 
-          src={config.hero_image} 
-          alt={business.name} 
+        <img
+          src={config.hero_image}
+          alt={business.name}
           className="hero-image"
         />
         <div className="hero-content">
@@ -151,37 +166,39 @@ const BusinessHome = () => {
       {/* 2. Best Sellers Section - Strictly based on is_bestseller */}
       {bestSellers.length > 0 && (
         <section className="section-best-sellers">
-          <div className="section-header">
-            <h2 className="section-title">best sellers</h2>
-            <Link to={`/${slug}/products`} className="btn-view-more">view more</Link>
-          </div>
+          <div className="section-best-sellers-content">
+            <div className="section-header">
+              <h2 className="section-title">best sellers</h2>
+              <Link to={`/${slug}/products`} className="btn-view-more">view more</Link>
+            </div>
 
-          <div className="best-sellers-grid">
-            {bestSellers.map(product => (
-              <Link 
-                key={product.id} 
-                to={`/${slug}/product/${product.id}`} 
-                className="product-item"
-              >
-                <div className="product-item-image">
-                  <span className="badge-best-seller">best seller</span>
-                  {product.offer_price && <span className="offer-badge">SALE</span>}
-                  <img src={product.image} alt={product.name} />
-                </div>
-                <div className="product-item-info">
-                  <h3>{product.name}</h3>
-                  <p className="product-item-description">{product.description}</p>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <p className="product-item-price">${Number(product.price).toFixed(2)}</p>
-                    {product.offer_price && (
-                      <p style={{ color: '#ef4444', textDecoration: 'line-through', fontSize: '0.9rem', opacity: 0.6 }}>
-                        ${Number(product.offer_price).toFixed(2)}
-                      </p>
-                    )}
+            <div className="best-sellers-grid">
+              {bestSellers.map(product => (
+                <Link
+                  key={product.id}
+                  to={`/${slug}/product/${product.id}`}
+                  className="product-item"
+                >
+                  <div className="product-item-image">
+                    <span className="badge-best-seller">best seller</span>
+                    {product.offer_price && <span className="offer-badge">SALE</span>}
+                    <img src={product.image} alt={product.name} />
                   </div>
-                </div>
-              </Link>
-            ))}
+                  <div className="product-item-info">
+                    <h3>{product.name}</h3>
+                    <p className="product-item-description">{product.description}</p>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                      <p className="product-item-price">${Number(product.price).toFixed(2)}</p>
+                      {product.offer_price && (
+                        <p style={{ color: '#ef4444', textDecoration: 'line-through', fontSize: '0.9rem', opacity: 0.6 }}>
+                          ${Number(product.offer_price).toFixed(2)}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
         </section>
       )}
@@ -220,7 +237,7 @@ const BusinessHome = () => {
               // Find the first product in this category to use its image as a thumbnail fallback
               const sampleProduct = products.find(p => p.category_id === cat.id);
               const displayImage = cat.cover_img || (sampleProduct ? sampleProduct.image : null);
-              
+
               return (
                 <Link key={cat.id} to={`/${slug}/products?category=${cat.id}`} className="category-card-screenshot">
                   <div className="category-image-container">
@@ -244,18 +261,20 @@ const BusinessHome = () => {
 
       {/* 5. Our Story Section */}
       <section className="section-our-story">
-        <div className="story-container">
-          <h2 className="story-title">our story</h2>
-          <p className="story-main-text">{config.our_story || config.footer_about}</p>
+        <div className="section-our-story-content">
+          <div className="story-container">
+            <h2 className="story-title">our story</h2>
+            <p className="story-main-text">{config.our_story || config.footer_about}</p>
+          </div>
         </div>
       </section>
 
       {/* 6. Instagram Section */}
       <section className="section-instagram">
         <div className="instagram-content">
-          <a 
-            href={config.instagram_link || '#'} 
-            target="_blank" 
+          <a
+            href={config.instagram_link || '#'}
+            target="_blank"
             rel="noopener noreferrer"
             style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
           >
@@ -293,10 +312,10 @@ const BusinessHome = () => {
           <div className="footer-col">
             <Link to={`/${slug}`} className="footer-simple-logo" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               {(config.logo_url || business.logo_url || business.logo || business.avatar_url) && (
-                <img 
-                  src={config.logo_url || business.logo_url || business.logo || business.avatar_url} 
-                  alt={business.name} 
-                  style={{ height: '40px', width: '40px', borderRadius: '4px', objectFit: 'contain' }} 
+                <img
+                  src={config.logo_url || business.logo_url || business.logo || business.avatar_url}
+                  alt={business.name}
+                  style={{ height: '40px', width: '40px', borderRadius: '4px', objectFit: 'contain' }}
                 />
               )}
               {business.name}
@@ -368,30 +387,30 @@ const BusinessHome = () => {
 
       {/* Policy Modal */}
       {activePolicy && (
-        <div 
-          style={{ 
-            position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', 
+        <div
+          style={{
+            position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
             background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)',
             display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000,
             padding: '2rem'
           }}
           onClick={() => setActivePolicy(null)}
         >
-          <div 
-            style={{ 
-              background: '#fff', width: '100%', maxWidth: '800px', maxHeight: '80vh', 
+          <div
+            style={{
+              background: '#fff', width: '100%', maxWidth: '800px', maxHeight: '80vh',
               borderRadius: '24px', padding: '3rem', position: 'relative', overflowY: 'auto',
               boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <button 
+            <button
               onClick={() => setActivePolicy(null)}
-              style={{ 
-                position: 'absolute', top: '1.5rem', right: '1.5rem', 
-                background: '#f1f5f9', border: 'none', width: '40px', height: '40px', 
-                borderRadius: '50%', cursor: 'pointer', display: 'flex', 
-                alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' 
+              style={{
+                position: 'absolute', top: '1.5rem', right: '1.5rem',
+                background: '#f1f5f9', border: 'none', width: '40px', height: '40px',
+                borderRadius: '50%', cursor: 'pointer', display: 'flex',
+                alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem'
               }}
             >
               ×
@@ -404,26 +423,7 @@ const BusinessHome = () => {
         </div>
       )}
 
-      <style>{`
-        .footer-link-btn {
-          background: none;
-          border: none;
-          padding: 0;
-          color: inherit;
-          font: inherit;
-          cursor: pointer;
-          text-align: left;
-          transition: all 0.2s;
-        }
-        .footer-link-btn:hover {
-          text-decoration: underline;
-          opacity: 0.8;
-        }
-        .preview-mode a, .preview-mode button {
-          pointer-events: none !important;
-          cursor: default !important;
-        }
-      `}</style>
+
     </div>
   );
 };
