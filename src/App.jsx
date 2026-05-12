@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import { StoreProvider } from './context/StoreContext';
 
 // Platform Pages
 import LandingPage from './pages/platform/LandingPage';
@@ -14,7 +15,6 @@ import ProductDetails from './pages/storefront/ProductDetails';
 import Cart from './pages/storefront/Cart';
 import Checkout from './pages/storefront/Checkout';
 import OrderTracking from './pages/storefront/OrderTracking';
-import StorefrontLayout from './components/StorefrontLayout';
 
 // Admin Pages
 import Login from './pages/admin/Login';
@@ -40,14 +40,12 @@ function App() {
         <Route path="/admin" element={<AdminPortal />} />
         
         {/* Customer Storefront Flow */}
-        <Route element={<StorefrontLayout />}>
-          <Route path="/:slug" element={<StoreHome />} />
-          <Route path="/:slug/products" element={<ProductList />} />
-          <Route path="/:slug/product/:id" element={<ProductDetails />} />
-          <Route path="/:slug/cart" element={<Cart />} />
-          <Route path="/:slug/checkout" element={<Checkout />} />
-          <Route path="/:slug/track" element={<OrderTracking />} />
-        </Route>
+        <Route path="/:slug" element={<StoreProvider><StoreHome /></StoreProvider>} />
+        <Route path="/:slug/products" element={<StoreProvider><ProductList /></StoreProvider>} />
+        <Route path="/:slug/product/:id" element={<StoreProvider><ProductDetails /></StoreProvider>} />
+        <Route path="/:slug/cart" element={<StoreProvider><Cart /></StoreProvider>} />
+        <Route path="/:slug/checkout" element={<StoreProvider><Checkout /></StoreProvider>} />
+        <Route path="/:slug/track" element={<StoreProvider><OrderTracking /></StoreProvider>} />
         
         {/* Fallback */}
         <Route path="*" element={

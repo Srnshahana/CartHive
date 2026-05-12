@@ -6,63 +6,77 @@ const StoreContext = createContext();
 
 export const StoreProvider = ({ children }) => {
   const { slug } = useParams();
-  const [business, setBusiness] = useState(null);
+  const navigate = useNavigate();
+  const [storeData, setStoreData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchBusiness = async () => {
+    const fetchStoreBySlug = async () => {
       if (!slug) return;
       
       try {
         setLoading(true);
-        const { data, error: bizErr } = await supabase
+        // 1. Fetch business details by slug
+        const { data: business, error: bizError } = await supabase
           .from('businesses')
           .select('*')
           .eq('slug', slug)
           .single();
 
-        if (bizErr || !data) {
-          throw new Error('Store not found');
+        if (bizError || !business) {
+          console.error('Store not found:', bizError);
+          setError('Store not found');
+          // If it's a platform route that accidentally matched, we might not want to redirect here
+          // but for storefront sub-routes, we should.
+          return;
         }
 
-        setBusiness(data);
-        setError(null);
+        // 2. Fetch homepage content/config for this business
+        const { data: config } = await supabase
+          .from('homepage_content')
+          .select('*')
+          .eq('business_id', business.id)
+          .single();
+
+        setStoreData({
+          ...business,
+          config: config || {}
+        });
       } catch (err) {
-        console.error('Store resolution error:', err);
+        console.error('Error resolving store slug:', err);
         setError(err.message);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchBusiness();
+    fetchStoreBySlug();
   }, [slug]);
 
   const value = {
-    business,
+    storeData,
     loading,
     error,
-    slug
+    businessId: storeData?.id,
+    businessName: storeData?.name,
+    config: storeData?.config
   };
 
   if (loading) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fdfdfd' }}>
-        <div className="shimmer-effect" style={{ width: '200px', height: '40px', borderRadius: '12px' }}></div>
+      <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fcfcfc' }}>
+        <div className="shimmer-effect" style={{ width: '200px', height: '40px', borderRadius: '8px' }}></div>
       </div>
     );
   }
 
-  if (error) {
+  if (error && !loading) {
+    // Optionally redirect to platform landing if store not found
     return (
-      <div className="container section-padding" style={{ textAlign: 'center', minHeight: '80vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-        <h1 style={{ fontSize: '3rem', fontWeight: '900', color: '#102a82', marginBottom: '1rem' }}>Store Not Found</h1>
-        <p style={{ color: '#64748b', fontSize: '1.2rem', marginBottom: '2rem' }}>We couldn't find a store at the address <strong>/{slug}</strong></p>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <button onClick={() => navigate('/')} className="btn-shop-dark">Back to platform</button>
-        </div>
+      <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+        <h2>Store not found</h2>
+        <button onClick={() => navigate('/')} style={{ marginTop: '1rem', padding: '0.5rem 1rem' }}>Back to CartHive</button>
       </div>
     );
   }

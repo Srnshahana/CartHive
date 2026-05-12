@@ -3,12 +3,11 @@ import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { ArrowLeft, ShoppingBag, Minus, Plus, ChevronDown, ChevronUp } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
-import { useStore } from '../../context/StoreContext';
 
 const ProductDetails = () => {
   const { slug, id } = useParams();
-  const { business } = useStore();
   const [product, setProduct] = useState(null);
+  const [business, setBusiness] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [activeAccordion, setActiveAccordion] = useState(null);
@@ -18,7 +17,9 @@ const ProductDetails = () => {
     const fetchProductData = async () => {
       try {
         setLoading(true);
-        if (business) {
+        const { data: biz } = await supabase.from('businesses').select('*').eq('slug', slug).single();
+        setBusiness(biz);
+        if (biz) {
           const { data: prod } = await supabase.from('products').select('*, categories(*)').eq('id', id).single();
           setProduct(prod);
         }

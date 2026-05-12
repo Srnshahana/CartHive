@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import { ShoppingCart, User, Menu, X, Search } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
+import { ShoppingCart, User, Menu, X, Search } from 'lucide-react';
 
 const BusinessHome = () => {
-  const { business, slug } = useStore();
+  const { slug } = useParams();
+  const { businessId, storeData, config: contextConfig, loading: storeLoading } = useStore();
   const [config, setConfig] = useState(null);
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -36,14 +37,13 @@ const BusinessHome = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!businessId) return;
       try {
         setLoading(true);
 
-        if (!business) return;
-        const biz = business;
-
-        // 2. Fetch Homepage Content
-        let homeContent = null;
+        // 2. Resolve Homepage Content
+        let homeContent = contextConfig || null;
+        
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('preview') === 'true') {
           const previewData = localStorage.getItem(`carthive_preview_${slug}`);
@@ -54,28 +54,18 @@ const BusinessHome = () => {
           }
         }
 
-        if (!homeContent) {
-          const { data: dbContentList } = await supabase
-            .from('homepage_content')
-            .select('*')
-            .eq('business_id', biz.id)
-            .order('created_at', { ascending: false })
-            .limit(1);
-          homeContent = dbContentList?.[0] || null;
-        }
-
         // 3. Fetch Products
         const { data: prods } = await supabase
           .from('products')
           .select('*')
-          .eq('business_id', biz.id);
+          .eq('business_id', businessId);
         setProducts(prods || []);
 
         // 4. Fetch Categories
         const { data: cats } = await supabase
           .from('categories')
           .select('*')
-          .eq('business_id', biz.id);
+          .eq('business_id', businessId);
         setCategories(cats || []);
 
         // Define the beautiful default/fallback content
