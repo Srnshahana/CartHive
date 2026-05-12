@@ -372,7 +372,7 @@ const AdminPortal = () => {
 
       <aside className="admin-sidebar">
         <div className="admin-sidebar-header">
-          <div className="admin-logo" style={{ textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.9rem', color: '#3b82f6' }}>Admin Dashboard</div>
+          <div className="admin-logo" style={{ textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.9rem', color: '#102a82' }}>Admin Dashboard</div>
           <button className="admin-mobile-close" onClick={() => setMobileMenuOpen(false)}>
             <X size={24} />
           </button>
@@ -418,7 +418,7 @@ const AdminPortal = () => {
                 </button>
                 <button
                   className="btn-shop-dark"
-                  style={{ padding: '0.6rem 1.2rem', borderRadius: '10px', background: '#3b82f6', color: 'white', borderColor: '#3b82f6' }}
+                  style={{ padding: '0.6rem 1.2rem', borderRadius: '10px', background: '#102a82', color: 'white', borderColor: '#102a82' }}
                   onClick={createDefaultConfig}
                   disabled={publishing}
                   title="Create default configuration row"

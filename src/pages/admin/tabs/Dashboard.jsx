@@ -48,10 +48,12 @@ const Dashboard = ({ products }) => {
         const d = new Date();
         d.setMonth(d.getMonth() - i);
         const monthName = d.toLocaleString('default', { month: 'short' });
-        months.push({ name: monthName, count: orders.filter(o => {
-          const od = new Date(o.created_at);
-          return od.getMonth() === d.getMonth() && od.getFullYear() === d.getFullYear();
-        }).length });
+        months.push({
+          name: monthName, count: orders.filter(o => {
+            const od = new Date(o.created_at);
+            return od.getMonth() === d.getMonth() && od.getFullYear() === d.getFullYear();
+          }).length
+        });
       }
       setMonthlyData(months);
       setRecentOrders(orders.slice(0, 5));
@@ -84,16 +86,16 @@ const Dashboard = ({ products }) => {
   const maxOrders = Math.max(...monthlyData.map(m => m.count), 5);
 
   return (
-    <div className="dashboard-content" style={{ padding: '2.5rem', minHeight: '100%' }}>
-      
+    <div className="dashboard-content" style={{ padding: '1.5rem 2.5rem 4rem 2.5rem' }}>
+
       {/* Premium Welcome Header */}
       <div style={{ marginBottom: '3.5rem', position: 'relative' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#3b82f6', marginBottom: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#102a82', marginBottom: '8px' }}>
           <Store size={16} />
-          <span style={{ fontSize: '0.75rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.15em' }}>Dashboard Overview</span>
+          <div className="admin-logo" style={{ textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.9rem', color: '#102a82' }}>Admin Dashboard</div>
         </div>
         <h1 style={{ fontSize: '2.5rem', fontWeight: '900', color: '#111', letterSpacing: '-0.03em', margin: 0 }}>
-          Welcome back, <span style={{ color: '#3b82f6' }}>{businessName}</span>
+          Welcome back, <span style={{ color: '#102a82' }}>{businessName}</span>
         </h1>
         <p style={{ fontSize: '1rem', color: '#666', marginTop: '10px', maxWidth: '600px', lineHeight: 1.6 }}>
           Here's a breakdown of your boutique's performance and recent activity.
@@ -102,17 +104,17 @@ const Dashboard = ({ products }) => {
 
       {/* Modern Stats Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem', marginBottom: '3.5rem' }}>
-        <StatCard title="Total Revenue" value={`$${stats.totalRevenue.toLocaleString()}`} icon={<DollarSign size={24} />} color="#3b82f6" />
+        <StatCard title="Total Revenue" value={`$${stats.totalRevenue.toLocaleString()}`} icon={<DollarSign size={24} />} color="#102a82" />
         <StatCard title="Total Orders" value={stats.totalOrders} icon={<ShoppingBag size={24} />} color="#10b981" />
         <StatCard title="Active Items" value={products.length} icon={<Package size={24} />} color="#8b5cf6" />
         <StatCard title="Pending" value={stats.pendingOrders} icon={<Clock size={24} />} color="#f59e0b" />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr', gap: '3rem' }}>
-        
+
         {/* Left: Performance Visuals */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
-          
+
           {/* Sales Analytics Card */}
           <div style={{ background: '#fff', borderRadius: '32px', padding: '2.5rem', border: '1px solid #f1f5f9', boxShadow: '0 10px 30px -10px rgba(0,0,0,0.03)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
@@ -121,7 +123,7 @@ const Dashboard = ({ products }) => {
                 <p style={{ fontSize: '0.85rem', color: '#999', marginTop: '4px' }}>Monthly order volume over the last 6 months</p>
               </div>
               <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <BarChart3 size={20} color="#3b82f6" />
+                <BarChart3 size={20} color="#102a82" />
               </div>
             </div>
 
@@ -130,8 +132,8 @@ const Dashboard = ({ products }) => {
                 <svg width="100%" height="100%" viewBox="0 0 500 100" preserveAspectRatio="none" style={{ overflow: 'visible' }}>
                   <defs>
                     <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.2" />
-                      <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
+                      <stop offset="0%" stopColor="#102a82" stopOpacity="0.2" />
+                      <stop offset="100%" stopColor="#102a82" stopOpacity="0" />
                     </linearGradient>
                   </defs>
                   {(() => {
@@ -145,11 +147,11 @@ const Dashboard = ({ products }) => {
                     return (
                       <>
                         <path d={areaD} fill="url(#chartGradient)" />
-                        <path d={d} fill="none" stroke="#3b82f6" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d={d} fill="none" stroke="#102a82" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
                         {pts.map((p, i) => (
                           <g key={i}>
-                            <circle cx={p.x} cy={p.y} r="6" fill="#fff" stroke="#3b82f6" strokeWidth="3" />
-                            <text x={p.x} y={p.y - 15} textAnchor="middle" fill="#3b82f6" fontSize="11" fontWeight="900">{monthlyData[i].count}</text>
+                            <circle cx={p.x} cy={p.y} r="6" fill="#fff" stroke="#102a82" strokeWidth="3" />
+                            <text x={p.x} y={p.y - 15} textAnchor="middle" fill="#102a82" fontSize="11" fontWeight="900">{monthlyData[i].count}</text>
                           </g>
                         ))}
                       </>
@@ -167,13 +169,13 @@ const Dashboard = ({ products }) => {
 
           {/* Recent Orders List */}
           <div style={{ background: '#fff', borderRadius: '32px', padding: '2.5rem', border: '1px solid #f1f5f9' }}>
-             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
               <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: '#111', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Latest Transactions</h3>
-              <button style={{ color: '#3b82f6', fontSize: '0.85rem', fontWeight: '800', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <button style={{ color: '#102a82', fontSize: '0.85rem', fontWeight: '800', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
                 All Orders <ChevronRight size={16} />
               </button>
             </div>
-            
+
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {recentOrders.map(order => (
                 <div key={order.id} style={{ display: 'flex', alignItems: 'center', padding: '1.25rem', borderRadius: '20px', background: '#fcfcfc', border: '1px solid #f5f5f5', transition: 'all 0.3s ease' }}>
@@ -194,14 +196,14 @@ const Dashboard = ({ products }) => {
 
         {/* Right: Quick Insights */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-          
-          <div style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)', borderRadius: '32px', padding: '2.5rem', color: '#fff', boxShadow: '0 20px 40px -10px rgba(59,130,246,0.2)' }}>
-            <Zap size={24} style={{ marginBottom: '1.5rem' }} />
-            <h3 style={{ fontSize: '1.25rem', fontWeight: '800', marginBottom: '1rem' }}>Instant Insights</h3>
-            <p style={{ fontSize: '0.95rem', opacity: 0.9, lineHeight: 1.6, marginBottom: '2rem' }}>
-              Your store is performing <strong style={{ textDecoration: 'underline' }}>12.5% better</strong> than last month. Consider restocking your best sellers soon.
+
+          <div style={{ background: '#fff', borderRadius: '32px', padding: '2.5rem', color: '#111', border: '1px solid #102a82', boxShadow: '0 10px 30px -10px rgba(16, 42, 130, 0.1)' }}>
+            <Zap size={24} color="#102a82" style={{ marginBottom: '1.5rem' }} />
+            <h3 style={{ fontSize: '1.25rem', fontWeight: '800', marginBottom: '1rem', color: '#102a82' }}>Instant Insights</h3>
+            <p style={{ fontSize: '0.95rem', color: '#666', lineHeight: 1.6, marginBottom: '2rem' }}>
+              Your store is performing <strong style={{ color: '#10b981' }}>12.5% better</strong> than last month. Consider restocking your best sellers soon.
             </p>
-            <button style={{ width: '100%', padding: '1rem', borderRadius: '16px', background: '#fff', color: '#3b82f6', border: 'none', fontWeight: '800', cursor: 'pointer' }}>Generate Report</button>
+            <button style={{ width: '100%', padding: '1rem', borderRadius: '16px', background: '#102a82', color: '#fff', border: 'none', fontWeight: '800', cursor: 'pointer', transition: 'all 0.3s ease' }}>Generate Report</button>
           </div>
 
           <div style={{ background: '#fff', borderRadius: '32px', padding: '2.5rem', border: '1px solid #f1f5f9' }}>
@@ -236,7 +238,7 @@ const StatCard = ({ title, value, icon, color }) => (
     </div>
     <p style={{ fontSize: '0.75rem', fontWeight: '900', color: '#999', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '6px' }}>{title}</p>
     <h3 style={{ fontSize: '2rem', fontWeight: '900', color: '#111', margin: 0, letterSpacing: '-0.02em' }}>{value}</h3>
-    
+
     {/* Decorative Sparkle */}
     <div style={{ position: 'absolute', top: '15px', right: '15px', opacity: 0.05 }}>
       <Zap size={40} color={color} />
