@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { ShoppingCart, User, LogOut, LayoutDashboard, LogIn, Search, Menu, Heart, ShoppingBag, Flower } from 'lucide-react';
+import { ShoppingCart, User, LogOut, LayoutDashboard, LogIn, Search, Menu, Heart, ShoppingBag, Flower, ArrowLeft, Truck } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 
 const Navbar = () => {
@@ -82,17 +82,42 @@ const Navbar = () => {
 
   return (
     <nav className={`nav-pill ${scrolled ? 'scrolled' : ''} ${menuOpen ? 'nav-open' : ''}`}>
-      {/* Left: Logo & Branding */}
-      <Link to={slug ? `/${slug}` : "/"} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none', color: '#0f172a', zIndex: 10001 }}>
-        <div style={{ background: '#0f172a', width: '32px', height: '32px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          {(branding?.logo_url || business?.logo_url) ? (
-            <img src={branding?.logo_url || business?.logo_url} style={{ width: '20px', height: '20px', objectFit: 'contain' }} alt="" />
-          ) : (
-            <Flower size={18} color="white" />
-          )}
-        </div>
-        <span style={{ fontWeight: '900', fontSize: '1.2rem', letterSpacing: '-1px' }}>{business?.name || 'carthive'}</span>
-      </Link>
+      {/* Left: Back Button & Logo */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', zIndex: 10001 }}>
+        {slug && (location.pathname !== `/${slug}` && location.pathname !== `/${slug}/`) && (
+          <button 
+            onClick={() => navigate(-1)}
+            style={{ 
+              background: '#f1f5f9', 
+              border: 'none', 
+              width: '40px', 
+              height: '40px', 
+              borderRadius: '50%', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              cursor: 'pointer',
+              color: '#0f172a',
+              transition: 'all 0.2s ease'
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.background = '#e2e8f0'}
+            onMouseLeave={(e) => e.currentTarget.style.background = '#f1f5f9'}
+          >
+            <ArrowLeft size={18} />
+          </button>
+        )}
+        
+        <Link to={slug ? `/${slug}` : "/"} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none', color: '#0f172a' }}>
+          <div style={{ background: '#0f172a', width: '32px', height: '32px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {(branding?.logo_url || business?.logo_url) ? (
+              <img src={branding?.logo_url || business?.logo_url} style={{ width: '20px', height: '20px', objectFit: 'contain' }} alt="" />
+            ) : (
+              <Flower size={18} color="white" />
+            )}
+          </div>
+          <span style={{ fontWeight: '900', fontSize: '1.2rem', letterSpacing: '-1px' }}>{business?.name || 'carthive'}</span>
+        </Link>
+      </div>
 
 
       {/* Right: Actions */}
@@ -109,6 +134,13 @@ const Navbar = () => {
           </Link>
         )}
 
+
+        {slug && (
+          <Link to={`/${slug}/track`} className="nav-icon-link" style={{ fontSize: '0.85rem', fontWeight: '800', textDecoration: 'none', color: '#0f172a' }}>
+            <Truck size={20} />
+            <span className="auth-label-mobile">track</span>
+          </Link>
+        )}
 
         <Link to={`/${slug}/cart`} className="nav-icon-link cart-icon">
           <ShoppingBag size={20} />

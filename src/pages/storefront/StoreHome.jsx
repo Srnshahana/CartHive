@@ -147,7 +147,23 @@ const BusinessHome = () => {
 
   const [activePolicy, setActivePolicy] = useState(null); // { title: string, content: string }
 
-  if (loading) return <div className="container section-padding" style={{ textAlign: 'center' }}><p>Loading store...</p></div>;
+  if (loading) return (
+    <div style={{ minHeight: '100vh', background: '#f1f0ea' }}>
+      {/* Hero Shimmer */}
+      <div className="shimmer-effect" style={{ height: '85vh', margin: '30px', borderRadius: '40px' }}></div>
+      <div className="container">
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '3rem' }}>
+          <div className="shimmer-effect" style={{ width: '200px', height: '40px', borderRadius: '4px' }}></div>
+          <div className="shimmer-effect" style={{ width: '100px', height: '40px', borderRadius: '4px' }}></div>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '2rem' }}>
+          {[1, 2, 3, 4].map(i => (
+            <div key={i} className="shimmer-effect" style={{ aspectRatio: '0.85', borderRadius: '25px' }}></div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
   if (error) return <div className="container section-padding" style={{ textAlign: 'center' }}><h1>{error}</h1><Link to="/">Go back home</Link></div>;
 
   const MOCK_PRODUCTS = [

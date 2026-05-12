@@ -1,182 +1,227 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import { Search, Package, Clock, CheckCircle2, AlertCircle, ArrowLeft, Truck } from 'lucide-react';
-import { Link, useParams } from 'react-router-dom';
+import { Package, Truck, CheckCircle, Clock, ArrowLeft, Loader2, Mail, Phone, MapPin, Eye } from 'lucide-react';
 
 const OrderTracking = () => {
   const { slug } = useParams();
-  const [orderId, setOrderId] = useState('');
-  const [order, setOrder] = useState(null);
+  const [business, setBusiness] = useState(null);
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [orders, setOrders] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchBusiness = async () => {
+      const { data } = await supabase.from('businesses').select('*').eq('slug', slug).single();
+      setBusiness(data);
+    };
+    fetchBusiness();
+  }, [slug]);
 
   const handleTrack = async (e) => {
     e.preventDefault();
-    if (!orderId) return;
-
     setLoading(true);
-    setError('');
-    setOrder(null);
+    setError(null);
+    setOrders(null);
 
     try {
-      const { data, error: queryError } = await supabase
-        .from('orders')
-        .select('*, products(*)')
-        .eq('id', orderId)
-        .single();
-
-      if (queryError || !data) {
-        throw new Error('order not found. please check your order id and try again.');
+      if (!business) {
+        setError('Store information is still loading. Please try again in a moment.');
+        setLoading(false);
+        return;
       }
 
-      setOrder(data);
+      const { data, error: fetchError } = await supabase
+        .from('orders')
+        .select('*, products(name, image)')
+        .eq('business_id', business.id)
+        .eq('email', email.trim())
+        .eq('phone', phone.trim())
+        .order('created_at', { ascending: false });
+
+      if (fetchError) throw fetchError;
+
+      if (!data || data.length === 0) {
+        setError('No orders found with these details. Please check your email and phone number.');
+      } else {
+        setOrders(data);
+      }
     } catch (err) {
-      setError(err.message);
+      console.error('Tracking error:', err);
+      setError('Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
   const getStatusStep = (status) => {
-    const steps = ['pending_payment', 'processing', 'shipped', 'delivered'];
-    return steps.indexOf(status?.toLowerCase()) + 1;
+    switch (status) {
+      case 'completed': return 4;
+      case 'shipped': return 3;
+      case 'processing': return 2;
+      case 'pending': return 1;
+      default: return 1;
+    }
   };
 
   return (
-    <div className="tracking-page" style={{ padding: '140px 5% 8rem', background: '#fcfcfc', minHeight: '100vh' }}>
-      <div className="container" style={{ maxWidth: '900px' }}>
-        <div style={{ marginBottom: '4rem' }}>
-          <Link to={`/${slug}`} className="back-link-hover" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: '#64748b', textDecoration: 'none', fontWeight: '600', textTransform: 'lowercase', fontSize: '0.9rem' }}>
-            <ArrowLeft size={16} /> back to store
-          </Link>
-        </div>
+    <div style={{ minHeight: '100vh', background: '#f1f0ea', padding: '160px 2rem 2rem' }}>
+      <div style={{ maxWidth: '800px', margin: '0 auto' }}>
 
-        <div style={{ textAlign: 'center', marginBottom: '5rem' }}>
-          <h1 style={{ fontSize: 'clamp(3rem, 6vw, 4.5rem)', fontWeight: '900', letterSpacing: '-3px', marginBottom: '1.5rem', lineHeight: 0.9, textTransform: 'lowercase' }}>
-            track your <span style={{ color: '#3b82f6' }}>order</span>
-          </h1>
-          <p style={{ color: '#64748b', fontSize: '1.2rem', maxWidth: '500px', margin: '0 auto' }}>
-            enter your order id below to see the journey of your curated selection.
-          </p>
-        </div>
+        {/* Tracking Form */}
 
-        <form onSubmit={handleTrack} style={{ display: 'flex', gap: '1rem', marginBottom: '6rem', background: '#fff', padding: '0.75rem', borderRadius: '32px', boxShadow: '0 20px 40px rgba(0,0,0,0.03)', border: '1px solid #f1f5f9' }}>
-          <div style={{ position: 'relative', flex: 1 }}>
-            <Search style={{ position: 'absolute', left: '1.5rem', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} size={20} />
-            <input 
-              type="text" 
-              placeholder="order id (e.g., ord-001)" 
-              style={{ width: '100%', padding: '1.25rem 1.25rem 1.25rem 4rem', border: 'none', background: 'transparent', outline: 'none', fontSize: '1.1rem', fontWeight: '600', color: '#0f172a' }}
-              value={orderId}
-              onChange={(e) => setOrderId(e.target.value)}
-            />
+        {/* Tracking Form */}
+        <div style={{ background: '#fff', padding: '3.5rem', borderRadius: '40px', border: '1px solid rgba(0,0,0,0.05)', marginBottom: '3rem', position: 'relative', overflow: 'hidden' }}>
+          {/* Minimal Decor */}
+          <div style={{ position: 'absolute', top: 0, right: 0, width: '150px', height: '150px', background: 'radial-gradient(circle at center, rgba(59,130,246,0.03) 0%, transparent 70%)', borderRadius: '50%', transform: 'translate(30%, -30%)' }} />
+
+          <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+            <div style={{ width: '64px', height: '64px', background: '#fcfcfc', border: '1px solid #f1f5f9', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
+              <Package size={30} color="#3b82f6" strokeWidth={1.5} />
+            </div>
+            <h1 style={{ fontSize: '2.25rem', fontWeight: '900', color: '#111', letterSpacing: '-0.02em', marginBottom: '12px' }}>Track Your Order</h1>
+            <p style={{ color: '#888', fontSize: '1rem', fontWeight: '500' }}>Enter the contact details used during checkout</p>
           </div>
-          <button type="submit" className="btn-shop-dark" style={{ padding: '0 3rem', borderRadius: '24px', height: '64px' }} disabled={loading}>
-            {loading ? 'searching...' : 'track order'}
-          </button>
-        </form>
 
-        {error && (
-          <div style={{ padding: '3rem', textAlign: 'center', borderRadius: '32px', border: '1px solid #fee2e2', background: '#fff', boxShadow: '0 20px 40px rgba(239, 68, 68, 0.05)' }}>
-            <AlertCircle size={40} color="#ef4444" style={{ marginBottom: '1.5rem' }} />
-            <p style={{ color: '#ef4444', fontSize: '1.1rem', fontWeight: '600' }}>{error}</p>
-          </div>
-        )}
-
-        {order && (
-          <div style={{ background: '#fff', padding: '4rem', borderRadius: '48px', border: '1px solid #f1f5f9', boxShadow: '0 30px 60px rgba(0,0,0,0.05)', animation: 'fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5rem', paddingBottom: '2.5rem', borderBottom: '1px solid #f1f5f9' }}>
-              <div>
-                <p style={{ fontSize: '0.7rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.2em', fontWeight: '900', marginBottom: '0.5rem' }}>order reference</p>
-                <h3 style={{ fontSize: '2rem', fontWeight: '900', letterSpacing: '-1px' }}>#{order.id}</h3>
+          <form onSubmit={handleTrack} style={{ display: 'grid', gap: '1.5rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <label style={{ fontSize: '0.75rem', fontWeight: '800', textTransform: 'uppercase', color: '#bbb', letterSpacing: '0.1em' }}>Email Address</label>
+                <div style={{ position: 'relative' }}>
+                  <Mail size={18} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: '#ddd' }} />
+                  <input
+                    type="email"
+                    required
+                    placeholder="e.g. name@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    style={{ width: '100%', padding: '16px 16px 16px 48px', borderRadius: '16px', border: '1px solid #eee', outline: 'none', fontSize: '1rem', background: '#fcfcfc', transition: 'all 0.3s' }}
+                  />
+                </div>
               </div>
-              <div style={{ textAlign: 'right' }}>
-                <p style={{ fontSize: '0.7rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.2em', fontWeight: '900', marginBottom: '0.5rem' }}>status</p>
-                <span style={{ 
-                  background: '#f8fafc', color: '#0f172a', padding: '0.6rem 1.5rem', 
-                  borderRadius: '50px', fontSize: '0.9rem', fontWeight: '900', border: '1px solid #e2e8f0',
-                  textTransform: 'lowercase'
-                }}>
-                  {order.status.replace('_', ' ')}
-                </span>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <label style={{ fontSize: '0.75rem', fontWeight: '800', textTransform: 'uppercase', color: '#bbb', letterSpacing: '0.1em' }}>Phone Number</label>
+                <div style={{ position: 'relative' }}>
+                  <Phone size={18} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: '#ddd' }} />
+                  <input
+                    type="tel"
+                    required
+                    placeholder="e.g. +1234567890"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    style={{ width: '100%', padding: '16px 16px 16px 48px', borderRadius: '16px', border: '1px solid #eee', outline: 'none', fontSize: '1rem', background: '#fcfcfc', transition: 'all 0.3s' }}
+                  />
+                </div>
               </div>
             </div>
+            <button
+              type="submit"
+              disabled={loading}
+              style={{ padding: '1.25rem', background: '#111', color: '#fff', border: 'none', borderRadius: '18px', fontSize: '0.95rem', fontWeight: '800', cursor: 'pointer', transition: 'all 0.3s ease', marginTop: '1rem', letterSpacing: '0.05em' }}
+            >
+              {loading ? <Loader2 className="animate-spin" style={{ margin: '0 auto' }} size={20} /> : 'SEARCH MY ORDER'}
+            </button>
+          </form>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6rem', position: 'relative' }}>
-              {/* Progress Line */}
-              <div style={{ position: 'absolute', top: '30px', left: '10%', right: '10%', height: '4px', background: '#f1f5f9', zIndex: 0, borderRadius: '10px' }}></div>
-              <div style={{ 
-                position: 'absolute', top: '30px', left: '10%', 
-                width: `${(getStatusStep(order.status) - 1) * 33.33}%`, 
-                height: '4px', background: '#3b82f6', zIndex: 1, 
-                transition: 'width 1.5s cubic-bezier(0.4, 0, 0.2, 1)',
-                borderRadius: '10px',
-                boxShadow: '0 0 20px rgba(59, 130, 246, 0.4)'
-              }}></div>
+          {error && (
+            <div style={{ marginTop: '2rem', padding: '1.25rem', background: '#fff5f5', color: '#e53e3e', borderRadius: '16px', textAlign: 'center', fontSize: '0.9rem', fontWeight: '700', border: '1px solid #fed7d7' }}>
+              {error}
+            </div>
+          )}
+        </div>
 
-              {[
-                { label: 'placed', icon: Clock },
-                { label: 'processing', icon: Package },
-                { label: 'shipped', icon: Truck },
-                { label: 'delivered', icon: CheckCircle2 }
-              ].map((step, i) => {
-                const isActive = i + 1 <= getStatusStep(order.status);
-                const Icon = step.icon;
-                return (
-                  <div key={step.label} style={{ textAlign: 'center', zIndex: 2, position: 'relative' }}>
-                    <div style={{ 
-                      width: '64px', height: '64px', borderRadius: '24px', 
-                      background: isActive ? '#3b82f6' : '#fff', 
-                      border: `2px solid ${isActive ? '#3b82f6' : '#f1f5f9'}`,
-                      color: isActive ? '#fff' : '#cbd5e1',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      margin: '0 auto 1.5rem',
-                      transition: 'all 0.5s ease',
-                      boxShadow: isActive ? '0 15px 30px rgba(59, 130, 246, 0.25)' : 'none'
-                    }}>
-                      <Icon size={24} />
+        {/* Tracking Results */}
+        {orders && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
+            <h2 style={{ fontSize: '1.1rem', fontWeight: '900', color: '#111', textTransform: 'uppercase', letterSpacing: '0.1em', paddingLeft: '1rem' }}>Found {orders.length} Order{orders.length > 1 ? 's' : ''}</h2>
+
+            {orders.map(order => (
+              <div key={order.id} style={{ background: '#fff', borderRadius: '40px', overflow: 'hidden', border: '1px solid rgba(0,0,0,0.05)', boxShadow: '0 10px 30px rgba(0,0,0,0.02)' }}>
+                {/* Status Badge & Meta */}
+                <div style={{ padding: '2.5rem', background: '#fafaf9', borderBottom: '1px solid #f0f0ee', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+                    <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: order.status === 'completed' ? '#10b981' : '#3b82f6', boxShadow: `0 0 0 4px ${order.status === 'completed' ? '#dcfce7' : '#dbeafe'}` }} />
+                    <div>
+                      <p style={{ fontSize: '0.7rem', fontWeight: '800', color: '#bbb', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>Order Status</p>
+                      <h4 style={{ fontSize: '1.1rem', fontWeight: '900', color: '#111', textTransform: 'capitalize' }}>{order.status}</h4>
                     </div>
-                    <span style={{ fontSize: '0.9rem', fontWeight: '900', color: isActive ? '#0f172a' : '#cbd5e1', textTransform: 'lowercase' }}>{step.label}</span>
                   </div>
-                );
-              })}
-            </div>
-
-            <div style={{ background: '#f8fafc', padding: '3rem', borderRadius: '32px', border: '1px solid #f1f5f9' }}>
-              <h4 style={{ fontSize: '1.2rem', fontWeight: '900', color: '#0f172a', marginBottom: '2rem' }}>order details</h4>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-                  <div style={{ width: '60px', height: '60px', borderRadius: '16px', overflow: 'hidden', background: '#fff' }}>
-                    <img src={order.products?.image} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
-                  </div>
-                  <div>
-                    <p style={{ fontWeight: '800', color: '#0f172a', fontSize: '1.1rem' }}>{order.products?.name}</p>
-                    <p style={{ fontSize: '0.85rem', color: '#64748b' }}>quantity: {order.quantity}</p>
+                  <div style={{ textAlign: 'right' }}>
+                    <p style={{ fontSize: '0.7rem', fontWeight: '800', color: '#bbb', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>Ordered On</p>
+                    <h4 style={{ fontSize: '1.1rem', fontWeight: '900', color: '#111' }}>{new Date(order.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</h4>
                   </div>
                 </div>
-                <p style={{ fontWeight: '900', fontSize: '1.2rem', color: '#0f172a' }}>${Number(order.total_amount).toFixed(2)}</p>
+
+                {/* Progress Visualizer */}
+                <div style={{ padding: '4rem 3rem' }}>
+                  <div style={{ position: 'relative', display: 'flex', justifyContent: 'space-between' }}>
+                    {/* Background Line */}
+                    <div style={{ position: 'absolute', top: '24px', left: '12%', right: '12%', height: '2px', background: '#f1f1ee', zIndex: 1 }} />
+                    {/* Active Line */}
+                    <div style={{ position: 'absolute', top: '24px', left: '12%', width: `${((getStatusStep(order.status) - 1) / 3) * 76}%`, height: '2px', background: '#111', zIndex: 1, transition: 'width 1.5s ease-out' }} />
+
+                    <StatusNode icon={<Clock size={18} />} label="Ordered" active={getStatusStep(order.status) >= 1} />
+                    <StatusNode icon={<Package size={18} />} label="Processing" active={getStatusStep(order.status) >= 2} />
+                    <StatusNode icon={<Truck size={18} />} label="Shipped" active={getStatusStep(order.status) >= 3} />
+                    <StatusNode icon={<CheckCircle size={18} />} label="Delivered" active={getStatusStep(order.status) >= 4} />
+                  </div>
+                </div>
+
+                {/* Items & Summary */}
+                <div style={{ padding: '2.5rem', borderTop: '1px solid #f1f1ee', display: 'grid', gridTemplateColumns: '1fr auto', gap: '2rem', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+                    <div style={{ width: '70px', height: '90px', borderRadius: '16px', overflow: 'hidden', border: '1px solid #eee' }}>
+                      <img src={order.products?.image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
+                    <div>
+                      <h4 style={{ fontSize: '1rem', fontWeight: '800', marginBottom: '6px', color: '#111' }}>{order.products?.name}</h4>
+                      <p style={{ fontSize: '0.85rem', color: '#888', fontWeight: '500' }}>Qty: {order.quantity} • Paid via QR</p>
+                      <p style={{ fontSize: '1.1rem', fontWeight: '900', color: '#3b82f6', marginTop: '8px' }}>${Number(order.total_amount).toFixed(2)}</p>
+                    </div>
+                  </div>
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#fcfcfc', border: '1px solid #eee', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 8px' }}>
+                      <Eye size={20} color="#111" />
+                    </div>
+                    <p style={{ fontSize: '0.65rem', fontWeight: '900', textTransform: 'uppercase', color: '#bbb' }}>Ref: #{String(order.id).slice(0, 6)}</p>
+                  </div>
+                </div>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '2rem', borderTop: '1px solid #e2e8f0', marginTop: '1.5rem' }}>
-                <span style={{ fontWeight: '900', fontSize: '1.1rem', color: '#0f172a' }}>total amount</span>
-                <span style={{ fontWeight: '900', fontSize: '1.5rem', color: '#3b82f6' }}>${Number(order.total_amount).toFixed(2)}</span>
-              </div>
-            </div>
+            ))}
           </div>
         )}
-      </div>
 
-      <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .back-link-hover:hover {
-          color: #0f172a !important;
-          transform: translateX(-5px);
-        }
-      `}</style>
+        {/* Footer Info */}
+        <div style={{ marginTop: '5rem', textAlign: 'center', padding: '3rem', borderTop: '1px solid rgba(0,0,0,0.05)' }}>
+          <p style={{ fontSize: '0.85rem', color: '#999', fontWeight: '500' }}>Having trouble finding your order? Contact the store owner via WhatsApp.</p>
+        </div>
+
+      </div>
     </div>
   );
 };
+
+const StatusNode = ({ icon, label, active }) => (
+  <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '14px' }}>
+    <div style={{
+      width: '48px',
+      height: '48px',
+      borderRadius: '50%',
+      background: active ? '#111' : '#fff',
+      border: `1.5px solid ${active ? '#111' : '#f1f1ee'}`,
+      color: active ? '#fff' : '#ccc',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+      boxShadow: active ? '0 10px 20px rgba(0,0,0,0.1)' : 'none'
+    }}>
+      {icon}
+    </div>
+    <span style={{ fontSize: '0.7rem', fontWeight: '900', color: active ? '#111' : '#bbb', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</span>
+  </div>
+);
 
 export default OrderTracking;

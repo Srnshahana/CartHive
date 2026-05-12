@@ -12,6 +12,7 @@ import StoreHome from './pages/storefront/StoreHome';
 import ProductList from './pages/storefront/ProductList';
 import ProductDetails from './pages/storefront/ProductDetails';
 import Cart from './pages/storefront/Cart';
+import Checkout from './pages/storefront/Checkout';
 import OrderTracking from './pages/storefront/OrderTracking';
 
 // Admin Pages
@@ -42,6 +43,7 @@ function App() {
         <Route path="/:slug/products" element={<ProductList />} />
         <Route path="/:slug/product/:id" element={<ProductDetails />} />
         <Route path="/:slug/cart" element={<Cart />} />
+        <Route path="/:slug/checkout" element={<Checkout />} />
         <Route path="/:slug/track" element={<OrderTracking />} />
         
         {/* Fallback */}

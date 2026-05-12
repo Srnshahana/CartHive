@@ -3,10 +3,148 @@ import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { ArrowRight, Store, Rocket, Globe, Shield, Lock, X, Loader2, ChevronRight, ShieldCheck } from 'lucide-react';
 
+const InteractiveDots = () => {
+  const canvasRef = React.useRef(null);
+  const mouse = React.useRef({ x: -1000, y: -1000, active: false });
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    let animationFrameId;
+    let dots = [];
+
+    const spacing = 18;
+    const radius = 100;
+    const mouseForce = 0.2;
+
+    const resize = () => {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      canvas.style.width = `${rect.width}px`;
+      canvas.style.height = `${rect.height}px`;
+      ctx.scale(dpr, dpr);
+
+      initDots(rect.width, rect.height);
+    };
+
+    const initDots = (width, height) => {
+      dots = [];
+      for (let x = 0; x < width; x += spacing) {
+        for (let y = 0; y < height; y += spacing) {
+          dots.push({
+            x: x,
+            y: y,
+            baseX: x,
+            baseY: y,
+            vx: 0,
+            vy: 0,
+            density: (Math.random() * 20) + 10
+          });
+        }
+      }
+    };
+
+    const animate = () => {
+      const rect = canvas.getBoundingClientRect();
+      ctx.clearRect(0, 0, rect.width, rect.height);
+
+      dots.forEach(dot => {
+        let dx = mouse.current.x - dot.x;
+        let dy = mouse.current.y - dot.y;
+        let distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < radius) {
+          let force = (radius - distance) / radius;
+          let directionX = (dx / distance) * force * dot.density * mouseForce;
+          let directionY = (dy / distance) * force * dot.density * mouseForce;
+
+          dot.x -= directionX;
+          dot.y -= directionY;
+        } else {
+          if (dot.x !== dot.baseX) {
+            dot.x -= (dot.x - dot.baseX) / 10;
+          }
+          if (dot.y !== dot.baseY) {
+            dot.y -= (dot.y - dot.baseY) / 10;
+          }
+        }
+
+        const distToMouse = mouse.current.active ? Math.sqrt(Math.pow(mouse.current.x - dot.x, 2) + Math.pow(mouse.current.y - dot.y, 2)) : 1000;
+
+        ctx.beginPath();
+        ctx.arc(dot.x, dot.y, 1.2, 0, Math.PI * 2);
+
+        if (mouse.current.active && distToMouse < radius * 1.2) {
+          const opacity = 1 - (distToMouse / (radius * 1.2));
+          ctx.fillStyle = `rgba(29, 78, 216, ${0.5 + opacity * 0.5})`; // Bold Darker Blue (Blue-700)
+        } else {
+          ctx.fillStyle = 'rgba(30, 64, 175, 0.35)'; // More visible base blue-800
+        }
+        ctx.fill();
+      });
+
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    const handleMouseMove = (e) => {
+      const rect = canvas.getBoundingClientRect();
+      mouse.current = {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+        active: true
+      };
+    };
+
+    const handleMouseLeave = () => {
+      mouse.current.active = false;
+    };
+
+    resize();
+    animate();
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('resize', resize);
+    canvas.addEventListener('mouseleave', handleMouseLeave);
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('resize', resize);
+      canvas.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        zIndex: 0,
+        pointerEvents: 'none' // Let events pass through to buttons if needed, but we track globally anyway
+      }}
+    />
+  );
+};
+
 const LandingPage = () => {
   const navigate = useNavigate();
   const [businesses, setBusinesses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    setMousePos({ x, y });
+  };
 
   // Founder Login State
   const [isFounderLoginOpen, setIsFounderLoginOpen] = useState(false);
@@ -41,8 +179,14 @@ const LandingPage = () => {
   return (
     <div className="platform-landing">
       {/* Hero Section */}
-      <section className="hero-platform">
-        <div className="container">
+      <section
+        className="hero-platform"
+        style={{ position: 'relative', overflow: 'hidden' }}
+      >
+        {/* Interactive Dot Grid (Inspired by Stitch) */}
+        <InteractiveDots />
+
+        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
           <div className="hero-tagline">
             <Rocket size={16} /> Welcome to the future of retail
           </div>
@@ -64,7 +208,7 @@ const LandingPage = () => {
       <section className="section-padding" style={{ background: 'white' }}>
         <div className="container" id="explore">
           <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-            <h2 style={{ fontSize: '2.2rem', fontWeight: '900', marginBottom: '0.75rem', letterSpacing: '-0.75px' }}>Explore <span className="gradient-text">featured stores</span></h2>
+            <h2 style={{ fontSize: '2.2rem', fontWeight: '900', marginBottom: '0.75rem', letterSpacing: '-0.75px' }}>Our Trusted <span className="gradient-text">Partners</span></h2>
             <p style={{ color: '#64748b', fontSize: '1.05rem', maxWidth: '550px', margin: '0 auto' }}>Discover unique brands and products from our thriving community of businesses.</p>
           </div>
 

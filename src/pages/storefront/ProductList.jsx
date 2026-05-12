@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import { ArrowLeft, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 
 const ProductList = () => {
   const { slug } = useParams();
@@ -14,28 +14,6 @@ const ProductList = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const location = useLocation();
-
-  useEffect(() => {
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('reveal-active');
-        }
-      });
-    }, observerOptions);
-
-    const revealElements = document.querySelectorAll('.reveal-on-scroll');
-    revealElements.forEach(el => observer.observe(el));
-
-    return () => {
-      revealElements.forEach(el => observer.unobserve(el));
-    };
-  }, [loading, products]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -80,8 +58,24 @@ const ProductList = () => {
   });
 
   if (loading) return (
-    <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f1f0ea' }}>
-      <div className="loading-spinner"></div>
+    <div style={{ minHeight: '100vh', background: '#f1f0ea', padding: '120px 2rem 2rem' }}>
+      <div className="container">
+        <div style={{ display: 'grid', gridTemplateColumns: '250px 1fr', gap: '40px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div className="shimmer-effect" style={{ height: '40px', borderRadius: '8px' }}></div>
+            <div className="shimmer-effect" style={{ height: '200px', borderRadius: '8px' }}></div>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '30px' }}>
+            {[1, 2, 3, 4, 5, 6].map(i => (
+              <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                <div className="shimmer-effect" style={{ aspectRatio: '0.85', borderRadius: '12px' }}></div>
+                <div className="shimmer-effect" style={{ height: '20px', width: '60%', borderRadius: '4px' }}></div>
+                <div className="shimmer-effect" style={{ height: '16px', width: '40%', borderRadius: '4px' }}></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 
@@ -91,7 +85,7 @@ const ProductList = () => {
         
         <div className="catalog-layout">
           {/* Onsko Sidebar */}
-          <aside className="catalog-sidebar reveal-on-scroll">
+          <aside className="catalog-sidebar">
             {/* Search Input */}
             <div className="sidebar-section">
               <div className="onsko-search-wrapper">
@@ -150,12 +144,12 @@ const ProductList = () => {
 
           {/* Onsko Product Grid */}
           <main className="catalog-main">
-            <div className="catalog-grid">
-              {filteredProducts.map((product, index) => (
+            <div className="catalog-grid catalog-grid-entry">
+              {filteredProducts.map((product) => (
                 <Link 
                   key={product.id} 
                   to={`/${slug}/product/${product.id}`} 
-                  className={`onsko-card reveal-on-scroll stagger-${(index % 3) + 1}`}
+                  className="onsko-card"
                 >
                   <div className="onsko-image-box">
                     {product.is_bestseller && (
