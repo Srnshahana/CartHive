@@ -204,7 +204,7 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Featured Stores Section */}
+      {/* Featured Stores Section/ */}
       <section className="section-padding" style={{ background: 'white' }}>
         <div className="container" id="explore">
           <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
