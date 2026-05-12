@@ -118,7 +118,7 @@ const BusinessHome = () => {
     };
 
     fetchData();
-  }, [slug]);
+  }, [slug, businessId]);
 
   useEffect(() => {
     if (config?.logo_url || config?.logo) {
