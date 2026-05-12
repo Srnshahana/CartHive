@@ -14,6 +14,7 @@ import ProductDetails from './pages/storefront/ProductDetails';
 import Cart from './pages/storefront/Cart';
 import Checkout from './pages/storefront/Checkout';
 import OrderTracking from './pages/storefront/OrderTracking';
+import StorefrontLayout from './components/StorefrontLayout';
 
 // Admin Pages
 import Login from './pages/admin/Login';
@@ -39,12 +40,14 @@ function App() {
         <Route path="/admin" element={<AdminPortal />} />
         
         {/* Customer Storefront Flow */}
-        <Route path="/:slug" element={<StoreHome />} />
-        <Route path="/:slug/products" element={<ProductList />} />
-        <Route path="/:slug/product/:id" element={<ProductDetails />} />
-        <Route path="/:slug/cart" element={<Cart />} />
-        <Route path="/:slug/checkout" element={<Checkout />} />
-        <Route path="/:slug/track" element={<OrderTracking />} />
+        <Route element={<StorefrontLayout />}>
+          <Route path="/:slug" element={<StoreHome />} />
+          <Route path="/:slug/products" element={<ProductList />} />
+          <Route path="/:slug/product/:id" element={<ProductDetails />} />
+          <Route path="/:slug/cart" element={<Cart />} />
+          <Route path="/:slug/checkout" element={<Checkout />} />
+          <Route path="/:slug/track" element={<OrderTracking />} />
+        </Route>
         
         {/* Fallback */}
         <Route path="*" element={

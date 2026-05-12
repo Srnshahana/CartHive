@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { ShoppingCart, User, Menu, X, Search } from 'lucide-react';
+import { useStore } from '../../context/StoreContext';
 
 const BusinessHome = () => {
-  const { slug } = useParams();
-  const [business, setBusiness] = useState(null);
+  const { business, slug } = useStore();
   const [config, setConfig] = useState(null);
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -39,15 +39,8 @@ const BusinessHome = () => {
       try {
         setLoading(true);
 
-        // 1. Fetch Business
-        const { data: biz, error: bizErr } = await supabase
-          .from('businesses')
-          .select('*')
-          .eq('slug', slug)
-          .single();
-
-        if (bizErr || !biz) throw new Error('Store not found');
-        setBusiness(biz);
+        if (!business) return;
+        const biz = business;
 
         // 2. Fetch Homepage Content
         let homeContent = null;

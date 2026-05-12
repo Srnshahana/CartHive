@@ -2,23 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { Package, Truck, CheckCircle, Clock, ArrowLeft, Loader2, Mail, Phone, MapPin, Eye } from 'lucide-react';
+import { useStore } from '../../context/StoreContext';
 
 const OrderTracking = () => {
-  const { slug } = useParams();
-  const [business, setBusiness] = useState(null);
+  const { business, slug } = useStore();
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   const [orders, setOrders] = useState(null);
   const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchBusiness = async () => {
-      const { data } = await supabase.from('businesses').select('*').eq('slug', slug).single();
-      setBusiness(data);
-    };
-    fetchBusiness();
-  }, [slug]);
 
   const handleTrack = async (e) => {
     e.preventDefault();
