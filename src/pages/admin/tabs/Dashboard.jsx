@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../../lib/supabase';
-import { ShoppingBag, DollarSign, Package, Clock, TrendingUp, ArrowUpRight, BarChart3, ChevronRight, Activity, Zap, Layers, Store } from 'lucide-react';
+import { ShoppingBag, IndianRupee, Package, Clock, TrendingUp, ArrowUpRight, BarChart3, ChevronRight, Activity, Zap, Layers, Store } from 'lucide-react';
 
 const Dashboard = ({ products }) => {
   const [stats, setStats] = useState({
@@ -104,7 +104,7 @@ const Dashboard = ({ products }) => {
 
       {/* Modern Stats Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem', marginBottom: '3.5rem' }}>
-        <StatCard title="Total Revenue" value={`$${stats.totalRevenue.toLocaleString()}`} icon={<DollarSign size={24} />} color="#102a82" />
+        <StatCard title="Total Revenue" value={`₹${stats.totalRevenue.toLocaleString()}`} icon={<IndianRupee size={24} />} color="#102a82" />
         <StatCard title="Total Orders" value={stats.totalOrders} icon={<ShoppingBag size={24} />} color="#10b981" />
         <StatCard title="Active Items" value={products.length} icon={<Package size={24} />} color="#8b5cf6" />
         <StatCard title="Pending" value={stats.pendingOrders} icon={<Clock size={24} />} color="#f59e0b" />
@@ -185,7 +185,7 @@ const Dashboard = ({ products }) => {
                     <p style={{ fontSize: '0.8rem', color: '#999' }}>{order.products?.name} • {new Date(order.created_at).toLocaleDateString()}</p>
                   </div>
                   <div style={{ textAlign: 'right' }}>
-                    <p style={{ fontSize: '1.1rem', fontWeight: '900', color: '#111' }}>${Number(order.total_amount).toFixed(2)}</p>
+                    <p style={{ fontSize: '1.1rem', fontWeight: '900', color: '#111' }}>₹{Number(order.total_amount).toFixed(0)}</p>
                     <span style={{ fontSize: '0.7rem', fontWeight: '900', textTransform: 'uppercase', color: order.status === 'completed' ? '#10b981' : '#f59e0b' }}>{order.status}</span>
                   </div>
                 </div>
@@ -217,7 +217,7 @@ const Dashboard = ({ products }) => {
                   <img src={prod.image} alt="" style={{ width: '44px', height: '44px', borderRadius: '10px', objectFit: 'cover' }} />
                   <div style={{ flex: 1 }}>
                     <p style={{ fontSize: '0.9rem', fontWeight: '800', color: '#111' }}>{prod.name}</p>
-                    <p style={{ fontSize: '0.8rem', color: '#999' }}>${prod.price}</p>
+                    <p style={{ fontSize: '0.8rem', color: '#999' }}>₹{prod.price}</p>
                   </div>
                   <TrendingUp size={16} color="#10b981" />
                 </div>

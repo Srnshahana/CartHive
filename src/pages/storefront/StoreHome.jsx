@@ -207,6 +207,19 @@ const BusinessHome = () => {
         </div>
       </section>
 
+      {/* 1.5 Magazine About Section */}
+      {business.about_store && (
+        <section className="section-magazine-about reveal-on-scroll">
+          <div className="magazine-about-content">
+            <span className="magazine-label">The Story of {business.name}</span>
+            <p className="magazine-text">
+              {business.about_store}
+            </p>
+            <div className="magazine-divider"></div>
+          </div>
+        </section>
+      )}
+
       {/* 2. Best Sellers Section - Strictly based on is_bestseller */}
       {bestSellers.length > 0 && (
         <section className="section-best-sellers reveal-on-scroll">

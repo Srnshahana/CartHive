@@ -12,8 +12,9 @@ const ProductDetails = () => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
+  const [addedCount, setAddedCount] = useState(0);
   const [activeAccordion, setActiveAccordion] = useState(null);
-  const { addToCart } = useCart();
+  const { cart, addToCart, updateQuantity, removeFromCart } = useCart();
 
   useEffect(() => {
     const fetchProductData = async () => {
@@ -76,72 +77,83 @@ const ProductDetails = () => {
   if (!product || !business) return <div className="boutique-page-wrapper" style={{ textAlign: 'center' }}><h1>Product not found</h1><Link to={`/${slug}`}>Return to store</Link></div>;
 
   return (
-    <div className="boutique-page-wrapper">
+    <div className="boutique-page-wrapper product-page-refresh">
       <div className="container">
-        <div className="details-grid">
+        <div className="details-grid-new">
           {/* Image Side */}
-          <div className="details-image-box reveal-on-scroll" style={{ transitionDelay: '0.2s' }}>
+          <div className="details-image-box-new reveal-on-scroll" style={{ transitionDelay: '0.2s' }}>
             {product.is_bestseller && (
-              <div className="onsko-badge" style={{ top: '20px', left: '20px' }}>best seller</div>
+              <div className="onsko-badge" style={{ top: '30px', left: '30px' }}>best seller</div>
             )}
             <img 
               src={product.image} 
               alt={product.name} 
-              style={{ transition: 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)' }}
-              onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
-              onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+              className="luxury-detail-img"
             />
           </div>
 
           {/* Info Side */}
-          <div className="details-info">
+          <div className="details-info-new">
             <div className="reveal-on-scroll" style={{ transitionDelay: '0.3s' }}>
-              <span style={{ fontSize: '0.75rem', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#888', display: 'block', marginBottom: '10px' }}>
-                {product.categories?.name || 'new arrival'}
-              </span>
-              <h1 style={{ marginBottom: '0.5rem', fontWeight: '800' }}>{product.name.toLowerCase()}</h1>
-              <p className="details-price" style={{ marginBottom: '2.5rem' }}>${Number(product.price).toFixed(2)}</p>
-              
-              <div style={{ width: '40px', height: '2px', background: '#1a1a1a', marginBottom: '2.5rem' }}></div>
-              
-              <p className="details-desc" style={{ marginBottom: '3rem', opacity: 0.8 }}>{product.description}</p>
-            </div>
-
-            {/* Quantity Selector */}
-            <div className="reveal-on-scroll" style={{ transitionDelay: '0.4s', marginBottom: '3rem' }}>
-              <span style={{ fontSize: '0.85rem', fontWeight: '700', textTransform: 'lowercase', display: 'block', marginBottom: '1rem' }}>quantity</span>
-              <div style={{ display: 'inline-flex', alignItems: 'center', border: '1px solid #dcdbd5', borderRadius: '4px', padding: '5px' }}>
-                <button 
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  style={{ background: 'none', border: 'none', width: '40px', height: '40px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                >
-                  <Minus size={14} />
-                </button>
-                <span style={{ width: '50px', textAlign: 'center', fontSize: '1rem', fontWeight: '600' }}>{quantity}</span>
-                <button 
-                  onClick={() => setQuantity(quantity + 1)}
-                  style={{ background: 'none', border: 'none', width: '40px', height: '40px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                >
-                  <Plus size={14} />
-                </button>
+              <div className="magazine-category-badge">
+                {product.categories?.name || 'exclusive collection'}
               </div>
+              <h1 className="product-title-luxury">{product.name.toLowerCase()}</h1>
+              
+              <div className="luxury-price-tag">
+                <span className="currency">₹</span>
+                <span className="amount">{Number(product.price).toFixed(0)}</span>
+              </div>
+
+              <p className="details-desc-luxury">{product.description}</p>
+              
+              <div className="magazine-divider" style={{ margin: '3rem 0', width: '100px' }}></div>
             </div>
 
-            {/* Add to Cart */}
-            <div className="reveal-on-scroll" style={{ transitionDelay: '0.5s' }}>
-              <button
-                onClick={() => addToCart(product, quantity)}
-                className="boutique-btn"
-                style={{ height: '64px', borderRadius: '4px', fontSize: '1.1rem' }}
-              >
-                add to bag — ${(Number(product.price) * quantity).toFixed(2)}
-              </button>
+            {/* Action Bar */}
+            <div className="reveal-on-scroll action-bar-luxury" style={{ transitionDelay: '0.4s' }}>
+              <div className="total-price-display">
+                <span className="label-caps">total</span>
+                <span className="total-amount">₹{(Number(product.price) * (cart.find(item => item.id === product.id)?.quantity || 1)).toFixed(0)}</span>
+              </div>
+              
+              {cart.find(item => item.id === product.id) ? (
+                <div className="luxury-button-qty-selector">
+                  <button 
+                    onClick={() => {
+                      const item = cart.find(i => i.id === product.id);
+                      if (item.quantity === 1) {
+                        removeFromCart(product.id);
+                      } else {
+                        updateQuantity(product.id, -1);
+                      }
+                    }} 
+                    className="btn-qty-action"
+                  >
+                    <Minus size={18} />
+                  </button>
+                  <span className="btn-qty-current">{cart.find(i => i.id === product.id).quantity}</span>
+                  <button 
+                    onClick={() => updateQuantity(product.id, 1)} 
+                    className="btn-qty-action"
+                  >
+                    <Plus size={18} />
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => addToCart(product, 1)}
+                  className="btn-add-to-bag"
+                >
+                  <span>add to bag</span>
+                </button>
+              )}
             </div>
 
             {/* Accordions */}
             <div className="reveal-on-scroll" style={{ marginTop: '4rem', transitionDelay: '0.6s' }}>
               {[
-                { title: 'shipping information', content: 'We offer free carbon-neutral shipping on all orders over $150. Standard delivery typically takes 3-5 business days.' },
+                { title: 'shipping information', content: 'We offer free carbon-neutral shipping on all orders over ₹1000. Standard delivery typically takes 3-5 business days.' },
                 { title: 'care instructions', content: 'Handle with care. Avoid direct sunlight for prolonged periods. Wipe with a dry, soft microfiber cloth for cleaning.' },
                 { title: 'boutique guarantee', content: 'Every piece in our collection is curated for quality and authenticity. We guarantee the premium craftsmanship of all products.' }
               ].map((item, idx) => (

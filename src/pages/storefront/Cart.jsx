@@ -124,7 +124,7 @@ const Cart = () => {
                         </button>
                       </div>
                       <span style={{ fontWeight: '600', fontSize: '1.1rem' }}>
-                        ${(Number(item.price) * item.quantity).toFixed(2)}
+                        ₹{(Number(item.price) * item.quantity).toFixed(0)}
                       </span>
                     </div>
                   </div>
@@ -139,7 +139,7 @@ const Cart = () => {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginBottom: '30px', paddingBottom: '30px', borderBottom: '1px solid #eee' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
                   <span style={{ color: '#666' }}>subtotal</span>
-                  <span style={{ fontWeight: '600' }}>${Number(cartTotal).toFixed(2)}</span>
+                  <span style={{ fontWeight: '600' }}>₹{Number(cartTotal).toFixed(0)}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
                   <span style={{ color: '#666' }}>estimated shipping</span>
@@ -147,13 +147,13 @@ const Cart = () => {
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
                   <span style={{ color: '#666' }}>tax</span>
-                  <span style={{ fontWeight: '600' }}>$0.00</span>
+                  <span style={{ fontWeight: '600' }}>₹0</span>
                 </div>
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '40px' }}>
                 <span style={{ fontWeight: '800', fontSize: '1.1rem' }}>total</span>
-                <span style={{ fontWeight: '800', fontSize: '1.5rem' }}>${Number(cartTotal).toFixed(2)}</span>
+                <span style={{ fontWeight: '800', fontSize: '1.5rem' }}>₹{Number(cartTotal).toFixed(0)}</span>
               </div>
 
               <Link 

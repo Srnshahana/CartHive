@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { ShoppingCart, User, LogOut, LayoutDashboard, LogIn, Search, Menu, Heart, ShoppingBag, Flower, ArrowLeft, Truck } from 'lucide-react';
@@ -12,12 +12,16 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
+  const [visible, setVisible] = useState(true);
+  const [mounted, setMounted] = useState(false);
+  const lastScrollY = useRef(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const pathParts = location.pathname.split('/').filter(Boolean);
 
   const slug = pathParts.length > 0 && !['admin', 'login', 'cart', 'track'].includes(pathParts[0]) ? pathParts[0] : null;
 
   useEffect(() => {
+    setMounted(true);
     const savedUser = localStorage.getItem('carthive_user');
     if (savedUser) setUser(JSON.parse(savedUser));
     else setUser(null);
@@ -29,9 +33,23 @@ const Navbar = () => {
     }
 
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+      const currentScrollY = window.scrollY;
+      
+      // Safety check for mobile "bounce" scrolling (negative scroll)
+      if (currentScrollY < 0) return;
+
+      // Only hide if we've scrolled a decent amount down
+      if (currentScrollY > lastScrollY.current && currentScrollY > 150) {
+        setVisible(false);
+      } else if (currentScrollY < lastScrollY.current) {
+        // Show immediately on ANY scroll up
+        setVisible(true);
+      }
+      
+      setScrolled(currentScrollY > 50);
+      lastScrollY.current = currentScrollY;
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
     const handleLogoUpdate = (e) => {
       if (e.detail) setBranding(prev => ({ ...(prev || {}), logo_url: e.detail }));
@@ -81,21 +99,21 @@ const Navbar = () => {
   };
 
   return (
-    <nav className={`nav-pill ${scrolled ? 'scrolled' : ''} ${menuOpen ? 'nav-open' : ''}`}>
+    <nav className={`nav-pill ${mounted ? 'mounted' : ''} ${scrolled ? 'scrolled' : ''} ${!visible ? 'nav-hidden' : ''} ${menuOpen ? 'nav-open' : ''}`}>
       {/* Left: Back Button & Logo */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', zIndex: 10001 }}>
         {slug && (location.pathname !== `/${slug}` && location.pathname !== `/${slug}/`) && (
-          <button 
+          <button
             onClick={() => navigate(-1)}
-            style={{ 
-              background: '#f1f5f9', 
-              border: 'none', 
-              width: '40px', 
-              height: '40px', 
-              borderRadius: '50%', 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center', 
+            style={{
+              background: '#f1f5f9',
+              border: 'none',
+              width: '40px',
+              height: '40px',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
               cursor: 'pointer',
               color: '#0f172a',
               transition: 'all 0.2s ease'
@@ -106,7 +124,7 @@ const Navbar = () => {
             <ArrowLeft size={18} />
           </button>
         )}
-        
+
         <Link to={slug ? `/${slug}` : "/"} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none', color: '#0f172a' }}>
           <div style={{ background: '#0f172a', width: '32px', height: '32px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             {(branding?.logo_url || business?.logo_url) ? (

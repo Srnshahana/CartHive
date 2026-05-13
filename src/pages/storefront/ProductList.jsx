@@ -135,8 +135,8 @@ const ProductList = () => {
                   <div style={{ position: 'absolute', width: '12px', height: '12px', background: '#1a1a1a', borderRadius: '50%', top: '-5px', right: '0' }}></div>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: '#666' }}>
-                  <span>$0</span>
-                  <span>$1000+</span>
+                  <span>₹0</span>
+                  <span>₹1000+</span>
                 </div>
               </div>
             </div>
@@ -159,7 +159,7 @@ const ProductList = () => {
                   </div>
                   <div className="onsko-info">
                     <h3 className="onsko-title">{product.name.toLowerCase()}</h3>
-                    <p className="onsko-price">${Number(product.price).toFixed(2)}</p>
+                    <p className="onsko-price">₹{Number(product.price).toFixed(0)}</p>
                   </div>
                 </Link>
               ))}
