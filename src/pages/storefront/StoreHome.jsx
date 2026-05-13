@@ -43,7 +43,7 @@ const BusinessHome = () => {
 
         // 2. Resolve Homepage Content
         let homeContent = contextConfig || null;
-        
+
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('preview') === 'true') {
           const previewData = localStorage.getItem(`carthive_preview_${slug}`);
