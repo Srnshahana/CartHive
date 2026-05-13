@@ -242,63 +242,62 @@ const BusinessHome = () => {
                   <div className="category-image-container" style={{ marginBottom: '1.2rem' }}>
                     {product.offer_price && <span className="offer-badge">SALE</span>}
                     <img src={product.image} alt={product.name} />
+                    
+                    {/* Transforming Cart Button (Floating) */}
+                    <div className="home-card-action-wrapper" onClick={(e) => e.preventDefault()}>
+                      {cart.find(item => item.id === product.id) ? (
+                        <div className="home-card-qty-selector">
+                          <button 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              const item = cart.find(i => i.id === product.id);
+                              if (item.quantity === 1) {
+                                removeFromCart(product.id);
+                              } else {
+                                updateQuantity(product.id, -1);
+                              }
+                            }} 
+                            className="home-qty-btn"
+                          >
+                            <Minus size={14} />
+                          </button>
+                          <span className="home-qty-current">{cart.find(i => i.id === product.id).quantity}</span>
+                          <button 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              updateQuantity(product.id, 1);
+                            }} 
+                            className="home-qty-btn"
+                          >
+                            <Plus size={14} />
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            addToCart(product, 1);
+                          }}
+                          className="home-add-btn"
+                        >
+                          <ShoppingBag size={16} />
+                        </button>
+                      )}
+                    </div>
                   </div>
+
                   <div className="product-item-info" style={{ padding: '0 0.5rem' }}>
                     <h3 style={{ fontSize: '1rem', marginBottom: '0.3rem' }}>{product.name}</h3>
                     <p className="product-item-description" style={{ fontSize: '0.85rem', marginBottom: '0.8rem', display: '-webkit-box', WebkitLineClamp: '2', WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                       {product.description}
                     </p>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1rem' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                        <p className="product-item-price" style={{ fontWeight: '800', fontSize: '1.1rem' }}>₹{Number(product.price).toFixed(0)}</p>
-                        {product.offer_price && (
-                          <p style={{ color: '#ef4444', textDecoration: 'line-through', fontSize: '0.9rem', opacity: 0.6 }}>
-                            ₹{Number(product.offer_price).toFixed(0)}
-                          </p>
-                        )}
-                      </div>
-
-                      {/* Transforming Cart Button */}
-                      <div onClick={(e) => e.preventDefault()} style={{ cursor: 'default' }}>
-                        {cart.find(item => item.id === product.id) ? (
-                          <div className="home-card-qty-selector">
-                            <button 
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                const item = cart.find(i => i.id === product.id);
-                                if (item.quantity === 1) {
-                                  removeFromCart(product.id);
-                                } else {
-                                  updateQuantity(product.id, -1);
-                                }
-                              }} 
-                              className="home-qty-btn"
-                            >
-                              <Minus size={14} />
-                            </button>
-                            <span className="home-qty-current">{cart.find(i => i.id === product.id).quantity}</span>
-                            <button 
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                updateQuantity(product.id, 1);
-                              }} 
-                              className="home-qty-btn"
-                            >
-                              <Plus size={14} />
-                            </button>
-                          </div>
-                        ) : (
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              addToCart(product, 1);
-                            }}
-                            className="home-add-btn"
-                          >
-                            <ShoppingBag size={16} />
-                          </button>
-                        )}
-                      </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                      <p className="product-item-price" style={{ fontWeight: '800', fontSize: '1.1rem' }}>₹{Number(product.price).toFixed(0)}</p>
+                      {product.offer_price && (
+                        <p style={{ color: '#ef4444', textDecoration: 'line-through', fontSize: '0.9rem', opacity: 0.6 }}>
+                          ₹{Number(product.offer_price).toFixed(0)}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </Link>
