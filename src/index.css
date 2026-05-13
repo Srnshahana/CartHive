@@ -191,7 +191,7 @@ body {
 
 /* Magazine About Section */
 .section-magazine-about {
-  padding: 5rem 10% 4rem;
+  padding: 5rem 30px 4rem; /* Synced with Hero margin */
   background: #fafafa; /* Subtle off-white to separate sections */
   text-align: left;
   /* Shifted to left-aligned */
@@ -309,7 +309,7 @@ body {
 .section-best-sellers-content {
   position: relative;
   min-height: auto;
-  padding: 40px 10% 1rem 10%;
+  padding: 40px 30px 1rem 30px; /* Synced with Hero margin */
   /* Standardized: 40px top, 10% sides, 1rem bottom for tighter reveal */
   display: flex;
   flex-direction: column;
@@ -477,7 +477,7 @@ body {
 
 .featured-banner-container {
   width: auto;
-  margin: 0 10%;
+  margin: 0 30px; /* Synced with Hero margin */
   height: 600px;
   background-size: cover;
   background-position: center;
@@ -589,11 +589,7 @@ body {
   padding: 1.5rem 0;
   overflow: hidden;
   white-space: nowrap;
-  position: relative;
-  display: flex;
-  align-items: center;
-  margin: 0 10%;
-  /* Synced with other sections */
+  margin: 0 30px; /* Synced with Hero margin */
   width: auto;
   border-radius: 0 0 40px 40px;
 }
@@ -654,8 +650,7 @@ body {
 .section-categories {
   position: relative;
   z-index: 2;
-  padding: 10px 10% 4rem 10%;
-  /* Reduced top padding */
+  padding: 10px 30px 4rem 30px; /* Synced with Hero margin */
   background: #f3f4f6;
 }
 
@@ -777,8 +772,8 @@ body {
   /* Removed 100vh to eliminate gap */
   padding: 40px 0 1rem 0;
   /* Increased top padding for better external spacing */
-  margin-left: 10%;
-  margin-right: 10%;
+  margin-left: 30px; /* Synced with Hero margin */
+  margin-right: 30px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -855,8 +850,7 @@ body {
   position: relative;
   z-index: 4;
   min-height: 60vh;
-  padding: 40px 10% 4rem 10%;
-  /* Standardized */
+  padding: 40px 30px 4rem 30px; /* Synced with Hero margin */
   text-align: center;
   background: #f8f8f8;
   display: flex;
