@@ -83,7 +83,7 @@ const ProductDetails = () => {
           {/* Image Side */}
           <div className="details-image-box-new reveal-on-scroll" style={{ transitionDelay: '0.2s' }}>
             {product.is_bestseller && (
-              <div className="onsko-badge" style={{ top: '30px', left: '30px' }}>best seller</div>
+              <div className="best-seller-pill-luxury">best seller</div>
             )}
             <img 
               src={product.image} 
@@ -92,86 +92,92 @@ const ProductDetails = () => {
             />
           </div>
 
-          {/* Info Side */}
+          {/* Info Side - Structured with Cards to match Home sections */}
           <div className="details-info-new">
-            <div className="reveal-on-scroll" style={{ transitionDelay: '0.3s' }}>
-              <div className="magazine-category-badge">
+            {/* 1. Identity Card (White) */}
+            <div className="info-card-luxury product-identity-block reveal-on-scroll" style={{ transitionDelay: '0.3s' }}>
+              <span className="magazine-label">
                 {product.categories?.name || 'exclusive collection'}
-              </div>
+              </span>
               <h1 className="product-title-luxury">{product.name.toLowerCase()}</h1>
               
-              <div className="luxury-price-tag">
+              <div className="luxury-price-tag" style={{ margin: 0 }}>
                 <span className="currency">₹</span>
                 <span className="amount">{Number(product.price).toFixed(0)}</span>
               </div>
+            </div>
 
+            {/* 2. Action Card (Neutral Blue-Gray to match Story section) */}
+            <div className="info-card-luxury action-card reveal-on-scroll" style={{ transitionDelay: '0.4s' }}>
+              <div className="action-row-main">
+                {cart.find(item => item.id === product.id) ? (
+                  <div className="luxury-button-qty-selector">
+                    <button 
+                      onClick={() => {
+                        const item = cart.find(i => i.id === product.id);
+                        if (item.quantity === 1) {
+                          removeFromCart(product.id);
+                        } else {
+                          updateQuantity(product.id, -1);
+                        }
+                      }} 
+                      className="btn-qty-action"
+                    >
+                      <Minus size={18} />
+                    </button>
+                    <span className="btn-qty-current">{cart.find(i => i.id === product.id).quantity}</span>
+                    <button 
+                      onClick={() => updateQuantity(product.id, 1)} 
+                      className="btn-qty-action"
+                    >
+                      <Plus size={18} />
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => addToCart(product, 1)}
+                    className="btn-add-to-bag"
+                  >
+                    <span>add to bag</span>
+                  </button>
+                )}
+                
+                <div className="total-price-mini">
+                  <span className="label-caps" style={{ color: 'rgba(0,0,0,0.4)' }}>subtotal</span>
+                  <span className="mini-amount">₹{(Number(product.price) * (cart.find(item => item.id === product.id)?.quantity || 1)).toFixed(0)}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* 3. Narrative Card (White) */}
+            <div className="info-card-luxury reveal-on-scroll product-secondary-info" style={{ transitionDelay: '0.5s' }}>
+              <h3 className="label-caps" style={{ marginBottom: '1.5rem', color: '#111' }}>description</h3>
               <p className="details-desc-luxury">{product.description}</p>
               
-              <div className="magazine-divider" style={{ margin: '3rem 0', width: '100px' }}></div>
-            </div>
-
-            {/* Action Bar */}
-            <div className="reveal-on-scroll action-bar-luxury" style={{ transitionDelay: '0.4s' }}>
-              <div className="total-price-display">
-                <span className="label-caps">total</span>
-                <span className="total-amount">₹{(Number(product.price) * (cart.find(item => item.id === product.id)?.quantity || 1)).toFixed(0)}</span>
-              </div>
+              <div className="magazine-divider" style={{ margin: '3rem 0', opacity: '0.05' }}></div>
               
-              {cart.find(item => item.id === product.id) ? (
-                <div className="luxury-button-qty-selector">
-                  <button 
-                    onClick={() => {
-                      const item = cart.find(i => i.id === product.id);
-                      if (item.quantity === 1) {
-                        removeFromCart(product.id);
-                      } else {
-                        updateQuantity(product.id, -1);
-                      }
-                    }} 
-                    className="btn-qty-action"
-                  >
-                    <Minus size={18} />
-                  </button>
-                  <span className="btn-qty-current">{cart.find(i => i.id === product.id).quantity}</span>
-                  <button 
-                    onClick={() => updateQuantity(product.id, 1)} 
-                    className="btn-qty-action"
-                  >
-                    <Plus size={18} />
-                  </button>
-                </div>
-              ) : (
-                <button
-                  onClick={() => addToCart(product, 1)}
-                  className="btn-add-to-bag"
-                >
-                  <span>add to bag</span>
-                </button>
-              )}
-            </div>
-
-            {/* Accordions */}
-            <div className="reveal-on-scroll" style={{ marginTop: '4rem', transitionDelay: '0.6s' }}>
-              {[
-                { title: 'shipping information', content: 'We offer free carbon-neutral shipping on all orders over ₹1000. Standard delivery typically takes 3-5 business days.' },
-                { title: 'care instructions', content: 'Handle with care. Avoid direct sunlight for prolonged periods. Wipe with a dry, soft microfiber cloth for cleaning.' },
-                { title: 'boutique guarantee', content: 'Every piece in our collection is curated for quality and authenticity. We guarantee the premium craftsmanship of all products.' }
-              ].map((item, idx) => (
-                <div key={idx} style={{ borderBottom: '1px solid #dcdbd5', padding: '20px 0' }}>
-                  <button 
-                    onClick={() => toggleAccordion(idx)}
-                    style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left' }}
-                  >
-                    <span style={{ fontWeight: '700', textTransform: 'lowercase', fontSize: '0.95rem' }}>{item.title}</span>
-                    {activeAccordion === idx ? <Minus size={16} /> : <Plus size={16} />}
-                  </button>
-                  {activeAccordion === idx && (
-                    <div style={{ marginTop: '15px', fontSize: '0.9rem', color: '#666', lineHeight: 1.6 }}>
-                      {item.content}
-                    </div>
-                  )}
-                </div>
-              ))}
+              <div className="details-accordions">
+                {[
+                  { title: 'shipping information', content: 'We offer free carbon-neutral shipping on all orders over ₹1000. Standard delivery typically takes 3-5 business days.' },
+                  { title: 'care instructions', content: 'Handle with care. Avoid direct sunlight for prolonged periods. Wipe with a dry, soft microfiber cloth for cleaning.' },
+                  { title: 'boutique guarantee', content: 'Every piece in our collection is curated for quality and authenticity. We guarantee the premium craftsmanship of all products.' }
+                ].map((item, idx) => (
+                  <div key={idx} className="accordion-item-luxury">
+                    <button 
+                      onClick={() => toggleAccordion(idx)}
+                      className="accordion-trigger"
+                    >
+                      <span>{item.title}</span>
+                      {activeAccordion === idx ? <Minus size={16} /> : <Plus size={16} />}
+                    </button>
+                    {activeAccordion === idx && (
+                      <div className="accordion-content">
+                        {item.content}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

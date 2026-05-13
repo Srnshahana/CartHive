@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { useStore } from '../../context/StoreContext';
-import { ShoppingCart, User, Menu, X, Search } from 'lucide-react';
+import { ShoppingCart, User, Menu, X, Search, Plus, Minus, ShoppingBag } from 'lucide-react';
+import { useCart } from '../../context/CartContext';
 
 const BusinessHome = () => {
   const { slug } = useParams();
   const { businessId, storeData, config: contextConfig, loading: storeLoading } = useStore();
+  const { cart, addToCart, updateQuantity, removeFromCart } = useCart();
   const business = storeData; // Compatibility map
   const [config, setConfig] = useState(null);
   const [products, setProducts] = useState([]);
@@ -246,13 +248,57 @@ const BusinessHome = () => {
                     <p className="product-item-description" style={{ fontSize: '0.85rem', marginBottom: '0.8rem', display: '-webkit-box', WebkitLineClamp: '2', WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                       {product.description}
                     </p>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                      <p className="product-item-price" style={{ fontWeight: '800', fontSize: '1.1rem' }}>₹{Number(product.price).toFixed(0)}</p>
-                      {product.offer_price && (
-                        <p style={{ color: '#ef4444', textDecoration: 'line-through', fontSize: '0.9rem', opacity: 0.6 }}>
-                          ₹{Number(product.offer_price).toFixed(0)}
-                        </p>
-                      )}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                        <p className="product-item-price" style={{ fontWeight: '800', fontSize: '1.1rem' }}>₹{Number(product.price).toFixed(0)}</p>
+                        {product.offer_price && (
+                          <p style={{ color: '#ef4444', textDecoration: 'line-through', fontSize: '0.9rem', opacity: 0.6 }}>
+                            ₹{Number(product.offer_price).toFixed(0)}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Transforming Cart Button */}
+                      <div onClick={(e) => e.preventDefault()} style={{ cursor: 'default' }}>
+                        {cart.find(item => item.id === product.id) ? (
+                          <div className="home-card-qty-selector">
+                            <button 
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                const item = cart.find(i => i.id === product.id);
+                                if (item.quantity === 1) {
+                                  removeFromCart(product.id);
+                                } else {
+                                  updateQuantity(product.id, -1);
+                                }
+                              }} 
+                              className="home-qty-btn"
+                            >
+                              <Minus size={14} />
+                            </button>
+                            <span className="home-qty-current">{cart.find(i => i.id === product.id).quantity}</span>
+                            <button 
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                updateQuantity(product.id, 1);
+                              }} 
+                              className="home-qty-btn"
+                            >
+                              <Plus size={14} />
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              addToCart(product, 1);
+                            }}
+                            className="home-add-btn"
+                          >
+                            <ShoppingBag size={16} />
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </Link>
