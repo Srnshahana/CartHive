@@ -3,11 +3,13 @@ import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { ArrowLeft, ShoppingBag, Minus, Plus, ChevronDown, ChevronUp } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
+import { useStore } from '../../context/StoreContext';
 
 const ProductDetails = () => {
   const { slug, id } = useParams();
+  const { businessId, storeData } = useStore();
+  const business = storeData;
   const [product, setProduct] = useState(null);
-  const [business, setBusiness] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [activeAccordion, setActiveAccordion] = useState(null);
@@ -15,14 +17,11 @@ const ProductDetails = () => {
 
   useEffect(() => {
     const fetchProductData = async () => {
+      if (!businessId) return;
       try {
         setLoading(true);
-        const { data: biz } = await supabase.from('businesses').select('*').eq('slug', slug).single();
-        setBusiness(biz);
-        if (biz) {
-          const { data: prod } = await supabase.from('products').select('*, categories(*)').eq('id', id).single();
-          setProduct(prod);
-        }
+        const { data: prod } = await supabase.from('products').select('*, categories(*)').eq('id', id).single();
+        setProduct(prod);
       } catch (err) {
         console.error('Error:', err);
       } finally {
@@ -30,7 +29,7 @@ const ProductDetails = () => {
       }
     };
     fetchProductData();
-  }, [slug, id]);
+  }, [businessId, id]);
 
   const toggleAccordion = (index) => {
     setActiveAccordion(activeAccordion === index ? null : index);

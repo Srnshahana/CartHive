@@ -7,6 +7,7 @@ import { ShoppingCart, User, Menu, X, Search } from 'lucide-react';
 const BusinessHome = () => {
   const { slug } = useParams();
   const { businessId, storeData, config: contextConfig, loading: storeLoading } = useStore();
+  const business = storeData; // Compatibility map
   const [config, setConfig] = useState(null);
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
