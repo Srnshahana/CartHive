@@ -140,7 +140,8 @@ const Navbar = () => {
 
       {/* Right: Actions */}
       <div className="nav-icons">
-        {user ? (
+        {/* Dashboard Link - ONLY show if user is the owner of THIS specific shop */}
+        {user && business && user.business_id === business.id ? (
           <Link to="/admin" className="nav-icon-link" style={{ fontSize: '0.85rem', fontWeight: '800', textDecoration: 'none', color: '#0f172a' }}>
             <LayoutDashboard size={20} />
             <span className="auth-label-mobile">dashboard</span>
@@ -169,7 +170,7 @@ const Navbar = () => {
   );
 };
 
-const StoreIcon = () => (
+const NavbarStoreIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M12 2L3 7V17L12 22L21 17V7L12 2Z" fill="#3b82f6" fillOpacity="0.1" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     <path d="M12 22V12" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />

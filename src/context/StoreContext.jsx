@@ -37,7 +37,7 @@ export const StoreProvider = ({ children }) => {
           .from('homepage_content')
           .select('*')
           .eq('business_id', business.id)
-          .single();
+          .maybeSingle();
 
         setStoreData({
           ...business,

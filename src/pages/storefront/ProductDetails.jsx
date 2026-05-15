@@ -110,7 +110,7 @@ const ProductDetails = () => {
             {/* 2. Action Card (Neutral Blue-Gray to match Story section) */}
             <div className="info-card-luxury action-card reveal-on-scroll" style={{ transitionDelay: '0.4s' }}>
               <div className="action-row-main">
-                {cart.find(item => item.id === product.id) ? (
+                {cart.find(item => item.id === product.id) && !business?.is_firsTime && !product.id.startsWith('m') ? (
                   <div className="luxury-button-qty-selector">
                     <button 
                       onClick={() => {
@@ -135,10 +135,15 @@ const ProductDetails = () => {
                   </div>
                 ) : (
                   <button
-                    onClick={() => addToCart(product, 1)}
-                    className="btn-add-to-bag"
+                    onClick={() => {
+                      if (!business?.is_firsTime && !product.id.startsWith('m')) {
+                        addToCart(product, 1);
+                      }
+                    }}
+                    className={`btn-add-to-bag ${business?.is_firsTime || product.id.startsWith('m') ? 'disabled' : ''}`}
+                    disabled={business?.is_firsTime || product.id.startsWith('m')}
                   >
-                    <span>add to bag</span>
+                    <span>{business?.is_firsTime || product.id.startsWith('m') ? 'product not available' : 'add to bag'}</span>
                   </button>
                 )}
                 

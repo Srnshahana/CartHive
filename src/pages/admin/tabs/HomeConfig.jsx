@@ -42,18 +42,111 @@ const ImageUploadField = ({ label, value, onUpload, uploading, bucket, width = '
   );
 };
 
-const HomeConfig = ({ homeConfig, handleConfigChange, handleSocialImageChange, businessSlug, handleFileUpload, uploadingMap, publishChanges, publishing }) => {
+const HomeConfig = ({ 
+  homeConfig, 
+  handleConfigChange, 
+  handleSocialImageChange, 
+  businessSlug, 
+  handleFileUpload, 
+  uploadingMap, 
+  publishChanges, 
+  publishing,
+  tourStep,
+  setTourStep,
+  completeOnboarding
+}) => {
   const [previewKey, setPreviewKey] = React.useState(0);
+  const previewRef = React.useRef(null);
+  const brandingRef = React.useRef(null);
+
+  React.useEffect(() => {
+    if (tourStep === 2 && brandingRef.current) {
+      setTimeout(() => {
+        brandingRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 500); // Small delay to ensure layout is ready
+    }
+  }, [tourStep]);
 
   const handleApply = () => {
     localStorage.setItem(`carthive_preview_${businessSlug}`, JSON.stringify(homeConfig));
     setPreviewKey(k => k + 1);
+    if (tourStep === 3) {
+      setTourStep(4);
+      // Wait for re-render then scroll
+      setTimeout(() => {
+        previewRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
+    }
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem', width: '100%', maxWidth: '100%' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem', width: '100%', maxWidth: '100%', position: 'relative' }}>
+      
+      {/* Tour Step 4: Scroll UP to Preview (Now at top) */}
+      {tourStep === 4 && (
+        <div className="tour-tip-overlay">
+          <div className="tour-tip-card" style={{ top: '150px', left: '50%', transform: 'translateX(-50%)', position: 'fixed' }}>
+            <div className="tour-tip-icon"><ImageIcon size={20} /></div>
+            <div className="tour-tip-content">
+              <h4>3. Check Your Preview</h4>
+              <p>Take a look at your mobile view at the top. If you're happy, click Next!</p>
+              <button 
+                onClick={() => {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                  setTourStep(5);
+                }} 
+                className="btn-shop-dark" 
+                style={{ marginTop: '1rem', padding: '0.4rem 1.5rem', fontSize: '0.8rem' }}
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
-      {/* Scrollable Container */}
+      {/* Live Preview Section - MOVED TO TOP */}
+      <div ref={previewRef} style={{ order: -1 }}>
+        <h3 style={{ marginBottom: '1.5rem', fontSize: '1.5rem', fontWeight: '800' }}>
+          Live <span className="gradient-text">Store Preview</span>
+        </h3>
+        <div style={{ 
+          border: '12px solid #1e293b', 
+          borderRadius: '40px', 
+          overflow: 'hidden', 
+          height: '750px', 
+          width: '100%', 
+          background: '#fff', 
+          boxShadow: '0 40px 100px rgba(0,0,0,0.1)' 
+        }}>
+          <iframe key={previewKey} src={`/${businessSlug}?preview=true&k=${previewKey}`} style={{ width: '100%', height: '100%', border: 'none' }} title="Preview" />
+        </div>
+      </div>
+
+      {/* Tour Step 4: Scroll UP to Preview (Now at top) */}
+      {tourStep === 4 && (
+        <div className="tour-tip-overlay">
+          <div className="tour-tip-card" style={{ top: '150px', left: '50%', transform: 'translateX(-50%)', position: 'fixed' }}>
+            <div className="tour-tip-icon"><ImageIcon size={20} /></div>
+            <div className="tour-tip-content">
+              <h4>3. Check Your Preview</h4>
+              <p>Take a look at your mobile view at the top. If you're happy, click Next!</p>
+              <button 
+                onClick={() => {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                  setTourStep(5);
+                }} 
+                className="btn-shop-dark" 
+                style={{ marginTop: '1rem', padding: '0.4rem 1.5rem', fontSize: '0.8rem' }}
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Scrollable Container (Form Inputs) */}
       <div
         className="custom-scrollbar"
         style={{
@@ -67,14 +160,29 @@ const HomeConfig = ({ homeConfig, handleConfigChange, handleSocialImageChange, b
       >
 
         {/* Branding Section */}
-        <div className="admin-table-container" style={{ minWidth: '600px', flexShrink: 0, padding: '2.5rem', scrollSnapAlign: 'start' }}>
+        <div 
+          ref={brandingRef}
+          className="admin-table-container" 
+          style={{ minWidth: '600px', flexShrink: 0, padding: '2.5rem', scrollSnapAlign: 'start' }}
+        >
           <h4 style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <span style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '1.2rem', fontWeight: '800' }}>
               <Type size={22} color="#3b82f6" /> Store Branding
             </span>
-            <button className="btn-shop-dark" style={{ padding: '0.4rem 1rem', fontSize: '0.85rem' }} onClick={handleApply}>
-              Apply
-            </button>
+            <div style={{ position: 'relative' }}>
+              <button className="btn-shop-dark" style={{ padding: '0.4rem 1rem', fontSize: '0.85rem' }} onClick={handleApply}>
+                Apply
+              </button>
+              {tourStep === 3 && (
+                <div className="tour-arrow-pointer" style={{ right: 'calc(100% + 15px)', left: 'auto', top: '50%' }}>
+                  <div className="arrow-content" style={{ flexDirection: 'row-reverse' }}>
+                    <div className="arrow-pulse"></div>
+                    <span>2. Apply Changes</span>
+                    <div className="arrow-tip-left"></div>
+                  </div>
+                </div>
+              )}
+            </div>
           </h4>
           <div className="admin-form" style={{ gap: '2rem' }}>
             <ImageUploadField
@@ -95,13 +203,39 @@ const HomeConfig = ({ homeConfig, handleConfigChange, handleSocialImageChange, b
               height="140px"
             />
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
-              <div className="form-group">
+              <div className="form-group" style={{ position: 'relative' }}>
                 <label>Hero Heading</label>
-                <textarea className="form-input" name="hero_heading" value={homeConfig.hero_heading} onChange={handleConfigChange} rows="2" />
+                <textarea 
+                  className="form-input" 
+                  name="hero_heading" 
+                  value={homeConfig.hero_heading || ''} 
+                  placeholder="Timeless Elegance"
+                  onChange={(e) => {
+                    handleConfigChange(e);
+                    if (tourStep === 2) setTourStep(3);
+                  }} 
+                  rows="2" 
+                />
+                {/* Tour Arrow for Hero Heading */}
+                {tourStep === 2 && (
+                  <div className="tour-arrow-pointer" style={{ left: 'calc(100% + 15px)', top: '50%' }}>
+                    <div className="arrow-content">
+                      <div className="arrow-pulse"></div>
+                      <span>1. Update Hero Text</span>
+                    </div>
+                  </div>
+                )}
               </div>
               <div className="form-group">
                 <label>Hero Subtext</label>
-                <textarea className="form-input" name="hero_subtext" value={homeConfig.hero_subtext} onChange={handleConfigChange} rows="2" />
+                <textarea 
+                  className="form-input" 
+                  name="hero_subtext" 
+                  value={homeConfig.hero_subtext || ''} 
+                  placeholder="Handcrafted jewellery for your most precious moments."
+                  onChange={handleConfigChange} 
+                  rows="2" 
+                />
               </div>
             </div>
           </div>
@@ -129,11 +263,25 @@ const HomeConfig = ({ homeConfig, handleConfigChange, handleSocialImageChange, b
             />
             <div className="form-group">
               <label>Banner Title</label>
-              <textarea className="form-input" name="banner_title" value={homeConfig.banner_title} onChange={handleConfigChange} rows="2" />
+              <textarea 
+                className="form-input" 
+                name="banner_title" 
+                value={homeConfig.banner_title || ''} 
+                placeholder="Exquisite Collections"
+                onChange={handleConfigChange} 
+                rows="2" 
+              />
             </div>
             <div className="form-group">
               <label>Moving Ticker Text</label>
-              <textarea className="form-input" name="ticker_text" value={homeConfig.ticker_text} onChange={handleConfigChange} rows="2" />
+              <textarea 
+                className="form-input" 
+                name="ticker_text" 
+                value={homeConfig.ticker_text || ''} 
+                placeholder="NEW ARRIVALS • Worldwide Shipping • Ethical & Sustainable ✿"
+                onChange={handleConfigChange} 
+                rows="2" 
+              />
             </div>
           </div>
         </div>
@@ -271,30 +419,6 @@ const HomeConfig = ({ homeConfig, handleConfigChange, handleSocialImageChange, b
         </div>
       </div>
 
-      {/* Live Preview Section */}
-      <div style={{ marginTop: '2rem' }}>
-        <h3 style={{ marginBottom: '2rem', fontSize: '1.5rem', fontWeight: '800' }}>Live <span className="gradient-text">Store Preview</span></h3>
-        <div style={{ border: '12px solid #1e293b', borderRadius: '40px', overflow: 'hidden', height: '800px', width: '100%', background: '#fff', boxShadow: '0 40px 100px rgba(0,0,0,0.2)' }}>
-          <iframe key={previewKey} src={`/${businessSlug}?preview=true&k=${previewKey}`} style={{ width: '100%', height: '100%', border: 'none' }} title="Preview" />
-        </div>
-      </div>
-      <style>{`
-        .upload-btn {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: #f1f5f9;
-          color: #64748b;
-          width: 45px;
-          height: 45px;
-          border-radius: 10px;
-          cursor: pointer;
-          transition: all 0.2s;
-        }
-        .upload-btn:hover { background: #e2e8f0; color: #3b82f6; }
-        .spin { animation: spin 1s linear infinite; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-      `}</style>
     </div>
   );
 };

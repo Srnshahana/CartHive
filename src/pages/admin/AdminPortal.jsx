@@ -1,14 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { uploadImage } from '../../lib/storage';
-import { LayoutDashboard, ShoppingBag, Edit3, LogOut, Package, User, Layout, Save, Plus, Loader2, Menu, X, ArrowLeft } from 'lucide-react';
+import {
+  LayoutDashboard, ShoppingBag, Package, Settings, LogOut, Menu, X, Save, Plus,
+  ArrowLeft, ArrowRight, Store as StoreIcon, ImageIcon, CheckCircle, Loader2, Heart, Tag, Type, MapPin, Mail, Phone,
+  User, Rocket
+} from 'lucide-react';
 
 // Import Tabs
 import Dashboard from './tabs/Dashboard';
 import Orders from './tabs/Orders';
 import Products from './tabs/Products';
 import HomeConfig from './tabs/HomeConfig';
+
+// Jewelry Assets
+import heroImg from '../../assets/hero-img.avif';
+import bannerImg from '../../assets/banner.avif';
+import insta1 from '../../assets/insta-1.jpg';
+import insta2 from '../../assets/insta2.jpg';
+import insta3 from '../../assets/insta3.jpg';
+import insta4 from '../../assets/insta4.jpg';
+import insta5 from '../../assets/insta5.jpg';
+import insta6 from '../../assets/insta6.jpg';
+import logoSvg from '../../assets/logo.svg';
 
 const AdminPortal = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -31,6 +46,9 @@ const AdminPortal = () => {
   const [homeConfig, setHomeConfig] = useState(null);
   const [user, setUser] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showArrowPointer, setShowArrowPointer] = useState(false);
+  const [tourStep, setTourStep] = useState(0); // 0: None, 1: Point to Store Design, 2: Inside HomeConfig tips
   const [alertConfig, setAlertConfig] = useState({ visible: false, title: '', message: '' });
 
   useEffect(() => {
@@ -58,6 +76,11 @@ const AdminPortal = () => {
       const { data: biz, error: bizErr } = await supabase.from('businesses').select('*').eq('id', userData.business_id).single();
       if (bizErr || !biz) throw new Error('Business not found');
       setCurrentBusiness(biz);
+
+      // Handle First Time Onboarding
+      if (biz.is_firsTime) {
+        setShowOnboarding(true);
+      }
 
       // Fetch Config - Get the latest entry to avoid issues with duplicates
       const { data: configList } = await supabase
@@ -94,20 +117,21 @@ const AdminPortal = () => {
       }
 
       if (!finalConfig) {
+        const dbLogo = biz.logo_url;
         finalConfig = {
-          logo_url: dbLogo || 'https://img.icons8.com/color/96/shop.png',
-          hero_image: 'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=1200&h=600&fit=crop',
-          hero_heading: 'shine on the',
-          hero_subtext: 'beauty that reflects your spirits',
-          banner_image: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=1200&h=600&fit=crop',
-          banner_title: 'effortless beauty, timeless charm.',
-          banner_subtitle: 'new arrivals now in stock',
-          ticker_text: 'orders over $50 ✿ free shipping on orders over $50 ✿',
-          footer_about: 'born from a passion for beauty rituals, we celebrate individuality and bring radiant confidence to everyone',
+          logo_url: dbLogo || logoSvg,
+          hero_image: heroImg,
+          hero_heading: 'Timeless Elegance',
+          hero_subtext: 'Handcrafted jewellery for your most precious moments.',
+          banner_image: bannerImg,
+          banner_title: 'Exquisite Collections',
+          banner_subtitle: 'Discover our latest handcrafted bracelets and rings.',
+          ticker_text: 'NEW ARRIVALS: Handcrafted Gold & Silver Collections • Worldwide Shipping • Ethical & Sustainable ✿ • ',
+          footer_about: 'Dedicated to the art of fine jewellery, we craft pieces that tell your unique story with elegance and precision.',
           support_email: `support@${biz.slug}.com`,
           support_phone: '+1 123 456 7890',
-          physical_address: '123 Creative Lane, Art City',
-          our_story: 'Born from a passion for beauty rituals, we celebrate individuality and bring radiant confidence to everyone. We believe that every person deserves to feel beautiful in their own skin.',
+          physical_address: '123 Jewellery Lane, Luxury City',
+          our_story: 'Dedicated to the art of fine jewellery, we craft pieces that tell your unique story with elegance and precision. Our journey began with a simple passion for transforming raw materials into timeless treasures. Today, we celebrate individuality and bring radiant confidence to everyone who wears our collections.',
           instagram_link: 'https://instagram.com/',
           facebook_link: '',
           twitter_link: '',
@@ -117,28 +141,23 @@ const AdminPortal = () => {
           privacy_policy: `We respect your privacy. We only collect information necessary to process your orders and improve your shopping experience. We never sell your personal data to third parties.`,
           shipping_policy: `We strive to ship all orders within 2-3 business days. Shipping rates are calculated at checkout. You will receive a tracking number once your order is on its way.`,
           refund_policy: `We accept returns within 30 days of purchase. Items must be in original condition. Please contact our support team to initiate a return process.`,
-          instagram_images: [
-            'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600&h=600&fit=crop',
-            'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=600&h=600&fit=crop',
-            'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=1200&h=600&fit=crop',
-            'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=400&h=400&fit=crop',
-            'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600&h=600&fit=crop',
-            'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=600&h=600&fit=crop'
-          ]
+          instagram_images: [insta1, insta2, insta3, insta4, insta5, insta6]
         };
       }
 
-      // Mandatory fallbacks for existing config
-      if (!finalConfig.instagram_images || finalConfig.instagram_images.length === 0) {
-        finalConfig.instagram_images = [
-          'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600&h=600&fit=crop',
-          'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=600&h=600&fit=crop',
-          'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=1200&h=600&fit=crop',
-          'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=400&h=400&fit=crop',
-          'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600&h=600&fit=crop',
-          'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=600&h=600&fit=crop'
-        ];
-      }
+      const brandingDefaults = {
+        logo_url: logoSvg,
+        hero_image: heroImg,
+        hero_heading: 'Timeless Elegance',
+        hero_subtext: 'Handcrafted jewellery for your most precious moments.',
+        banner_image: bannerImg,
+        banner_title: 'Exquisite Collections',
+        banner_subtitle: 'Discover our latest handcrafted bracelets and rings.',
+        ticker_text: 'NEW ARRIVALS: Handcrafted Gold & Silver Collections • Worldwide Shipping • Ethical & Sustainable ✿ • ',
+        footer_about: 'Dedicated to the art of fine jewellery, we craft pieces that tell your unique story with elegance and precision.',
+        our_story: 'Dedicated to the art of fine jewellery, we craft pieces that tell your unique story with elegance and precision. Our journey began with a simple passion for transforming raw materials into timeless treasures. Today, we celebrate individuality and bring radiant confidence to everyone who wears our collections.',
+        instagram_images: [insta1, insta2, insta3, insta4, insta5, insta6]
+      };
 
       const policyDefaults = {
         terms_and_conditions: `Welcome to our store. By accessing this website, you agree to be bound by these Terms and Conditions. All content is owned by ${biz.name}. We reserve the right to modify these terms at any time.`,
@@ -147,15 +166,21 @@ const AdminPortal = () => {
         refund_policy: `We accept returns within 30 days of purchase. Items must be in original condition. Please contact our support team to initiate a return process.`
       };
 
+      const allDefaults = { ...brandingDefaults, ...policyDefaults };
       const patchedConfig = { ...finalConfig };
-      Object.keys(policyDefaults).forEach(key => {
+
+      Object.keys(allDefaults).forEach(key => {
         const val = patchedConfig[key];
-        if (val === null || val === undefined || (typeof val === 'string' && val.trim() === '')) {
-          patchedConfig[key] = policyDefaults[key];
+        const isOldLogo = key === 'logo_url' && val === 'https://img.icons8.com/color/96/shop.png';
+        
+        if (val === null || val === undefined || (typeof val === 'string' && val.trim() === '') || (Array.isArray(val) && val.length === 0) || isOldLogo) {
+          patchedConfig[key] = allDefaults[key];
         }
       });
 
       setHomeConfig(patchedConfig);
+      // Sync to local storage for the preview iframe to pick up immediately
+      localStorage.setItem(`carthive_preview_${biz.slug}`, JSON.stringify(patchedConfig));
 
       // Fetch Categories
       const { data: cats } = await supabase.from('categories').select('*').eq('business_id', biz.id);
@@ -318,18 +343,18 @@ const AdminPortal = () => {
         business_id: currentBusiness.id,
         store_name: currentBusiness.name,
         logo_url: 'https://img.icons8.com/color/96/shop.png',
-        hero_image: 'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=1200&h=600&fit=crop',
-        hero_heading: 'shine on the',
-        hero_subtext: 'beauty that reflects your spirits',
-        banner_image: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=1200&h=600&fit=crop',
-        banner_title: 'effortless beauty, timeless charm.',
-        banner_subtitle: 'new arrivals now in stock',
-        ticker_text: 'orders over $50 ✿ free shipping on orders over $50 ✿',
-        footer_about: 'born from a passion for beauty rituals, we celebrate individuality and bring radiant confidence to everyone',
+        hero_image: heroImg,
+        hero_heading: 'Timeless Elegance',
+        hero_subtext: 'Handcrafted jewellery for your most precious moments.',
+        banner_image: bannerImg,
+        banner_title: 'Exquisite Collections',
+        banner_subtitle: 'Discover our latest handcrafted bracelets and rings.',
+        ticker_text: 'NEW ARRIVALS: Handcrafted Gold & Silver Collections • Worldwide Shipping • Ethical & Sustainable ✿ • ',
+        footer_about: 'Dedicated to the art of fine jewellery, we craft pieces that tell your unique story with elegance and precision.',
         support_email: `support@${currentBusiness.slug}.com`,
         support_phone: '+1 123 456 7890',
-        physical_address: '123 Creative Lane, Art City',
-        our_story: 'Born from a passion for beauty rituals, we celebrate individuality and bring radiant confidence to everyone. We believe that every person deserves to feel beautiful in their own skin.',
+        physical_address: '123 Jewellery Lane, Luxury City',
+        our_story: 'Dedicated to the art of fine jewellery, we craft pieces that tell your unique story with elegance and precision. Our journey began with a simple passion for transforming raw materials into timeless treasures. Today, we celebrate individuality by bringing radiant confidence to everyone who wears our collections. We believe that every piece of jewellery should be as unique and precious as the moments they commemorate, crafted with ethical standards and sustainable practices at the heart of everything we do.',
         instagram_link: 'https://instagram.com/',
         facebook_link: '',
         twitter_link: '',
@@ -339,14 +364,7 @@ const AdminPortal = () => {
         privacy_policy: `We respect your privacy. We only collect information necessary to process your orders and improve your shopping experience. We never sell your personal data to third parties.`,
         shipping_policy: `We strive to ship all orders within 2-3 business days. Shipping rates are calculated at checkout. You will receive a tracking number once your order is on its way.`,
         refund_policy: `We accept returns within 30 days of purchase. Items must be in original condition. Please contact our support team to initiate a return process.`,
-        instagram_images: [
-          'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600&h=600&fit=crop',
-          'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=600&h=600&fit=crop',
-          'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=1200&h=600&fit=crop',
-          'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=400&h=400&fit=crop',
-          'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600&h=600&fit=crop',
-          'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=600&h=600&fit=crop'
-        ]
+        instagram_images: [insta1, insta2, insta3, insta4, insta5, insta6]
       };
 
       const { error } = await supabase.from('homepage_content').insert(defaults);
@@ -358,6 +376,17 @@ const AdminPortal = () => {
       showAlert(err.message, 'Error creating defaults');
     } finally {
       setPublishing(false);
+    }
+  };
+
+  const completeOnboarding = async () => {
+    try {
+      await supabase.from('businesses').update({ is_firsTime: false }).eq('id', currentBusiness.id);
+      setShowOnboarding(false);
+      setCurrentBusiness(prev => ({ ...prev, is_firsTime: false }));
+    } catch (err) {
+      console.error('Error completing onboarding:', err);
+      setShowOnboarding(false);
     }
   };
 
@@ -381,11 +410,32 @@ const AdminPortal = () => {
           <button className={`admin-nav-item ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => { setActiveTab('dashboard'); setMobileMenuOpen(false); }}><LayoutDashboard size={20} /> dashboard</button>
           <button className={`admin-nav-item ${activeTab === 'orders' ? 'active' : ''}`} onClick={() => { setActiveTab('orders'); setMobileMenuOpen(false); }}><ShoppingBag size={20} /> orders</button>
           <button className={`admin-nav-item ${activeTab === 'products' ? 'active' : ''}`} onClick={() => { setActiveTab('products'); setMobileMenuOpen(false); }}><Package size={20} /> products</button>
-          <button className={`admin-nav-item ${activeTab === 'home_screen' ? 'active' : ''}`} onClick={() => { setActiveTab('home_screen'); setMobileMenuOpen(false); }}><Layout size={20} /> store design</button>
+
+          <div style={{ position: 'relative' }}>
+            <button className={`admin-nav-item ${activeTab === 'home_screen' ? 'active' : ''}`} onClick={() => {
+                setActiveTab('home_screen');
+                setMobileMenuOpen(false);
+                if (showArrowPointer) {
+                  setShowArrowPointer(false);
+                  setTourStep(2);
+                }
+              }}>
+                  <CustomStoreIcon /> <span>Store Design</span>
+            </button>
+            {showArrowPointer && (
+              <div className="tour-arrow-pointer">
+                <div className="arrow-content">
+                  <div className="arrow-pulse"></div>
+                  <span>Start Here!</span>
+                </div>
+              </div>
+            )}
+          </div>
+
           <div style={{ borderTop: '1px solid #e2e8f0', margin: '1rem 0', paddingTop: '1rem' }}>
-            <button 
-              onClick={() => navigate(`/${currentBusiness?.slug}`)} 
-              className="admin-nav-item" 
+            <button
+              onClick={() => navigate(`/${currentBusiness?.slug}`)}
+              className="admin-nav-item"
               style={{ color: '#64748b' }}
             >
               <ArrowLeft size={20} /> back to store
@@ -397,31 +447,50 @@ const AdminPortal = () => {
 
       <main className="admin-content">
         <header className="admin-header">
+          {/* <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}> */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <button className="admin-mobile-menu-btn" onClick={() => setMobileMenuOpen(true)}>
               <Menu size={24} />
             </button>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: '800', color: '#0f172a' }}>
-              {activeTab === 'home_screen' ? 'Store Design' : activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
-            </h2>
+            {activeTab !== 'home_screen' && (
+              <h2 style={{ fontSize: '1.5rem', fontWeight: '800', color: '#0f172a' }}>
+                {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
+              </h2>
+            )}
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            {homeConfig?.logo_url ? (
-              <img src={homeConfig.logo_url} alt={currentBusiness?.name} style={{ height: '40px', width: '40px', borderRadius: '4px', objectFit: 'contain' }} />
-            ) : (
-              <StoreIcon />
-            )}
             {activeTab === 'home_screen' && (
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
-                <button className="btn-shop-dark" style={{ padding: '0.6rem 1.8rem', borderRadius: '10px' }} onClick={() => publishChanges()} disabled={publishing}>
-                  <Save size={18} /> {publishing ? 'publishing...' : 'publish changes'}
+              <div style={{ display: 'flex', gap: '0.75rem', position: 'relative' }}>
+                <button
+                  className="btn-launch-instant"
+                  style={{
+                    padding: '0.6rem 2.2rem',
+                    borderRadius: '12px',
+                    fontSize: '0.9rem',
+                    fontWeight: '800',
+                    boxShadow: '0 4px 15px rgba(59, 130, 246, 0.3)',
+                    background: 'linear-gradient(135deg, #2563eb 0%, #1e40af 100%)'
+                  }}
+                  onClick={() => publishChanges()}
+                  disabled={publishing}
+                >
+                  {publishing ? 'publishing...' : 'publish changes'}
                 </button>
+                {tourStep === 5 && (
+                  <div className="tour-arrow-pointer" style={{ right: 'calc(100% + 15px)', left: 'auto', top: '50%' }}>
+                    <div className="arrow-content" style={{ flexDirection: 'row-reverse' }}>
+                      <div className="arrow-pulse"></div>
+                      <span>Click Publish!</span>
+                      <div className="arrow-tip-left"></div>
+                    </div>
+                  </div>
+                )}
                 <button
                   className="btn-shop-dark"
-                  style={{ padding: '0.6rem 1.2rem', borderRadius: '10px', background: '#102a82', color: 'white', borderColor: '#102a82' }}
+                  style={{ padding: '0.6rem 1.2rem', borderRadius: '12px', background: '#f8fafc', color: '#64748b', borderColor: '#e2e8f0' }}
                   onClick={createDefaultConfig}
                   disabled={publishing}
-                  title="Create default configuration row"
+                  title="Reset Design"
                 >
                   <Plus size={18} />
                 </button>
@@ -460,9 +529,43 @@ const AdminPortal = () => {
             publishing={publishing}
             handleResetDesign={handleResetDesign}
             createDefaultConfig={createDefaultConfig}
+            tourStep={tourStep}
+            setTourStep={setTourStep}
+            completeOnboarding={completeOnboarding}
           />
         )}
       </main>
+
+      {/* Onboarding Overlay - Simplified Welcome */}
+      {showOnboarding && (
+        <div className="admin-onboarding-overlay">
+          <div className="onboarding-card reveal-on-scroll reveal-active" style={{ maxWidth: '500px', textAlign: 'center' }}>
+            <div style={{ background: '#eff6ff', width: '80px', height: '80px', borderRadius: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem', color: '#3b82f6' }}>
+              <Rocket size={40} />
+            </div>
+            <h2 className="onboarding-title">Welcome to {currentBusiness?.name || 'Your Boutique'}!</h2>
+            <p className="onboarding-subtitle" style={{ marginBottom: '2.5rem' }}>
+              Your boutique is live! Let's take 30 seconds to customize your design and make it truly yours.
+            </p>
+
+            <button
+              onClick={() => {
+                setShowOnboarding(false);
+                setShowArrowPointer(true);
+                setTourStep(1);
+              }}
+              className="btn-launch-instant"
+              style={{ width: '100%', justifyContent: 'center', padding: '1.2rem' }}
+            >
+              Let's Get Started <ArrowRight size={20} />
+            </button>
+
+            <button onClick={completeOnboarding} className="onboarding-skip" style={{ marginTop: '1.5rem' }}>
+              I'll explore on my own
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Custom Alert Modal */}
       {alertConfig.visible && (
@@ -482,7 +585,7 @@ const AdminPortal = () => {
 
 export default AdminPortal;
 
-const StoreIcon = () => (
+const CustomStoreIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" fill="#1e293b" />
     <path d="M12 17C14.7614 17 17 14.7614 17 12C17 9.23858 14.7614 7 12 7C9.23858 7 7 9.23858 7 12C7 14.7614 9.23858 17 12 17Z" fill="white" />

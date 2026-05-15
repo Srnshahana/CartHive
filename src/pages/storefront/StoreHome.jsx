@@ -2,8 +2,31 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { useStore } from '../../context/StoreContext';
-import { ShoppingCart, User, Menu, X, Search, Plus, Minus, ShoppingBag } from 'lucide-react';
+import { ShoppingBag, User, Menu, X, Search, Heart } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
+
+// Jewelry Assets
+import heroImg from '../../assets/hero-img.avif';
+import bannerImg from '../../assets/banner.avif';
+import insta1 from '../../assets/insta-1.jpg';
+import insta2 from '../../assets/insta2.jpg';
+import insta3 from '../../assets/insta3.jpg';
+import insta4 from '../../assets/insta4.jpg';
+import insta5 from '../../assets/insta5.jpg';
+import insta6 from '../../assets/insta6.jpg';
+
+// Jewelry Product & Category Assets
+import catBracelet from '../../assets/category-bracelet.jpg';
+import catChain from '../../assets/category-chain.jpg';
+import catEarring from '../../assets/category-earing.avif';
+import catRing from '../../assets/category-ring.jpg';
+
+import bs1 from '../../assets/bestseller-1.jpg';
+import bs2 from '../../assets/best seller2.png';
+import bs3 from '../../assets/best seller-3.jpg';
+import bs4 from '../../assets/bestseller4.jpg';
+import bs5 from '../../assets/bestseller5.jpg';
+import logoSvg from '../../assets/logo.svg';
 
 const BusinessHome = () => {
   const { slug } = useParams();
@@ -71,27 +94,22 @@ const BusinessHome = () => {
           .eq('business_id', businessId);
         setCategories(cats || []);
 
-        // Define the beautiful default/fallback content
+        // Define the beautiful jewelry default/fallback content
         const defaults = {
-          hero_image: 'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=1200&h=600&fit=crop',
-          hero_heading: 'shine on the',
-          hero_subtext: 'beauty that reflects your spirits',
-          banner_image: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=1200&h=600&fit=crop',
-          banner_title: 'effortless beauty, timeless charm ahead.',
-          banner_subtitle: 'new arrivals now in stock',
-          ticker_text: 'effortless beauty, timeless charm ahead • new arrivals now in stock • effortless beauty, timeless charm ahead • new arrivals now in stock • ',
-          footer_about: 'born from a passion for beauty rituals, we celebrate individuality and bring radiant confidence to everyone',
+          logo_url: logoSvg,
+          hero_image: heroImg,
+          hero_heading: 'Timeless Elegance',
+          hero_subtext: 'Handcrafted jewellery for your most precious moments.',
+          banner_image: bannerImg,
+          banner_title: 'Exquisite Collections',
+          banner_subtitle: 'Discover our latest handcrafted bracelets and rings.',
+          ticker_text: 'NEW ARRIVALS: Handcrafted Gold & Silver Collections • Worldwide Shipping • Ethical & Sustainable ✿ • ',
+          footer_about: 'Dedicated to the art of fine jewellery, we craft pieces that tell your unique story with elegance and precision.',
+          our_story: 'Dedicated to the art of fine jewellery, we craft pieces that tell your unique story with elegance and precision. Our journey began with a simple passion for transforming raw materials into timeless treasures. Today, we celebrate individuality and bring radiant confidence to everyone who wears our collections.',
           support_email: `support@${slug}.com`,
           support_phone: '+1 123 456 7890',
-          physical_address: '123 Creative Lane, Art City',
-          instagram_images: [
-            'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600&h=600&fit=crop',
-            'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=600&h=600&fit=crop',
-            'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=1200&h=600&fit=crop',
-            'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=400&h=400&fit=crop',
-            'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600&h=600&fit=crop',
-            'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=600&h=600&fit=crop'
-          ]
+          physical_address: '123 Jewellery Lane, Luxury City',
+          instagram_images: [insta1, insta2, insta3, insta4, insta5, insta6]
         };
 
         // Combine defaults with real data
@@ -153,22 +171,18 @@ const BusinessHome = () => {
   if (error) return <div className="container section-padding" style={{ textAlign: 'center' }}><h1>{error}</h1><Link to="/">Go back home</Link></div>;
 
   const MOCK_PRODUCTS = [
-    { id: 'm1', name: 'Summer Whisper', price: 450, image: 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=600&h=800&fit=crop', is_bestseller: true, description: 'A light, airy abstract piece with soft pastel strokes and bright accents.' },
-    { id: 'm2', name: 'Morning Dew', price: 320, image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&h=800&fit=crop', is_bestseller: true, description: 'Fresh and vibrant floral study capturing the first light of day.' },
-    { id: 'm3', name: 'Azure Horizon', price: 280, image: 'https://images.unsplash.com/photo-1549490349-8643362247b5?w=600&h=800&fit=crop', is_bestseller: true, description: 'Minimalist coastal abstract with soothing blue and white tones.' },
-    { id: 'm4', name: 'Golden Glow', price: 550, image: 'https://images.unsplash.com/photo-1541963463532-d68292c34b19?w=600&h=800&fit=crop', is_bestseller: true, description: 'Radiant abstract composition celebrating warmth and light.' },
-    { id: 'm5', name: 'Ocean Breath', price: 390, image: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600&h=800&fit=crop', is_bestseller: true, description: 'A calming abstract with deep oceanic blues.' },
-    { id: 'm6', name: 'Velvet Sky', price: 420, image: 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=600&h=800&fit=crop', is_bestseller: true, description: 'Soft purples and deep indigos.' },
-    { id: 'm7', name: 'Sunbeam', price: 290, image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&h=800&fit=crop', is_bestseller: true, description: 'Bright yellow energy on canvas.' },
-    { id: 'm8', name: 'Earthly Ties', price: 310, image: 'https://images.unsplash.com/photo-1549490349-8643362247b5?w=600&h=800&fit=crop', is_bestseller: true, description: 'Organic textures and tones.' },
-    { id: 'm9', name: 'Forest Echo', price: 480, image: 'https://images.unsplash.com/photo-1541963463532-d68292c34b19?w=600&h=800&fit=crop', is_bestseller: true, description: 'Deep greens and misty grays.' },
-    { id: 'm10', name: 'Lunar Path', price: 360, image: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600&h=800&fit=crop', is_bestseller: true, description: 'Monochrome abstract moonlight.' }
+    { id: 'm1', name: 'Midnight Bloom Earrings', price: 1250, image: bs1, is_bestseller: true, description: 'Exquisitely handcrafted earrings featuring a delicate floral pattern.' },
+    { id: 'm2', name: 'Ethereal Silver Chain', price: 2100, image: bs2, is_bestseller: true, description: 'A timeless sterling silver chain that adds a touch of grace to any outfit.' },
+    { id: 'm3', name: 'Golden Aura Bracelet', price: 1850, image: bs3, is_bestseller: true, description: 'A sophisticated gold-plated bracelet designed for everyday elegance.' },
+    { id: 'm4', name: 'Celestial Ring Set', price: 3200, image: bs4, is_bestseller: true, description: 'A set of intricately carved rings inspired by the night sky.' },
+    { id: 'm5', name: 'Starlight Pendant', price: 1450, image: bs5, is_bestseller: true, description: 'A sparkling pendant that captures the essence of refined luxury.' }
   ];
 
   const MOCK_CATEGORIES = [
-    { id: 'c1', name: 'modern abstract', cover_img: 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=600&h=800&fit=crop' },
-    { id: 'c2', name: 'minimalist', cover_img: 'https://images.unsplash.com/photo-1549490349-8643362247b5?w=600&h=800&fit=crop' },
-    { id: 'c3', name: 'floral studies', cover_img: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&h=800&fit=crop' }
+    { id: 'c1', name: 'Bracelets', cover_img: catBracelet },
+    { id: 'c2', name: 'Chains', cover_img: catChain },
+    { id: 'c3', name: 'Earrings', cover_img: catEarring },
+    { id: 'c4', name: 'Rings', cover_img: catRing }
   ];
 
   const displayProducts = products.length > 0 ? products : MOCK_PRODUCTS;
@@ -206,6 +220,11 @@ const BusinessHome = () => {
           <Link to={`/${slug}/products`} className="btn-shop">
             shop now
           </Link>
+        </div>
+
+        {/* Scroll Down Indicator */}
+        <div className="hero-scroll-indicator">
+          <div className="scroll-arrow"></div>
         </div>
       </section>
 
@@ -245,7 +264,7 @@ const BusinessHome = () => {
                     
                     {/* Transforming Cart Button (Floating) */}
                     <div className="home-card-action-wrapper" onClick={(e) => e.preventDefault()}>
-                      {cart.find(item => item.id === product.id) ? (
+                      {cart.find(item => item.id === product.id) && !business?.is_firsTime && !product.id.startsWith('m') ? (
                         <div className="home-card-qty-selector">
                           <button 
                             onClick={(e) => {
@@ -276,11 +295,19 @@ const BusinessHome = () => {
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            addToCart(product, 1);
+                            if (!business?.is_firsTime && !product.id.startsWith('m')) {
+                              addToCart(product, 1);
+                            }
                           }}
-                          className="home-add-btn"
+                          className={`home-add-btn ${business?.is_firsTime || product.id.startsWith('m') ? 'disabled' : ''}`}
+                          title={business?.is_firsTime || product.id.startsWith('m') ? 'Product not available' : 'Add to Cart'}
+                          disabled={business?.is_firsTime || product.id.startsWith('m')}
                         >
-                          <ShoppingBag size={16} />
+                          {business?.is_firsTime || product.id.startsWith('m') ? (
+                            <span style={{ fontSize: '0.65rem', fontWeight: '800', whiteSpace: 'nowrap', padding: '0 10px' }}>Product not available</span>
+                          ) : (
+                            <ShoppingBag size={16} />
+                          )}
                         </button>
                       )}
                     </div>
