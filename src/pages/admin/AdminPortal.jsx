@@ -5,7 +5,7 @@ import { uploadImage } from '../../lib/storage';
 import {
   LayoutDashboard, ShoppingBag, Package, Settings, LogOut, Menu, X, Save, Plus,
   ArrowLeft, ArrowRight, Store as StoreIcon, ImageIcon, CheckCircle, Loader2, Heart, Tag, Type, MapPin, Mail, Phone,
-  User, Rocket
+  User, Rocket, Check
 } from 'lucide-react';
 
 // Import Tabs
@@ -34,12 +34,14 @@ const AdminPortal = () => {
   const [uploadingMap, setUploadingMap] = useState({});
   const navigate = useNavigate();
 
-  const showAlert = (message, title = 'Alert') => {
-    setAlertConfig({ visible: true, title, message });
+  const showAlert = (message, title = 'Alert', onClose = null) => {
+    setAlertConfig({ visible: true, title, message, onClose });
   };
 
   const closeAlert = () => {
-    setAlertConfig({ ...alertConfig, visible: false });
+    const cb = alertConfig.onClose;
+    setAlertConfig({ visible: false, title: '', message: '', onClose: null });
+    if (cb) cb();
   };
 
   const [currentBusiness, setCurrentBusiness] = useState(null);
@@ -47,6 +49,7 @@ const AdminPortal = () => {
   const [user, setUser] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showPaymentPlan, setShowPaymentPlan] = useState(false);
   const [showArrowPointer, setShowArrowPointer] = useState(false);
   const [tourStep, setTourStep] = useState(0); // 0: None, 1: Point to Store Design, 2: Inside HomeConfig tips
   const [alertConfig, setAlertConfig] = useState({ visible: false, title: '', message: '' });
@@ -77,8 +80,10 @@ const AdminPortal = () => {
       if (bizErr || !biz) throw new Error('Business not found');
       setCurrentBusiness(biz);
 
-      // Handle First Time Onboarding
-      if (biz.is_firsTime) {
+      // Handle First Time Onboarding and Payment Plan
+      if (!biz.payment_plan || biz.payment_plan === '') {
+        setShowPaymentPlan(true);
+      } else if (biz.is_firsTime) {
         setShowOnboarding(true);
       }
 
@@ -141,7 +146,9 @@ const AdminPortal = () => {
           privacy_policy: `We respect your privacy. We only collect information necessary to process your orders and improve your shopping experience. We never sell your personal data to third parties.`,
           shipping_policy: `We strive to ship all orders within 2-3 business days. Shipping rates are calculated at checkout. You will receive a tracking number once your order is on its way.`,
           refund_policy: `We accept returns within 30 days of purchase. Items must be in original condition. Please contact our support team to initiate a return process.`,
-          instagram_images: [insta1, insta2, insta3, insta4, insta5, insta6]
+          instagram_images: [insta1, insta2, insta3, insta4, insta5, insta6],
+          payment_qr_url: '',
+          payment_link: ''
         };
       }
 
@@ -252,6 +259,30 @@ const AdminPortal = () => {
     setHomeConfig(prev => ({ ...prev, instagram_images: newImages }));
   };
 
+  const handleSelectPaymentPlan = async (planName) => {
+    try {
+      const { error } = await supabase.from('businesses').update({ payment_plan: planName }).eq('id', currentBusiness.id);
+      if (error) throw error;
+      setCurrentBusiness(prev => ({ ...prev, payment_plan: planName }));
+      setShowPaymentPlan(false);
+      
+      const proceedToOnboarding = () => {
+        if (currentBusiness?.is_firsTime) {
+          setShowOnboarding(true);
+        }
+      };
+
+      if (planName !== 'Launch') {
+        showAlert('Our team will contact you within 24 hours to complete your upgrade.', 'Premium Plan Selected', proceedToOnboarding);
+      } else {
+        proceedToOnboarding();
+      }
+    } catch (err) {
+      console.error('Error saving payment plan:', err);
+      showAlert('Failed to save payment plan', 'Please try again.');
+    }
+  };
+
   const publishChanges = async (silent = false) => {
     setPublishing(true);
     try {
@@ -265,10 +296,8 @@ const AdminPortal = () => {
         avatar_url: logo
       }).eq('id', currentBusiness.id);
 
-      if (bizError) console.warn('Business logo update error:', bizError.message);
+      if (bizError) console.warn('Business update error:', bizError.message);
 
-      // Smart Update: ONLY edit existing row
-      // Strip ID and non-existent columns to avoid schema errors
       const {
         id: oldId,
         created_at,
@@ -279,7 +308,8 @@ const AdminPortal = () => {
         ...configToSave
       } = homeConfig;
 
-      const { data: updatedData, error } = await supabase.from('homepage_content').update({
+      // Smart Upsert: Check if row exists, if not insert, else update
+      const { data: updatedData, error } = await supabase.from('homepage_content').upsert({
         ...configToSave,
         business_id: currentBusiness.id,
         store_name: currentBusiness.name,
@@ -293,16 +323,17 @@ const AdminPortal = () => {
         privacy_policy: homeConfig.privacy_policy,
         shipping_policy: homeConfig.shipping_policy,
         refund_policy: homeConfig.refund_policy
-      }).eq('business_id', currentBusiness.id).select();
+      }, { onConflict: 'business_id' }).select();
 
       if (error) throw error;
 
-      if (!updatedData || updatedData.length === 0) {
-        throw new Error('No configuration found to update. Please click the "+" button to initialize your store first!');
-      }
-
       // Sync local state and re-fetch to be 100% sure
       await refreshAllData();
+
+      if (tourStep === 5) {
+        await completeOnboarding();
+        setTourStep(0);
+      }
 
       if (!silent) showAlert('Changes published successfully!', 'Success');
       return true;
@@ -485,15 +516,6 @@ const AdminPortal = () => {
                     </div>
                   </div>
                 )}
-                <button
-                  className="btn-shop-dark"
-                  style={{ padding: '0.6rem 1.2rem', borderRadius: '12px', background: '#f8fafc', color: '#64748b', borderColor: '#e2e8f0' }}
-                  onClick={createDefaultConfig}
-                  disabled={publishing}
-                  title="Reset Design"
-                >
-                  <Plus size={18} />
-                </button>
               </div>
             )}
             <div style={{ textAlign: 'right', marginRight: '1rem' }}>
@@ -504,7 +526,7 @@ const AdminPortal = () => {
           </div>
         </header>
 
-        {activeTab === 'dashboard' && <Dashboard products={products} />}
+        {activeTab === 'dashboard' && <Dashboard products={products} currentBusiness={currentBusiness} user={user} homeConfig={homeConfig} refreshData={refreshAllData} />}
         {activeTab === 'orders' && <Orders />}
         {activeTab === 'products' && (
           <Products
@@ -535,6 +557,9 @@ const AdminPortal = () => {
           />
         )}
       </main>
+
+      {/* Payment Plan Selection Overlay */}
+      {showPaymentPlan && <PaymentPlanSelection onSelectPlan={handleSelectPaymentPlan} />}
 
       {/* Onboarding Overlay - Simplified Welcome */}
       {showOnboarding && (
@@ -591,3 +616,105 @@ const CustomStoreIcon = () => (
     <path d="M12 17C14.7614 17 17 14.7614 17 12C17 9.23858 14.7614 7 12 7C9.23858 7 7 9.23858 7 12C7 14.7614 9.23858 17 12 17Z" fill="white" />
   </svg>
 );
+
+const PaymentPlanSelection = ({ onSelectPlan }) => {
+  const [selectedPlan, setSelectedPlan] = useState('Growth');
+
+  return (
+    <div className="admin-onboarding-overlay" style={{ background: '#f8fafc', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 9999, padding: '2rem', overflowY: 'auto' }}>
+
+      <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+        <h2 style={{ fontSize: '2.5rem', fontWeight: '900', color: '#0f172a', marginBottom: '1rem' }}>Choose your plan</h2>
+        <p style={{ fontSize: '1.1rem', color: '#64748b' }}>Select the perfect plan to grow your boutique.</p>
+      </div>
+      
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', maxWidth: '1100px', width: '100%', alignItems: 'stretch' }}>
+        
+        {/* Plan 1: Launch */}
+        <div 
+          onClick={() => setSelectedPlan('Launch')}
+          style={{ background: '#fff', borderRadius: '24px', padding: '2.5rem 2rem', boxShadow: selectedPlan === 'Launch' ? '0 20px 50px -10px rgba(30, 58, 138, 0.15)' : '0 10px 40px -10px rgba(0,0,0,0.05)', border: selectedPlan === 'Launch' ? '2px solid #1e3a8a' : '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'all 0.2s', transform: selectedPlan === 'Launch' ? 'scale(1.02)' : 'scale(1)' }}
+        >
+          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+            <h3 style={{ fontSize: '1.5rem', fontWeight: '800', color: '#0f172a', marginBottom: '0.5rem' }}>Launch</h3>
+            <p style={{ fontSize: '0.9rem', color: '#64748b', marginBottom: '1.5rem', minHeight: '40px' }}>For small businesses testing the waters</p>
+            <div style={{ fontSize: '3rem', fontWeight: '900', color: '#0f172a' }}>FREE</div>
+          </div>
+          <div style={{ borderTop: '1px solid #e2e8f0', margin: '0 -2rem 2rem', padding: '0 2rem' }}></div>
+          <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 2rem 0', flex: 1, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {['Online storefront', 'Product listings', 'Order management', 'Payment integration', 'Customer support'].map((feat, i) => (
+              <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '0.95rem', color: '#334155' }}>
+                <Check size={18} color="#0f172a" /> {feat}
+              </li>
+            ))}
+          </ul>
+          <div style={{ width: '100%', padding: '1rem', borderRadius: '12px', background: selectedPlan === 'Launch' ? '#1e3a8a' : '#f1f5f9', color: selectedPlan === 'Launch' ? '#fff' : '#64748b', fontWeight: '800', fontSize: '1rem', textAlign: 'center', transition: 'all 0.2s' }}>
+            {selectedPlan === 'Launch' ? 'Selected' : 'Select'}
+          </div>
+        </div>
+
+        {/* Plan 2: Growth */}
+        <div 
+          onClick={() => setSelectedPlan('Growth')}
+          style={{ background: '#fff', borderRadius: '24px', padding: '2.5rem 2rem', boxShadow: selectedPlan === 'Growth' ? '0 20px 50px -10px rgba(30, 58, 138, 0.15)' : '0 10px 40px -10px rgba(0,0,0,0.05)', border: selectedPlan === 'Growth' ? '2px solid #1e3a8a' : '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', position: 'relative', cursor: 'pointer', transition: 'all 0.2s', transform: selectedPlan === 'Growth' ? 'scale(1.02)' : 'scale(1)' }}
+        >
+          <div style={{ position: 'absolute', top: '-16px', left: '50%', transform: 'translateX(-50%)', background: '#1e3a8a', color: '#fff', padding: '6px 20px', borderRadius: '20px', fontSize: '0.75rem', fontWeight: '800', letterSpacing: '0.05em' }}>MOST POPULAR</div>
+          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+            <h3 style={{ fontSize: '1.5rem', fontWeight: '800', color: '#0f172a', marginBottom: '0.5rem' }}>Growth</h3>
+            <p style={{ fontSize: '0.9rem', color: '#64748b', marginBottom: '1.5rem', minHeight: '40px' }}>Include everything in Launch plus features.</p>
+            <div style={{ fontSize: '2.5rem', fontWeight: '900', color: '#0f172a' }}>Rs. 1,999<span style={{ fontSize: '1.2rem', color: '#64748b', fontWeight: '700' }}>/mo</span></div>
+          </div>
+          <div style={{ borderTop: '1px solid #e2e8f0', margin: '0 -2rem 2rem', padding: '0 2rem' }}></div>
+          <p style={{ fontSize: '0.9rem', fontWeight: '800', color: '#0f172a', marginBottom: '1rem' }}>Includes everything in FREE:</p>
+          <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 2rem 0', flex: 1, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {['Analytics', 'WhatsApp marketing tools', 'Custom domains', 'SEO optimization'].map((feat, i) => (
+              <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '0.95rem', color: '#334155' }}>
+                <Check size={18} color="#0f172a" /> {feat}
+              </li>
+            ))}
+          </ul>
+          <div style={{ width: '100%', padding: '1rem', borderRadius: '12px', background: selectedPlan === 'Growth' ? '#1e3a8a' : '#f1f5f9', color: selectedPlan === 'Growth' ? '#fff' : '#64748b', fontWeight: '800', fontSize: '1rem', textAlign: 'center', transition: 'all 0.2s' }}>
+            {selectedPlan === 'Growth' ? 'Selected' : 'Select'}
+          </div>
+        </div>
+
+        {/* Plan 3: Scale */}
+        <div 
+          onClick={() => setSelectedPlan('Scale')}
+          style={{ background: '#fff', borderRadius: '24px', padding: '2.5rem 2rem', boxShadow: selectedPlan === 'Scale' ? '0 20px 50px -10px rgba(30, 58, 138, 0.15)' : '0 10px 40px -10px rgba(0,0,0,0.05)', border: selectedPlan === 'Scale' ? '2px solid #1e3a8a' : '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'all 0.2s', transform: selectedPlan === 'Scale' ? 'scale(1.02)' : 'scale(1)' }}
+        >
+          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+            <h3 style={{ fontSize: '1.5rem', fontWeight: '800', color: '#0f172a', marginBottom: '0.5rem' }}>Scale</h3>
+            <p style={{ fontSize: '0.9rem', color: '#64748b', marginBottom: '1.5rem', minHeight: '40px' }}>Designed for established businesses growing rapidly</p>
+            <div style={{ fontSize: '2.5rem', fontWeight: '900', color: '#0f172a' }}>Rs. 3,999<span style={{ fontSize: '1.2rem', color: '#64748b', fontWeight: '700' }}>/mo</span></div>
+          </div>
+          <div style={{ borderTop: '1px solid #e2e8f0', margin: '0 -2rem 2rem', padding: '0 2rem' }}></div>
+          <p style={{ fontSize: '0.9rem', fontWeight: '800', color: '#0f172a', marginBottom: '1rem' }}>Includes everything in Rs. 1,999/mo:</p>
+          <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 2rem 0', flex: 1, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {['Dedicated account manager', 'Priority support', 'API access', 'Multi-user accounts', 'Advanced reporting'].map((feat, i) => (
+              <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '0.95rem', color: '#334155' }}>
+                <Check size={18} color="#0f172a" /> {feat}
+              </li>
+            ))}
+          </ul>
+          <div style={{ width: '100%', padding: '1rem', borderRadius: '12px', background: selectedPlan === 'Scale' ? '#1e3a8a' : '#f1f5f9', color: selectedPlan === 'Scale' ? '#fff' : '#64748b', fontWeight: '800', fontSize: '1rem', textAlign: 'center', transition: 'all 0.2s' }}>
+            {selectedPlan === 'Scale' ? 'Selected' : 'Select'}
+          </div>
+        </div>
+
+      </div>
+
+      <div style={{ marginTop: '4rem', textAlign: 'center', paddingBottom: '2rem' }}>
+        <button 
+          onClick={() => onSelectPlan(selectedPlan)} 
+          style={{ padding: '1.2rem 4rem', borderRadius: '16px', background: 'linear-gradient(135deg, #2563eb 0%, #1e40af 100%)', color: '#fff', fontSize: '1.1rem', fontWeight: '800', cursor: 'pointer', border: 'none', boxShadow: '0 10px 25px rgba(37, 99, 235, 0.3)', transition: 'all 0.3s ease' }}
+          onMouseOver={(e) => e.target.style.transform = 'translateY(-2px)'}
+          onMouseOut={(e) => e.target.style.transform = 'translateY(0)'}
+        >
+          Confirm {selectedPlan} Plan
+        </button>
+      </div>
+    </div>
+  );
+};
+

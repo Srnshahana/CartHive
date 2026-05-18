@@ -185,9 +185,15 @@ const BusinessHome = () => {
     { id: 'c4', name: 'Rings', cover_img: catRing }
   ];
 
-  const displayProducts = products.length > 0 ? products : MOCK_PRODUCTS;
-  const displayCategories = categories.length > 0 ? categories : MOCK_CATEGORIES;
-  const bestSellers = displayProducts.filter(p => p.is_bestseller).slice(0, 5);
+  // Smart Display: If merchant has very few items, we pad with mocks to keep the premium layout full
+  // We only do this if they haven't explicitly disabled "Demo Mode" (or just by default for now to keep it pretty)
+  const displayProducts = products.length >= 4 ? products : [...products, ...MOCK_PRODUCTS.slice(0, 5 - products.length)];
+  const displayCategories = categories.length >= 4 ? categories : [...categories, ...MOCK_CATEGORIES.slice(0, 4 - categories.length)];
+  
+  // For Best Sellers, we want to ensure we always show something beautiful
+  const bestSellers = displayProducts.filter(p => p.is_bestseller).length > 0 
+    ? displayProducts.filter(p => p.is_bestseller).slice(0, 5)
+    : displayProducts.slice(0, 5); // Fallback to any products if no best sellers marked
 
   const openPolicy = (title, content) => {
     // If content is empty, provide professional defaults based on title

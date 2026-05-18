@@ -1,5 +1,5 @@
 import React from 'react';
-import { Type, Tag, ImageIcon, MapPin, Mail, Phone, Upload, Loader2, Heart } from 'lucide-react';
+import { Type, Tag, ImageIcon, MapPin, Mail, Phone, Upload, Loader2, Heart, IndianRupee } from 'lucide-react';
 
 const ImageUploadField = ({ label, value, onUpload, uploading, bucket, width = '100%', height = '140px', objectFit = 'contain' }) => {
   const fileInputId = `upload-${label.replace(/\s+/g, '-').toLowerCase()}`;
@@ -368,7 +368,7 @@ const HomeConfig = ({
           </div>
         </div>
 
-        {/* Footer Section */}
+
         <div className="admin-table-container" style={{ minWidth: '550px', flexShrink: 0, padding: '2.5rem', scrollSnapAlign: 'start' }}>
           <h4 style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <span style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '1.2rem', fontWeight: '800' }}>

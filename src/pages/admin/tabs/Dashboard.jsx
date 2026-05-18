@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../../../lib/supabase';
 import { ShoppingBag, IndianRupee, Package, Clock, TrendingUp, ArrowUpRight, BarChart3, ChevronRight, Activity, Zap, Layers, Store } from 'lucide-react';
 
-const Dashboard = ({ products }) => {
+const Dashboard = ({ products, currentBusiness, user, homeConfig, refreshData }) => {
   const [stats, setStats] = useState({
     totalRevenue: 0,
     totalOrders: 0,
@@ -13,6 +13,32 @@ const Dashboard = ({ products }) => {
   const [monthlyData, setMonthlyData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [businessName, setBusinessName] = useState('');
+  
+  // UPI Edit State
+  const [isEditingUpi, setIsEditingUpi] = useState(false);
+  const [upiInput, setUpiInput] = useState('');
+  const [savingUpi, setSavingUpi] = useState(false);
+
+  useEffect(() => {
+    if (currentBusiness) {
+      setUpiInput(currentBusiness.upi || '');
+    }
+  }, [currentBusiness]);
+
+  const handleSaveUpi = async () => {
+    if (!currentBusiness) return;
+    try {
+      setSavingUpi(true);
+      const { error } = await supabase.from('businesses').update({ upi: upiInput }).eq('id', currentBusiness.id);
+      if (error) throw error;
+      if (refreshData) await refreshData();
+      setIsEditingUpi(false);
+    } catch (err) {
+      console.error('Error saving UPI:', err);
+    } finally {
+      setSavingUpi(false);
+    }
+  };
 
   useEffect(() => {
     fetchDashboardData();
@@ -208,20 +234,61 @@ const Dashboard = ({ products }) => {
 
           <div style={{ background: '#fff', borderRadius: '32px', padding: '2.5rem', border: '1px solid #f1f5f9' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '2rem' }}>
-              <Layers size={20} color="#111" />
-              <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: '#111', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Inventory Hits</h3>
+              <IndianRupee size={20} color="#111" />
+              <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: '#111', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Payment Details</h3>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-              {products.slice(0, 4).map((prod) => (
-                <div key={prod.id} style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                  <img src={prod.image} alt="" style={{ width: '44px', height: '44px', borderRadius: '10px', objectFit: 'cover' }} />
-                  <div style={{ flex: 1 }}>
-                    <p style={{ fontSize: '0.9rem', fontWeight: '800', color: '#111' }}>{prod.name}</p>
-                    <p style={{ fontSize: '0.8rem', color: '#999' }}>₹{prod.price}</p>
-                  </div>
-                  <TrendingUp size={16} color="#10b981" />
+
+              <div style={{ padding: '1.5rem', borderRadius: '20px', background: '#f8fafc', border: '1px solid #e2e8f0' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                  <p style={{ fontSize: '0.75rem', fontWeight: '900', color: '#64748b', textTransform: 'uppercase' }}>Store UPI ID</p>
+                  {!isEditingUpi ? (
+                    <button onClick={() => setIsEditingUpi(true)} style={{ background: 'none', border: 'none', color: '#3b82f6', fontSize: '0.75rem', fontWeight: '800', cursor: 'pointer' }}>Edit</button>
+                  ) : (
+                    <button onClick={handleSaveUpi} disabled={savingUpi} style={{ background: 'none', border: 'none', color: '#10b981', fontSize: '0.75rem', fontWeight: '800', cursor: 'pointer' }}>
+                      {savingUpi ? 'Saving...' : 'Save'}
+                    </button>
+                  )}
                 </div>
-              ))}
+                
+                {isEditingUpi ? (
+                  <input 
+                    type="text" 
+                    value={upiInput} 
+                    onChange={(e) => setUpiInput(e.target.value)} 
+                    placeholder="e.g. yourname@upi"
+                    style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '0.9rem', outline: 'none' }}
+                    autoFocus
+                  />
+                ) : (
+                  <p style={{ fontSize: '1.1rem', fontWeight: '800', color: '#0f172a', wordBreak: 'break-all' }}>{currentBusiness?.upi || 'Not Set'}</p>
+                )}
+              </div>
+
+              {currentBusiness?.upi && (
+                <div style={{ padding: '1.5rem', borderRadius: '20px', background: '#f8fafc', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <p style={{ alignSelf: 'flex-start', fontSize: '0.75rem', fontWeight: '900', color: '#64748b', textTransform: 'uppercase', marginBottom: '1.2rem' }}>Payment QR (Auto-Generated)</p>
+                  
+                  <div style={{ background: '#fff', padding: '1.2rem', borderRadius: '20px', border: '1px solid #e2e8f0', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>
+                    <img 
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(currentBusiness.upi.includes('://') ? currentBusiness.upi : `upi://pay?pa=${currentBusiness.upi}`)}`} 
+                      alt="Payment QR" 
+                      style={{ width: '160px', height: '160px', display: 'block' }} 
+                    />
+                  </div>
+                  <p style={{ fontSize: '0.65rem', color: '#102a82', marginTop: '0.8rem', fontWeight: '800', letterSpacing: '0.1em' }}>SCAN TO PAY</p>
+                </div>
+              )}
+
+              {/* Only show uploaded QR if link is missing */}
+              {homeConfig?.payment_qr_url && !currentBusiness?.upi && (
+                <div style={{ padding: '1.5rem', borderRadius: '20px', background: '#f8fafc', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <p style={{ alignSelf: 'flex-start', fontSize: '0.75rem', fontWeight: '900', color: '#64748b', textTransform: 'uppercase', marginBottom: '1.2rem' }}>Payment QR (Uploaded)</p>
+                  <div style={{ background: '#fff', padding: '1rem', borderRadius: '20px', border: '1px solid #e2e8f0' }}>
+                    <img src={homeConfig.payment_qr_url} alt="Payment QR" style={{ width: '160px', height: '160px', objectFit: 'contain' }} />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
