@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { useStore } from '../../context/StoreContext';
-import { ShoppingBag, User, Menu, X, Search, Heart } from 'lucide-react';
+import { ShoppingBag, User, Menu, X, Search, Heart, Plus, Minus } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 
 // Jewelry Assets
@@ -320,14 +320,14 @@ const BusinessHome = () => {
                   </div>
 
                   <div className="product-item-info" style={{ padding: '0 0.5rem' }}>
-                    <h3 style={{ fontSize: '1rem', marginBottom: '0.3rem' }}>{product.name}</h3>
-                    <p className="product-item-description" style={{ fontSize: '0.85rem', marginBottom: '0.8rem', display: '-webkit-box', WebkitLineClamp: '2', WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                    <h3 className="product-item-title" style={{ marginBottom: '0.3rem' }}>{product.name}</h3>
+                    <p className="product-item-description" style={{ marginBottom: '0.8rem', display: '-webkit-box', WebkitLineClamp: '2', WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                       {product.description}
                     </p>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                      <p className="product-item-price" style={{ fontWeight: '800', fontSize: '1.1rem' }}>₹{Number(product.price).toFixed(0)}</p>
+                      <p className="product-item-price" style={{ fontWeight: '800' }}>₹{Number(product.price).toFixed(0)}</p>
                       {product.offer_price && (
-                        <p style={{ color: '#ef4444', textDecoration: 'line-through', fontSize: '0.9rem', opacity: 0.6 }}>
+                        <p className="product-item-old-price" style={{ color: '#ef4444', textDecoration: 'line-through', opacity: 0.6 }}>
                           ₹{Number(product.offer_price).toFixed(0)}
                         </p>
                       )}

@@ -100,8 +100,8 @@ body {
 .hero-container {
   position: relative;
   z-index: 0;
-  height: 90vh;
-  margin: 30px;
+  height: 75vh;
+  margin: 15px;
   border-radius: 40px;
   /* Premium ultra-rounded corners */
   overflow: hidden;
@@ -1992,6 +1992,20 @@ body {
     }
   }
 
+/* Product Card Base Typography */
+.product-item-title {
+  font-size: 1rem;
+}
+.product-item-price {
+  font-size: 1.1rem;
+}
+.product-item-old-price {
+  font-size: 0.9rem;
+}
+.product-item-description {
+  font-size: 0.85rem;
+}
+
   @media (max-width: 768px) {
 
     /* Universal Small Screen Fix */
@@ -2045,7 +2059,7 @@ body {
 
     /* Hero Mobile */
     .hero-container {
-      height: 85vh;
+      height: 70vh;
       margin: 20px;
     }
 
@@ -2054,12 +2068,12 @@ body {
     }
 
     .hero-h1 {
-      font-size: clamp(2.5rem, 10vw, 3.5rem) !important;
+      font-size: clamp(2rem, 8vw, 3rem) !important;
       letter-spacing: -1px;
     }
 
     .hero-p {
-      font-size: 1rem;
+      font-size: 0.9rem;
       margin-bottom: 2rem;
     }
 
@@ -2091,10 +2105,29 @@ body {
     .best-sellers-grid,
     .categories-grid-screenshot {
       grid-template-columns: repeat(2, 1fr) !important;
-      gap: 1rem !important;
+      gap: 0.75rem !important;
+    }
+
+    /* Product Card Text Mobile Override */
+    .product-item-title {
+      font-size: 0.85rem !important;
+    }
+    .product-item-price {
+      font-size: 0.95rem !important;
+    }
+    .product-item-old-price {
+      font-size: 0.8rem !important;
+    }
+    .product-item-description {
+      font-size: 0.75rem !important;
     }
 
     /* Banner Mobile */
+    .section-featured-banner {
+      min-height: 0 !important;
+      padding: 2rem 0 !important;
+    }
+
     .featured-banner-container {
       height: 400px;
       margin: 0 20px;
