@@ -118,13 +118,28 @@ const BusinessHome = () => {
           // Priority: homeContent values, then defaults
           Object.keys(defaults).forEach(key => {
             if (homeContent[key] && homeContent[key] !== '') {
+              // Ignore old vite/local asset paths saved in DB to prevent broken images in production
+              if (typeof homeContent[key] === 'string' && (homeContent[key].startsWith('/src/') || homeContent[key].startsWith('/assets/'))) {
+                return;
+              }
               finalConfig[key] = homeContent[key];
             }
           });
 
+          // Handle instagram images array specifically to filter out local paths
+          if (homeContent.instagram_images && Array.isArray(homeContent.instagram_images)) {
+            finalConfig.instagram_images = homeContent.instagram_images.map((img, i) => {
+              if (!img || img.startsWith('/src/') || img.startsWith('/assets/')) return defaults.instagram_images[i];
+              return img;
+            });
+          }
+
           // Also include any extra fields from homeContent (like logos or custom links)
           Object.keys(homeContent).forEach(key => {
             if (!defaults[key] && homeContent[key]) {
+              if (typeof homeContent[key] === 'string' && (homeContent[key].startsWith('/src/') || homeContent[key].startsWith('/assets/'))) {
+                return;
+              }
               finalConfig[key] = homeContent[key];
             }
           });

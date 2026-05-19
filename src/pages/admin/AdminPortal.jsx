@@ -179,11 +179,17 @@ const AdminPortal = () => {
       Object.keys(allDefaults).forEach(key => {
         const val = patchedConfig[key];
         const isOldLogo = key === 'logo_url' && val === 'https://img.icons8.com/color/96/shop.png';
-        
-        if (val === null || val === undefined || (typeof val === 'string' && val.trim() === '') || (Array.isArray(val) && val.length === 0) || isOldLogo) {
+        if (val === null || val === undefined || (typeof val === 'string' && val.trim() === '') || (Array.isArray(val) && val.length === 0) || isOldLogo || (typeof val === 'string' && (val.startsWith('/src/') || val.startsWith('/assets/')))) {
           patchedConfig[key] = allDefaults[key];
         }
       });
+
+      if (patchedConfig.instagram_images && Array.isArray(patchedConfig.instagram_images)) {
+        patchedConfig.instagram_images = patchedConfig.instagram_images.map((img, i) => {
+          if (!img || img.startsWith('/src/') || img.startsWith('/assets/')) return allDefaults.instagram_images[i];
+          return img;
+        });
+      }
 
       setHomeConfig(patchedConfig);
       // Sync to local storage for the preview iframe to pick up immediately
