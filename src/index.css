@@ -2102,9 +2102,9 @@ body {
     .section-best-sellers-content,
     .section-categories,
     .section-instagram {
-      padding: 4rem 20px !important;
-      margin-left: 20px !important;
-      margin-right: 20px !important;
+      padding: 3rem 10px !important;
+      margin-left: 10px !important;
+      margin-right: 10px !important;
     }
 
     /* Grids Mobile */
@@ -2153,6 +2153,15 @@ body {
 
     .marquee-ticker {
       margin: 0 20px;
+    }
+
+    /* Buttons Mobile */
+    .btn-shop, 
+    .btn-shop-dark, 
+    .btn-shop-now-outline {
+      padding: 0.6rem 1.4rem !important;
+      font-size: 0.75rem !important;
+      width: fit-content;
     }
 
     /* Story Mobile */
