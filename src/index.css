@@ -2016,34 +2016,86 @@ body {
 
     /* Universal Small Screen Fix */
     .nav-pill {
-      top: 10px;
-      left: 10px;
-      right: 10px;
-      padding: 0 1rem;
-      border-radius: 50px;
+      top: 40px !important;
+      left: 35px !important;
+      right: 35px !important;
+      padding: 0 0.75rem !important;
+      border-radius: 100px !important;
+      height: 52px !important;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 60px;
       flex-wrap: nowrap !important;
       z-index: 2000;
+    }
+
+    .nav-pill.scrolled {
+      top: 15px !important;
+      left: 20px !important;
+      right: 20px !important;
+      height: 50px !important;
+    }
+
+    /* Shrink the left section elements of navbar on mobile */
+    .nav-pill > div:first-child {
+      gap: 0.5rem !important;
+    }
+
+    .nav-pill button {
+      width: 32px !important;
+      height: 32px !important;
+    }
+
+    .nav-pill a {
+      gap: 0.5rem !important;
+    }
+
+    .nav-pill a > div {
+      width: 24px !important;
+      height: 24px !important;
+      border-radius: 6px !important;
+    }
+
+    .nav-pill a > div svg,
+    .nav-pill a > div img {
+      width: 14px !important;
+      height: 14px !important;
+    }
+
+    .nav-pill span {
+      font-size: 0.95rem !important;
     }
 
     .nav-icons {
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      gap: 0.25rem;
-      /* Even tighter for small screens */
+      gap: 0.15rem;
       margin: 0;
     }
 
     .nav-icon-link {
-      width: 40px;
-      height: 40px;
+      width: 36px !important;
+      height: 36px !important;
       padding: 0;
       justify-content: center;
       gap: 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-icon-link svg {
+      width: 18px !important;
+      height: 18px !important;
+    }
+
+    .cart-badge {
+      font-size: 0.65rem !important;
+      min-width: 16px !important;
+      height: 16px !important;
+      line-height: 16px !important;
+      top: 2px !important;
+      right: 2px !important;
     }
 
     .auth-label-mobile,
@@ -2201,9 +2253,23 @@ body {
     }
 
     .footer-grid {
-      grid-template-columns: 1fr;
-      gap: 3rem;
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 2.5rem 1.5rem !important;
       padding: 0;
+    }
+
+    .footer-grid .footer-col:first-child {
+      grid-column: span 2 !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding-bottom: 2rem;
+    }
+
+    .footer-grid .footer-col:last-child {
+      grid-column: span 2 !important;
+    }
+
+    .footer-col h4 {
+      margin-bottom: 1.2rem !important;
     }
 
     .footer-col p,

@@ -242,11 +242,6 @@ const BusinessHome = () => {
             shop now
           </Link>
         </div>
-
-        {/* Scroll Down Indicator */}
-        <div className="hero-scroll-indicator">
-          <div className="scroll-arrow"></div>
-        </div>
       </section>
 
       {/* 1.5 Magazine About Section */}
