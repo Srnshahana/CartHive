@@ -104,8 +104,8 @@ const Orders = () => {
   return (
     <div className="admin-orders-container" style={{ padding: '1.5rem' }}>
       {/* Header & Filters */}
-      <div style={{ background: '#fff', borderRadius: '16px', border: '1px solid #e2e8f0', padding: '1.5rem', marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.5rem', boxShadow: '0 1px 3px rgba(0,0,0,0.02)' }}>
-        <div style={{ display: 'flex', gap: '1rem', flex: 1, minWidth: '350px' }}>
+      <div className="orders-filter-bar">
+        <div className="orders-filter-left">
           <div style={{ position: 'relative', flex: 1 }}>
             <Search style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} size={18} />
             <input 
@@ -116,7 +116,7 @@ const Orders = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <div style={{ position: 'relative' }}>
+          <div style={{ position: 'relative' }} className="select-filter-wrapper">
             <Filter style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} size={16} />
             <select 
               style={{ padding: '12px 40px 12px 42px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', fontSize: '0.9rem', fontWeight: '600', color: '#475569', outline: 'none', appearance: 'none', minWidth: '160px' }}
@@ -132,10 +132,10 @@ const Orders = () => {
             </select>
           </div>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <div style={{ textAlign: 'right' }}>
-            <p style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: '700' }}>results</p>
-            <p style={{ fontSize: '1rem', fontWeight: '800', color: '#0f172a' }}>{filteredOrders.length} orders</p>
+        <div className="orders-filter-right">
+          <div className="orders-results-badge">
+            <p style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: '700', margin: 0 }}>results</p>
+            <p style={{ fontSize: '1rem', fontWeight: '800', color: '#0f172a', margin: 0 }}>{filteredOrders.length} orders</p>
           </div>
           <button onClick={fetchOrders} style={{ width: '42px', height: '42px', borderRadius: '10px', border: '1px solid #e2e8f0', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
             <Loader2 size={18} color="#64748b" className={loading ? "animate-spin" : ""} />

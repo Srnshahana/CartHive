@@ -1,5 +1,5 @@
 import React from 'react';
-import { Type, Tag, ImageIcon, MapPin, Mail, Phone, Upload, Loader2, Heart, IndianRupee } from 'lucide-react';
+import { Type, Tag, ImageIcon, MapPin, Mail, Phone, Upload, Loader2, Heart, IndianRupee, Star } from 'lucide-react';
 
 const ImageUploadField = ({ label, value, onUpload, uploading, bucket, width = '100%', height = '140px', objectFit = 'contain' }) => {
   const fileInputId = `upload-${label.replace(/\s+/g, '-').toLowerCase()}`;
@@ -107,9 +107,31 @@ const HomeConfig = ({
 
       {/* Live Preview Section - MOVED TO TOP */}
       <div ref={previewRef} style={{ order: -1 }}>
-        <h3 style={{ marginBottom: '1.5rem', fontSize: '1.5rem', fontWeight: '800' }}>
-          Live <span className="gradient-text">Store Preview</span>
-        </h3>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+          <h3 style={{ margin: 0, fontSize: '1.5rem', fontWeight: '800' }}>
+            Live <span className="gradient-text">Store Preview</span>
+          </h3>
+          <button 
+            className="btn-shop-dark btn-apply-preview" 
+            onClick={handleApply}
+            style={{ 
+              padding: '0.6rem 1.5rem', 
+              fontSize: '0.85rem', 
+              borderRadius: '10px', 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '0.5rem',
+              background: '#102a82',
+              color: '#fff',
+              border: 'none',
+              fontWeight: '800',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            <Star size={16} fill="#fff" /> Apply Changes to Preview
+          </button>
+        </div>
         <div style={{ 
           border: '12px solid #1e293b', 
           borderRadius: '40px', 

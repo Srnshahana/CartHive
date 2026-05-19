@@ -178,16 +178,16 @@ const Products = ({ products, categories, handleFileUpload, uploadingMap, refres
 
   return (
     <div className="admin-products-container">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
-        <div style={{ position: 'relative', width: '350px' }}>
+      <div className="products-filter-bar">
+        <div className="products-filter-search">
           <Search size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#888' }} />
           <input type="text" className="form-input" placeholder="Search inventory..." style={{ paddingLeft: '3rem', width: '100%' }} />
         </div>
-        <div style={{ display: 'flex', gap: '1rem' }}>
-          <button className="btn-shop-dark" style={{ background: '#f8fafc', color: '#1e293b', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '0.75rem' }} onClick={() => setShowCatModal(true)}>
+        <div className="products-filter-actions">
+          <button className="btn-shop-dark btn-cat-action" style={{ background: '#f8fafc', color: '#1e293b', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '0.75rem' }} onClick={() => setShowCatModal(true)}>
             <FolderPlus size={18} /> Categories
           </button>
-          <button className="btn-shop-dark" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1.5rem', borderRadius: '12px' }} onClick={() => setShowAddModal(true)}>
+          <button className="btn-shop-dark btn-new-product-action" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1.5rem', borderRadius: '12px' }} onClick={() => setShowAddModal(true)}>
             <Plus size={20} /> New Product
           </button>
         </div>
@@ -270,7 +270,7 @@ const Products = ({ products, categories, handleFileUpload, uploadingMap, refres
               {editingId ? 'Edit' : 'Add'} <span className="gradient-text">{editingId ? 'Product' : 'New Product'}</span>
             </h2>
             
-            <div className="grid grid-cols-2" style={{ gap: '2rem' }}>
+            <div className="product-modal-grid">
               <div className="admin-form">
                 <div className="form-group">
                   <label>Product Name</label>
