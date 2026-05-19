@@ -112,43 +112,43 @@ const Dashboard = ({ products, currentBusiness, user, homeConfig, refreshData })
   const maxOrders = Math.max(...monthlyData.map(m => m.count), 5);
 
   return (
-    <div className="dashboard-content" style={{ padding: '1.5rem 2.5rem 4rem 2.5rem' }}>
+    <div className="dashboard-content">
 
       {/* Premium Welcome Header */}
-      <div style={{ marginBottom: '3.5rem', position: 'relative' }}>
+      <div className="dashboard-welcome-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#102a82', marginBottom: '8px' }}>
           <Store size={16} />
           <div className="admin-logo" style={{ textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.9rem', color: '#102a82' }}>Admin Dashboard</div>
         </div>
-        <h1 style={{ fontSize: '2.5rem', fontWeight: '900', color: '#111', letterSpacing: '-0.03em', margin: 0 }}>
+        <h1 className="dashboard-welcome-h1">
           Welcome back, <span style={{ color: '#102a82' }}>{businessName}</span>
         </h1>
-        <p style={{ fontSize: '1rem', color: '#666', marginTop: '10px', maxWidth: '600px', lineHeight: 1.6 }}>
+        <p className="dashboard-welcome-p">
           Here's a breakdown of your boutique's performance and recent activity.
         </p>
       </div>
 
       {/* Modern Stats Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem', marginBottom: '3.5rem' }}>
+      <div className="dashboard-stats-grid">
         <StatCard title="Total Revenue" value={`₹${stats.totalRevenue.toLocaleString()}`} icon={<IndianRupee size={24} />} color="#102a82" />
         <StatCard title="Total Orders" value={stats.totalOrders} icon={<ShoppingBag size={24} />} color="#10b981" />
         <StatCard title="Active Items" value={products.length} icon={<Package size={24} />} color="#8b5cf6" />
         <StatCard title="Pending" value={stats.pendingOrders} icon={<Clock size={24} />} color="#f59e0b" />
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr', gap: '3rem' }}>
+      <div className="dashboard-main-grid">
 
         {/* Left: Performance Visuals */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
+        <div className="dashboard-left-panel">
 
           {/* Sales Analytics Card */}
-          <div style={{ background: '#fff', borderRadius: '32px', padding: '2.5rem', border: '1px solid #f1f5f9', boxShadow: '0 10px 30px -10px rgba(0,0,0,0.03)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
+          <div className="dashboard-card">
+            <div className="dashboard-card-header-row">
               <div>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: '#111', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Sales Momentum</h3>
-                <p style={{ fontSize: '0.85rem', color: '#999', marginTop: '4px' }}>Monthly order volume over the last 6 months</p>
+                <h3 className="dashboard-card-h3">Sales Momentum</h3>
+                <p className="dashboard-card-p">Monthly order volume over the last 6 months</p>
               </div>
-              <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div className="chart-icon-box">
                 <BarChart3 size={20} color="#102a82" />
               </div>
             </div>
@@ -194,9 +194,9 @@ const Dashboard = ({ products, currentBusiness, user, homeConfig, refreshData })
           </div>
 
           {/* Recent Orders List */}
-          <div style={{ background: '#fff', borderRadius: '32px', padding: '2.5rem', border: '1px solid #f1f5f9' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-              <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: '#111', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Latest Transactions</h3>
+          <div className="dashboard-card">
+            <div className="dashboard-card-header-row">
+              <h3 className="dashboard-card-h3">Latest Transactions</h3>
               <button style={{ color: '#102a82', fontSize: '0.85rem', fontWeight: '800', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
                 All Orders <ChevronRight size={16} />
               </button>
@@ -204,14 +204,14 @@ const Dashboard = ({ products, currentBusiness, user, homeConfig, refreshData })
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {recentOrders.map(order => (
-                <div key={order.id} style={{ display: 'flex', alignItems: 'center', padding: '1.25rem', borderRadius: '20px', background: '#fcfcfc', border: '1px solid #f5f5f5', transition: 'all 0.3s ease' }}>
+                <div key={order.id} className="dashboard-transaction-row">
                   <img src={order.products?.image} alt="" style={{ width: '50px', height: '50px', borderRadius: '12px', objectFit: 'cover' }} />
                   <div style={{ flex: 1, marginLeft: '1.25rem' }}>
-                    <p style={{ fontSize: '1rem', fontWeight: '800', color: '#111' }}>{order.customer_name}</p>
-                    <p style={{ fontSize: '0.8rem', color: '#999' }}>{order.products?.name} • {new Date(order.created_at).toLocaleDateString()}</p>
+                    <p style={{ fontSize: '1rem', fontWeight: '800', color: '#111', margin: 0 }}>{order.customer_name}</p>
+                    <p style={{ fontSize: '0.8rem', color: '#999', margin: '2px 0 0 0' }}>{order.products?.name} • {new Date(order.created_at).toLocaleDateString()}</p>
                   </div>
                   <div style={{ textAlign: 'right' }}>
-                    <p style={{ fontSize: '1.1rem', fontWeight: '900', color: '#111' }}>₹{Number(order.total_amount).toFixed(0)}</p>
+                    <p style={{ fontSize: '1.1rem', fontWeight: '900', color: '#111', margin: 0 }}>₹{Number(order.total_amount).toFixed(0)}</p>
                     <span style={{ fontSize: '0.7rem', fontWeight: '900', textTransform: 'uppercase', color: order.status === 'completed' ? '#10b981' : '#f59e0b' }}>{order.status}</span>
                   </div>
                 </div>
@@ -221,9 +221,9 @@ const Dashboard = ({ products, currentBusiness, user, homeConfig, refreshData })
         </div>
 
         {/* Right: Quick Insights */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+        <div className="dashboard-right-panel">
 
-          <div style={{ background: '#fff', borderRadius: '32px', padding: '2.5rem', color: '#111', border: '1px solid #102a82', boxShadow: '0 10px 30px -10px rgba(16, 42, 130, 0.1)' }}>
+          <div className="dashboard-card insight-card">
             <Zap size={24} color="#102a82" style={{ marginBottom: '1.5rem' }} />
             <h3 style={{ fontSize: '1.25rem', fontWeight: '800', marginBottom: '1rem', color: '#102a82' }}>Instant Insights</h3>
             <p style={{ fontSize: '0.95rem', color: '#666', lineHeight: 1.6, marginBottom: '2rem' }}>
@@ -232,16 +232,16 @@ const Dashboard = ({ products, currentBusiness, user, homeConfig, refreshData })
             <button style={{ width: '100%', padding: '1rem', borderRadius: '16px', background: '#102a82', color: '#fff', border: 'none', fontWeight: '800', cursor: 'pointer', transition: 'all 0.3s ease' }}>Generate Report</button>
           </div>
 
-          <div style={{ background: '#fff', borderRadius: '32px', padding: '2.5rem', border: '1px solid #f1f5f9' }}>
+          <div className="dashboard-card">
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '2rem' }}>
               <IndianRupee size={20} color="#111" />
-              <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: '#111', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Payment Details</h3>
+              <h3 className="dashboard-card-h3" style={{ margin: 0 }}>Payment Details</h3>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
 
               <div style={{ padding: '1.5rem', borderRadius: '20px', background: '#f8fafc', border: '1px solid #e2e8f0' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                  <p style={{ fontSize: '0.75rem', fontWeight: '900', color: '#64748b', textTransform: 'uppercase' }}>Store UPI ID</p>
+                  <p style={{ fontSize: '0.75rem', fontWeight: '900', color: '#64748b', textTransform: 'uppercase', margin: 0 }}>Store UPI ID</p>
                   {!isEditingUpi ? (
                     <button onClick={() => setIsEditingUpi(true)} style={{ background: 'none', border: 'none', color: '#3b82f6', fontSize: '0.75rem', fontWeight: '800', cursor: 'pointer' }}>Edit</button>
                   ) : (
@@ -261,13 +261,13 @@ const Dashboard = ({ products, currentBusiness, user, homeConfig, refreshData })
                     autoFocus
                   />
                 ) : (
-                  <p style={{ fontSize: '1.1rem', fontWeight: '800', color: '#0f172a', wordBreak: 'break-all' }}>{currentBusiness?.upi || 'Not Set'}</p>
+                  <p style={{ fontSize: '1.1rem', fontWeight: '800', color: '#0f172a', wordBreak: 'break-all', margin: 0 }}>{currentBusiness?.upi || 'Not Set'}</p>
                 )}
               </div>
 
               {currentBusiness?.upi && (
                 <div style={{ padding: '1.5rem', borderRadius: '20px', background: '#f8fafc', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <p style={{ alignSelf: 'flex-start', fontSize: '0.75rem', fontWeight: '900', color: '#64748b', textTransform: 'uppercase', marginBottom: '1.2rem' }}>Payment QR (Auto-Generated)</p>
+                  <p style={{ alignSelf: 'flex-start', fontSize: '0.75rem', fontWeight: '900', color: '#64748b', textTransform: 'uppercase', marginBottom: '1.2rem', margin: '0 0 1.2rem 0' }}>Payment QR (Auto-Generated)</p>
                   
                   <div style={{ background: '#fff', padding: '1.2rem', borderRadius: '20px', border: '1px solid #e2e8f0', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>
                     <img 
@@ -276,14 +276,14 @@ const Dashboard = ({ products, currentBusiness, user, homeConfig, refreshData })
                       style={{ width: '160px', height: '160px', display: 'block' }} 
                     />
                   </div>
-                  <p style={{ fontSize: '0.65rem', color: '#102a82', marginTop: '0.8rem', fontWeight: '800', letterSpacing: '0.1em' }}>SCAN TO PAY</p>
+                  <p style={{ fontSize: '0.65rem', color: '#102a82', marginTop: '0.8rem', fontWeight: '800', letterSpacing: '0.1em', margin: '0.8rem 0 0 0' }}>SCAN TO PAY</p>
                 </div>
               )}
 
               {/* Only show uploaded QR if link is missing */}
               {homeConfig?.payment_qr_url && !currentBusiness?.upi && (
                 <div style={{ padding: '1.5rem', borderRadius: '20px', background: '#f8fafc', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <p style={{ alignSelf: 'flex-start', fontSize: '0.75rem', fontWeight: '900', color: '#64748b', textTransform: 'uppercase', marginBottom: '1.2rem' }}>Payment QR (Uploaded)</p>
+                  <p style={{ alignSelf: 'flex-start', fontSize: '0.75rem', fontWeight: '900', color: '#64748b', textTransform: 'uppercase', marginBottom: '1.2rem', margin: '0 0 1.2rem 0' }}>Payment QR (Uploaded)</p>
                   <div style={{ background: '#fff', padding: '1rem', borderRadius: '20px', border: '1px solid #e2e8f0' }}>
                     <img src={homeConfig.payment_qr_url} alt="Payment QR" style={{ width: '160px', height: '160px', objectFit: 'contain' }} />
                   </div>
@@ -299,11 +299,11 @@ const Dashboard = ({ products, currentBusiness, user, homeConfig, refreshData })
 };
 
 const StatCard = ({ title, value, icon, color }) => (
-  <div style={{ background: '#fff', padding: '2rem', borderRadius: '28px', border: '1px solid #f1f5f9', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.02)', position: 'relative', overflow: 'hidden' }}>
+  <div className="stat-card">
     <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: `${color}15`, color: color, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem' }}>
       {icon}
     </div>
-    <p style={{ fontSize: '0.75rem', fontWeight: '900', color: '#999', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '6px' }}>{title}</p>
+    <p style={{ fontSize: '0.75rem', fontWeight: '900', color: '#999', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '6px', margin: '0 0 6px 0' }}>{title}</p>
     <h3 style={{ fontSize: '2rem', fontWeight: '900', color: '#111', margin: 0, letterSpacing: '-0.02em' }}>{value}</h3>
 
     {/* Decorative Sparkle */}

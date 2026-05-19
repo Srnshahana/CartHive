@@ -627,34 +627,33 @@ const PaymentPlanSelection = ({ onSelectPlan }) => {
   const [selectedPlan, setSelectedPlan] = useState('Growth');
 
   return (
-    <div className="admin-onboarding-overlay" style={{ background: '#f8fafc', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 9999, padding: '2rem', overflowY: 'auto' }}>
-
-      <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-        <h2 style={{ fontSize: '2.5rem', fontWeight: '900', color: '#0f172a', marginBottom: '1rem' }}>Choose your plan</h2>
-        <p style={{ fontSize: '1.1rem', color: '#64748b' }}>Select the perfect plan to grow your boutique.</p>
+    <div className="payment-plan-overlay">
+      <div className="plan-header">
+        <h2>Choose your plan</h2>
+        <p>Select the perfect plan to grow your boutique.</p>
       </div>
       
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', maxWidth: '1100px', width: '100%', alignItems: 'stretch' }}>
-        
+      {/* Desktop View (Grid Layout) */}
+      <div className="plans-grid">
         {/* Plan 1: Launch */}
         <div 
           onClick={() => setSelectedPlan('Launch')}
-          style={{ background: '#fff', borderRadius: '24px', padding: '2.5rem 2rem', boxShadow: selectedPlan === 'Launch' ? '0 20px 50px -10px rgba(30, 58, 138, 0.15)' : '0 10px 40px -10px rgba(0,0,0,0.05)', border: selectedPlan === 'Launch' ? '2px solid #1e3a8a' : '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'all 0.2s', transform: selectedPlan === 'Launch' ? 'scale(1.02)' : 'scale(1)' }}
+          className={`plan-card ${selectedPlan === 'Launch' ? 'active' : ''}`}
         >
-          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-            <h3 style={{ fontSize: '1.5rem', fontWeight: '800', color: '#0f172a', marginBottom: '0.5rem' }}>Launch</h3>
-            <p style={{ fontSize: '0.9rem', color: '#64748b', marginBottom: '1.5rem', minHeight: '40px' }}>For small businesses testing the waters</p>
-            <div style={{ fontSize: '3rem', fontWeight: '900', color: '#0f172a' }}>FREE</div>
+          <div className="plan-card-header">
+            <h3>Launch</h3>
+            <p className="plan-tagline">For small businesses testing the waters</p>
+            <div className="plan-price">FREE</div>
           </div>
-          <div style={{ borderTop: '1px solid #e2e8f0', margin: '0 -2rem 2rem', padding: '0 2rem' }}></div>
-          <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 2rem 0', flex: 1, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div className="plan-divider"></div>
+          <ul className="plan-features">
             {['Online storefront', 'Product listings', 'Order management', 'Payment integration', 'Customer support'].map((feat, i) => (
-              <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '0.95rem', color: '#334155' }}>
+              <li key={i}>
                 <Check size={18} color="#0f172a" /> {feat}
               </li>
             ))}
           </ul>
-          <div style={{ width: '100%', padding: '1rem', borderRadius: '12px', background: selectedPlan === 'Launch' ? '#1e3a8a' : '#f1f5f9', color: selectedPlan === 'Launch' ? '#fff' : '#64748b', fontWeight: '800', fontSize: '1rem', textAlign: 'center', transition: 'all 0.2s' }}>
+          <div className={`plan-select-btn ${selectedPlan === 'Launch' ? 'active' : ''}`}>
             {selectedPlan === 'Launch' ? 'Selected' : 'Select'}
           </div>
         </div>
@@ -662,24 +661,24 @@ const PaymentPlanSelection = ({ onSelectPlan }) => {
         {/* Plan 2: Growth */}
         <div 
           onClick={() => setSelectedPlan('Growth')}
-          style={{ background: '#fff', borderRadius: '24px', padding: '2.5rem 2rem', boxShadow: selectedPlan === 'Growth' ? '0 20px 50px -10px rgba(30, 58, 138, 0.15)' : '0 10px 40px -10px rgba(0,0,0,0.05)', border: selectedPlan === 'Growth' ? '2px solid #1e3a8a' : '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', position: 'relative', cursor: 'pointer', transition: 'all 0.2s', transform: selectedPlan === 'Growth' ? 'scale(1.02)' : 'scale(1)' }}
+          className={`plan-card ${selectedPlan === 'Growth' ? 'active' : ''}`}
         >
-          <div style={{ position: 'absolute', top: '-16px', left: '50%', transform: 'translateX(-50%)', background: '#1e3a8a', color: '#fff', padding: '6px 20px', borderRadius: '20px', fontSize: '0.75rem', fontWeight: '800', letterSpacing: '0.05em' }}>MOST POPULAR</div>
-          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-            <h3 style={{ fontSize: '1.5rem', fontWeight: '800', color: '#0f172a', marginBottom: '0.5rem' }}>Growth</h3>
-            <p style={{ fontSize: '0.9rem', color: '#64748b', marginBottom: '1.5rem', minHeight: '40px' }}>Include everything in Launch plus features.</p>
-            <div style={{ fontSize: '2.5rem', fontWeight: '900', color: '#0f172a' }}>Rs. 1,999<span style={{ fontSize: '1.2rem', color: '#64748b', fontWeight: '700' }}>/mo</span></div>
+          {selectedPlan === 'Growth' && <div className="popular-badge">MOST POPULAR</div>}
+          <div className="plan-card-header">
+            <h3>Growth</h3>
+            <p className="plan-tagline">Include everything in Launch plus features.</p>
+            <div className="plan-price">Rs. 1,999<span>/mo</span></div>
           </div>
-          <div style={{ borderTop: '1px solid #e2e8f0', margin: '0 -2rem 2rem', padding: '0 2rem' }}></div>
-          <p style={{ fontSize: '0.9rem', fontWeight: '800', color: '#0f172a', marginBottom: '1rem' }}>Includes everything in FREE:</p>
-          <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 2rem 0', flex: 1, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div className="plan-divider"></div>
+          <p className="plan-includes-label">Includes everything in FREE:</p>
+          <ul className="plan-features">
             {['Analytics', 'WhatsApp marketing tools', 'Custom domains', 'SEO optimization'].map((feat, i) => (
-              <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '0.95rem', color: '#334155' }}>
+              <li key={i}>
                 <Check size={18} color="#0f172a" /> {feat}
               </li>
             ))}
           </ul>
-          <div style={{ width: '100%', padding: '1rem', borderRadius: '12px', background: selectedPlan === 'Growth' ? '#1e3a8a' : '#f1f5f9', color: selectedPlan === 'Growth' ? '#fff' : '#64748b', fontWeight: '800', fontSize: '1rem', textAlign: 'center', transition: 'all 0.2s' }}>
+          <div className={`plan-select-btn ${selectedPlan === 'Growth' ? 'active' : ''}`}>
             {selectedPlan === 'Growth' ? 'Selected' : 'Select'}
           </div>
         </div>
@@ -687,35 +686,128 @@ const PaymentPlanSelection = ({ onSelectPlan }) => {
         {/* Plan 3: Scale */}
         <div 
           onClick={() => setSelectedPlan('Scale')}
-          style={{ background: '#fff', borderRadius: '24px', padding: '2.5rem 2rem', boxShadow: selectedPlan === 'Scale' ? '0 20px 50px -10px rgba(30, 58, 138, 0.15)' : '0 10px 40px -10px rgba(0,0,0,0.05)', border: selectedPlan === 'Scale' ? '2px solid #1e3a8a' : '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'all 0.2s', transform: selectedPlan === 'Scale' ? 'scale(1.02)' : 'scale(1)' }}
+          className={`plan-card ${selectedPlan === 'Scale' ? 'active' : ''}`}
         >
-          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-            <h3 style={{ fontSize: '1.5rem', fontWeight: '800', color: '#0f172a', marginBottom: '0.5rem' }}>Scale</h3>
-            <p style={{ fontSize: '0.9rem', color: '#64748b', marginBottom: '1.5rem', minHeight: '40px' }}>Designed for established businesses growing rapidly</p>
-            <div style={{ fontSize: '2.5rem', fontWeight: '900', color: '#0f172a' }}>Rs. 3,999<span style={{ fontSize: '1.2rem', color: '#64748b', fontWeight: '700' }}>/mo</span></div>
+          <div className="plan-card-header">
+            <h3>Scale</h3>
+            <p className="plan-tagline">Designed for established businesses growing rapidly</p>
+            <div className="plan-price">Rs. 3,999<span>/mo</span></div>
           </div>
-          <div style={{ borderTop: '1px solid #e2e8f0', margin: '0 -2rem 2rem', padding: '0 2rem' }}></div>
-          <p style={{ fontSize: '0.9rem', fontWeight: '800', color: '#0f172a', marginBottom: '1rem' }}>Includes everything in Rs. 1,999/mo:</p>
-          <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 2rem 0', flex: 1, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div className="plan-divider"></div>
+          <p className="plan-includes-label">Includes everything in Rs. 1,999/mo:</p>
+          <ul className="plan-features">
             {['Dedicated account manager', 'Priority support', 'API access', 'Multi-user accounts', 'Advanced reporting'].map((feat, i) => (
-              <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '0.95rem', color: '#334155' }}>
+              <li key={i}>
                 <Check size={18} color="#0f172a" /> {feat}
               </li>
             ))}
           </ul>
-          <div style={{ width: '100%', padding: '1rem', borderRadius: '12px', background: selectedPlan === 'Scale' ? '#1e3a8a' : '#f1f5f9', color: selectedPlan === 'Scale' ? '#fff' : '#64748b', fontWeight: '800', fontSize: '1rem', textAlign: 'center', transition: 'all 0.2s' }}>
+          <div className={`plan-select-btn ${selectedPlan === 'Scale' ? 'active' : ''}`}>
             {selectedPlan === 'Scale' ? 'Selected' : 'Select'}
           </div>
         </div>
-
       </div>
 
-      <div style={{ marginTop: '4rem', textAlign: 'center', paddingBottom: '2rem' }}>
+      {/* Mobile View (Horizontal Selection List) */}
+      <div className="plans-list-mobile">
+        {/* Launch Plan Row */}
+        <div 
+          onClick={() => setSelectedPlan('Launch')}
+          className={`mobile-plan-row ${selectedPlan === 'Launch' ? 'active' : ''}`}
+        >
+          <div className="mobile-plan-left">
+            <div className="mobile-plan-radio">
+              {selectedPlan === 'Launch' && <div className="radio-dot" />}
+            </div>
+            <div className="mobile-plan-info">
+              <h4>Launch</h4>
+              <p>For testing the waters</p>
+            </div>
+          </div>
+          <div className="mobile-plan-price">FREE</div>
+        </div>
+
+        {/* Growth Plan Row */}
+        <div 
+          onClick={() => setSelectedPlan('Growth')}
+          className={`mobile-plan-row ${selectedPlan === 'Growth' ? 'active' : ''}`}
+        >
+          <div className="mobile-plan-left">
+            <div className="mobile-plan-radio">
+              {selectedPlan === 'Growth' && <div className="radio-dot" />}
+            </div>
+            <div className="mobile-plan-info">
+              <h4>Growth</h4>
+              <p>Most popular plan</p>
+            </div>
+          </div>
+          <div className="mobile-plan-price">Rs. 1,999<span>/mo</span></div>
+        </div>
+
+        {/* Scale Plan Row */}
+        <div 
+          onClick={() => setSelectedPlan('Scale')}
+          className={`mobile-plan-row ${selectedPlan === 'Scale' ? 'active' : ''}`}
+        >
+          <div className="mobile-plan-left">
+            <div className="mobile-plan-radio">
+              {selectedPlan === 'Scale' && <div className="radio-dot" />}
+            </div>
+            <div className="mobile-plan-info">
+              <h4>Scale</h4>
+              <p>For rapid growth</p>
+            </div>
+          </div>
+          <div className="mobile-plan-price">Rs. 3,999<span>/mo</span></div>
+        </div>
+
+        {/* Dynamic Mobile Feature Summary */}
+        <div className="mobile-plan-features-summary">
+          <div className="summary-header">
+            <h5>Included in {selectedPlan}</h5>
+            <span className="summary-badge">{selectedPlan === 'Launch' ? 'Basic' : selectedPlan === 'Growth' ? 'Popular' : 'Enterprise'}</span>
+          </div>
+          <ul>
+            {(selectedPlan === 'Launch' ? [
+              'Online storefront',
+              'Product listings',
+              'Order management',
+              'Payment integration',
+              'Customer support'
+            ] : selectedPlan === 'Growth' ? [
+              'Everything in Launch plus:',
+              'Analytics dashboard',
+              'WhatsApp marketing tools',
+              'Custom domain support',
+              'SEO optimization'
+            ] : [
+              'Everything in Growth plus:',
+              'Dedicated account manager',
+              'Priority customer support',
+              'Developer API access',
+              'Multi-user team accounts',
+              'Advanced reporting'
+            ]).map((feat, index) => {
+              const isHighlight = feat.includes('Everything in');
+              return (
+                <li key={index} className={isHighlight ? 'feature-highlight' : 'feature-item'}>
+                  {!isHighlight ? (
+                    <div className="feature-check-circle">
+                      <Check size={10} color="#1e3a8a" strokeWidth={3} />
+                    </div>
+                  ) : null}
+                  <span>{feat}</span>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </div>
+
+      <div className="plan-confirm-container">
         <button 
           onClick={() => onSelectPlan(selectedPlan)} 
-          style={{ padding: '1.2rem 4rem', borderRadius: '16px', background: 'linear-gradient(135deg, #2563eb 0%, #1e40af 100%)', color: '#fff', fontSize: '1.1rem', fontWeight: '800', cursor: 'pointer', border: 'none', boxShadow: '0 10px 25px rgba(37, 99, 235, 0.3)', transition: 'all 0.3s ease' }}
-          onMouseOver={(e) => e.target.style.transform = 'translateY(-2px)'}
-          onMouseOut={(e) => e.target.style.transform = 'translateY(0)'}
+          className="btn-confirm-plan"
         >
           Confirm {selectedPlan} Plan
         </button>
