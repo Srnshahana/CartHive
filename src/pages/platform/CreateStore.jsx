@@ -155,7 +155,7 @@ const CreateStore = () => {
           <h1 style={{ fontSize: '2.5rem', fontWeight: '900', color: '#0f172a', marginBottom: '1.5rem', letterSpacing: '-1px' }}>Welcome to CartHive!</h1>
           <p style={{ color: '#64748b', fontSize: '1.1rem', lineHeight: '1.6', marginBottom: '2.5rem', textAlign: 'center' }}>
             Congratulations! <strong>{formData.name}</strong> is officially live.<br/> 
-            Now, log in to your <strong>Merchant Dashboard</strong> to add your first products and customize your boutique's layout.
+            Now, log in to your <strong>Merchant Dashboard</strong> to add your first products and customize your store's layout.
           </p>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <Link 
@@ -183,7 +183,7 @@ const CreateStore = () => {
             <div style={{ background: '#eff6ff', width: '80px', height: '80px', borderRadius: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem', color: '#3b82f6' }}>
               <Rocket size={40} />
             </div>
-            <h1 style={{ fontWeight: '900', color: '#0f172a', marginBottom: '1rem', letterSpacing: '-1px' }}>Launch Your Boutique</h1>
+            <h1 style={{ fontWeight: '900', color: '#0f172a', marginBottom: '1rem', letterSpacing: '-1px' }}>Launch Your Store</h1>
             <p style={{ color: '#64748b', fontSize: '1.1rem' }}>Enter your details to create your instant storefront.</p>
           </div>
 
@@ -201,7 +201,7 @@ const CreateStore = () => {
                 <input
                   required
                   type="text"
-                  placeholder="e.g. My Art Boutique"
+                  placeholder="e.g. My Art Store"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   style={{ padding: '1.2rem', borderRadius: '16px', border: '2px solid #e2e8f0', fontSize: '1.1rem', outline: 'none' }}

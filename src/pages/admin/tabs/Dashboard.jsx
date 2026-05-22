@@ -49,7 +49,7 @@ const Dashboard = ({ products, currentBusiness, user, homeConfig, refreshData })
       setLoading(true);
       const savedUser = localStorage.getItem('carthive_user');
       const userData = JSON.parse(savedUser);
-      setBusinessName(userData.business_name || 'Boutique');
+      setBusinessName(userData.business_name || 'Store');
 
       const { data: orders, error: ordersErr } = await supabase
         .from('orders')
@@ -124,7 +124,7 @@ const Dashboard = ({ products, currentBusiness, user, homeConfig, refreshData })
           Welcome back, <span style={{ color: '#102a82' }}>{businessName}</span>
         </h1>
         <p className="dashboard-welcome-p">
-          Here's a breakdown of your boutique's performance and recent activity.
+          Here's a breakdown of your store's performance and recent activity.
         </p>
       </div>
 

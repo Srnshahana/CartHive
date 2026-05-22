@@ -574,9 +574,9 @@ const AdminPortal = () => {
             <div style={{ background: '#eff6ff', width: '80px', height: '80px', borderRadius: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem', color: '#3b82f6' }}>
               <Rocket size={40} />
             </div>
-            <h2 className="onboarding-title">Welcome to {currentBusiness?.name || 'Your Boutique'}!</h2>
+            <h2 className="onboarding-title">Welcome to {currentBusiness?.name || 'Your Store'}!</h2>
             <p className="onboarding-subtitle" style={{ marginBottom: '2.5rem' }}>
-              Your boutique is live! Let's take 30 seconds to customize your design and make it truly yours.
+              Your store is live! Let's take 30 seconds to customize your design and make it truly yours.
             </p>
 
             <button
@@ -630,7 +630,7 @@ const PaymentPlanSelection = ({ onSelectPlan }) => {
     <div className="payment-plan-overlay">
       <div className="plan-header">
         <h2>Choose your plan</h2>
-        <p>Select the perfect plan to grow your boutique.</p>
+        <p>Select the perfect plan to grow your store.</p>
       </div>
       
       {/* Desktop View (Grid Layout) */}
