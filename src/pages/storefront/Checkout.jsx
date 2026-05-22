@@ -135,8 +135,8 @@ const Checkout = () => {
           <div style={{ background: '#f1f0ea', width: '80px', height: '80px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 30px' }}>
             <CheckCircle size={40} color="#10b981" />
           </div>
-          <h2 style={{ fontSize: '2rem', fontWeight: '800', marginBottom: '15px' }}>order confirmed!</h2>
-          <p style={{ color: '#666', marginBottom: '40px', lineHeight: 1.6 }}>
+          <h2 style={{ fontSize: 'clamp(1.5rem, 6vw, 2rem)', fontWeight: '800', marginBottom: '15px' }}>order confirmed!</h2>
+          <p style={{ color: '#666', marginBottom: '40px', lineHeight: 1.6, fontSize: 'clamp(0.9rem, 4vw, 1rem)' }}>
             Your payment receipt has been submitted. {business?.name} will verify your payment and process your order shortly.
           </p>
           <Link to={`/${slug}/products`} className="boutique-btn">return to shop</Link>
@@ -154,7 +154,7 @@ const Checkout = () => {
               <ArrowLeft size={24} />
             </button>
           )}
-          <h1 className="cart-title" style={{ margin: 0 }}>{step === 'details' ? 'checkout' : 'payment'}</h1>
+          <h1 className="cart-title" style={{ margin: 0, fontSize: 'clamp(2rem, 6vw, 3.5rem)' }}>{step === 'details' ? 'checkout' : 'payment'}</h1>
         </div>
 
         <div className="cart-grid">
@@ -165,7 +165,7 @@ const Checkout = () => {
               <form onSubmit={handleNextStep}>
                 <div style={{ marginBottom: '40px' }}>
                   <h3 className="checkout-step-title"><User size={16} /> customer information</h3>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+                  <div className="checkout-form-row">
                     <div className="checkout-input-group">
                       <label>full name</label>
                       <input required type="text" value={formData.customer_name} onChange={(e) => setFormData({...formData, customer_name: e.target.value})} />
@@ -183,7 +183,7 @@ const Checkout = () => {
 
                 <div style={{ marginBottom: '40px' }}>
                   <h3 className="checkout-step-title"><MapPin size={16} /> shipping address</h3>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+                  <div className="checkout-form-row">
                     <div className="checkout-input-group">
                       <label>state</label>
                       <input required type="text" value={formData.state} onChange={(e) => setFormData({...formData, state: e.target.value})} />
@@ -193,7 +193,7 @@ const Checkout = () => {
                       <input required type="text" value={formData.district} onChange={(e) => setFormData({...formData, district: e.target.value})} />
                     </div>
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+                  <div className="checkout-form-row">
                     <div className="checkout-input-group">
                       <label>pincode</label>
                       <input required type="text" value={formData.pincode} onChange={(e) => setFormData({...formData, pincode: e.target.value})} />
@@ -235,7 +235,7 @@ const Checkout = () => {
                     )}
                   </div>
                   <h2 style={{ fontSize: '1.5rem', fontWeight: '800', marginBottom: '10px' }}>scan to pay</h2>
-                  <p style={{ color: '#666', fontSize: '0.9rem' }}>Please scan the QR code above to pay the total amount of <strong>${Number(cartTotal).toFixed(2)}</strong></p>
+                  <p style={{ color: '#666', fontSize: '0.9rem' }}>Please scan the QR code above to pay the total amount of <strong>₹{Number(cartTotal).toFixed(0)}</strong></p>
                 </div>
 
                 <div style={{ border: '2px dashed #dcdbd5', borderRadius: '12px', padding: '30px', textAlign: 'center', background: '#fafafa' }}>
@@ -297,7 +297,7 @@ const Checkout = () => {
                     <p style={{ fontSize: '0.8rem', fontWeight: '600', textTransform: 'lowercase' }}>{item.name}</p>
                     <p style={{ fontSize: '0.75rem', color: '#888' }}>x {item.quantity}</p>
                   </div>
-                  <p style={{ fontSize: '0.85rem', fontWeight: '700' }}>${(item.price * item.quantity).toFixed(2)}</p>
+                  <p style={{ fontSize: '0.85rem', fontWeight: '700' }}>₹{(item.price * item.quantity).toFixed(0)}</p>
                 </div>
               ))}
             </div>
@@ -305,11 +305,11 @@ const Checkout = () => {
             <div style={{ borderTop: '1px solid #eee', paddingTop: '20px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', fontSize: '0.9rem' }}>
                 <span style={{ color: '#666' }}>subtotal</span>
-                <span>${Number(cartTotal).toFixed(2)}</span>
+                <span>₹{Number(cartTotal).toFixed(0)}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid #1a1a1a', paddingTop: '20px' }}>
                 <span style={{ fontWeight: '800' }}>total to pay</span>
-                <span style={{ fontWeight: '800', fontSize: '1.3rem' }}>${Number(cartTotal).toFixed(2)}</span>
+                <span style={{ fontWeight: '800', fontSize: '1.3rem' }}>₹{Number(cartTotal).toFixed(0)}</span>
               </div>
             </div>
 
@@ -361,6 +361,18 @@ const Checkout = () => {
           border-color: #1a1a1a;
           background: #fff;
           outline: none;
+        }
+        .checkout-form-row {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 20px;
+          margin-bottom: 20px;
+        }
+        @media (max-width: 768px) {
+          .checkout-form-row {
+            grid-template-columns: 1fr;
+            gap: 15px;
+          }
         }
       `}</style>
     </div>

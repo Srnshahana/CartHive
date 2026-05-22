@@ -70,10 +70,10 @@ const Cart = () => {
             transitionDelay: '0.1s', 
             textAlign: 'center', 
             fontFamily: 'var(--font-serif)', 
-            fontSize: '3.5rem',
-            marginBottom: '3rem'
+            fontSize: 'clamp(2rem, 6vw, 3.5rem)',
+            marginBottom: 'clamp(1.5rem, 4vw, 3rem)'
           }}>
-            your shopping bag <span style={{ color: '#aaa', fontWeight: '400', fontSize: '1.5rem', marginLeft: '10px', verticalAlign: 'middle' }}>/ {cartCount} items</span>
+            your shopping bag <span style={{ color: '#aaa', fontWeight: '400', fontSize: 'clamp(1rem, 3vw, 1.5rem)', marginLeft: '10px', verticalAlign: 'middle' }}>/ {cartCount} items</span>
           </h1>
         )}
 
