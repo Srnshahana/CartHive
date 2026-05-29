@@ -100,7 +100,7 @@ body {
 .hero-container {
   position: relative;
   z-index: 0;
-  height: 75vh;
+  height: calc(100vh - 30px);
   margin: 15px;
   border-radius: 40px;
   /* Premium ultra-rounded corners */
@@ -388,6 +388,7 @@ body {
   /* Reduced min-width from 240px to 200px to shrink cards */
   gap: 1.5rem;
   margin-top: 1rem;
+  align-items: flex-start;
 }
 
 @media (max-width: 1024px) {
@@ -691,6 +692,7 @@ body {
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   /* Responsive grid with smaller cards */
   gap: 2rem;
+  align-items: flex-start;
 }
 
 .category-card-screenshot {
@@ -707,6 +709,10 @@ body {
   align-items: center;
   transition: transform 0.3s ease;
   width: 100%;
+  height: max-content;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  isolation: isolate;
 }
 
 .category-card-screenshot:hover {
@@ -2117,8 +2123,8 @@ body {
 
     /* Hero Mobile */
     .hero-container {
-      height: 70vh;
-      margin: 20px;
+      height: 60vh;
+      margin: 15px;
       border-radius: 20px !important;
     }
 
