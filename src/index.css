@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@7..48,60..100,200..800&display=swap');
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   --primary: #2563eb;
   --primary-dark: #1e40af;

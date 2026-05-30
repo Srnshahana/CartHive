@@ -37,7 +37,7 @@ function App() {
         
         {/* Admin Flow */}
         <Route path="/login" element={<Login />} />
-        <Route path="/admin" element={<AdminPortal />} />
+        <Route path="/admin/*" element={<AdminPortal />} />
         
         {/* Customer Storefront Flow */}
         <Route path="/:slug" element={<StoreProvider><StoreHome /></StoreProvider>} />

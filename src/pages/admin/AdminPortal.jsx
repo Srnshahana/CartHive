@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Routes, Route } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { uploadImage } from '../../lib/storage';
 import {
@@ -13,6 +13,8 @@ import Dashboard from './tabs/Dashboard';
 import Orders from './tabs/Orders';
 import Products from './tabs/Products';
 import HomeConfig from './tabs/HomeConfig';
+import Template from './tabs/Template/Template';
+import TemplatePreview from './tabs/Template/TemplatePreview';
 
 // Jewelry Assets
 import heroImg from '../../assets/hero-img.avif';
@@ -50,6 +52,17 @@ const AdminPortal = () => {
   const [showArrowPointer, setShowArrowPointer] = useState(false);
   const [tourStep, setTourStep] = useState(0); // 0: None, 1: Point to Store Design, 2: Inside HomeConfig tips
   const [alertConfig, setAlertConfig] = useState({ visible: false, title: '', message: '' });
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname.startsWith('/admin/templates')) {
+      setActiveTab('templates');
+    } else if (location.pathname.startsWith('/admin/home_screen')) {
+      setActiveTab('home_screen');
+    } else if (location.pathname === '/admin') {
+      setActiveTab('dashboard');
+    }
+  }, [location.pathname]);
 
   useEffect(() => {
     // Initial fetch with full loading state
@@ -252,6 +265,17 @@ const AdminPortal = () => {
     setHomeConfig(prev => ({ ...prev, instagram_images: newImages }));
   };
 
+  const applyTemplate = (template) => {
+    if (!template) return;
+    setHomeConfig(prev => ({
+      ...prev,
+      ...template.fields,
+      ticker_text: template.fields.ticker_text || prev.ticker_text,
+      footer_about: template.fields.footer_about || prev.footer_about
+    }));
+    showAlert(`Template '${template.name}' applied. Update the content and publish to save your design.`, 'Template Applied');
+  };
+
   const publishChanges = async (silent = false) => {
     setPublishing(true);
     try {
@@ -412,7 +436,8 @@ const AdminPortal = () => {
           <button className={`admin-nav-item ${activeTab === 'products' ? 'active' : ''}`} onClick={() => { setActiveTab('products'); setMobileMenuOpen(false); }}><Package size={20} /> products</button>
 
           <div style={{ position: 'relative' }}>
-            <button className={`admin-nav-item ${activeTab === 'home_screen' ? 'active' : ''}`} onClick={() => {
+            <button className={`admin-nav-item ${activeTab === 'templates' ? 'active' : ''}`} onClick={() => { setActiveTab('templates'); setMobileMenuOpen(false); navigate('/admin/templates'); }}><ImageIcon size={20} /> templates</button>
+          <button className={`admin-nav-item ${activeTab === 'home_screen' ? 'active' : ''}`} onClick={() => {
                 setActiveTab('home_screen');
                 setMobileMenuOpen(false);
                 if (showArrowPointer) {
@@ -516,6 +541,20 @@ const AdminPortal = () => {
             businessId={currentBusiness?.id}
             showAlert={showAlert}
           />
+        )}
+        {activeTab === 'templates' && homeConfig && (
+          <Routes>
+            <Route
+              path="templates"
+              element={
+                <Template
+                  homeConfig={homeConfig}
+                  applyTemplate={applyTemplate}
+                />
+              }
+            />
+            <Route path="templates/preview/:templateId" element={<TemplatePreview />} />
+          </Routes>
         )}
         {activeTab === 'home_screen' && homeConfig && (
           <HomeConfig
