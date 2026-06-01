@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { Mail, Lock, LogIn, ArrowLeft, AlertCircle } from 'lucide-react';
 
@@ -9,6 +9,8 @@ const Login = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const fromStore = location.state?.fromStore;
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -43,8 +45,8 @@ const Login = () => {
   return (
     <div style={{ minHeight: '90vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem', background: '#f8fafc' }}>
       <div className="glass-card" style={{ maxWidth: '450px', width: '100%', padding: '3rem', background: 'white', borderRadius: '30px', boxShadow: '0 20px 50px rgba(0,0,0,0.05)' }}>
-        <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#64748b', textDecoration: 'none', fontSize: '0.9rem', marginBottom: '2rem' }}>
-          <ArrowLeft size={16} /> back to stores
+        <Link to={fromStore ? `/${fromStore}` : "/"} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#64748b', textDecoration: 'none', fontSize: '0.9rem', marginBottom: '2rem' }}>
+          <ArrowLeft size={16} /> back to {fromStore ? 'store' : 'CartHive'}
         </Link>
         
         <h2 style={{ fontSize: '2.2rem', marginBottom: '0.5rem', fontWeight: '800' }}>Admin <span className="gradient-text">Login</span></h2>

@@ -178,7 +178,7 @@ const CustomerLogin = () => {
 
         <div style={{ borderTop: '1px solid #e2e8f0', marginTop: '2rem', paddingTop: '1.5rem', textAlign: 'center' }}>
           <p style={{ color: '#94a3b8', fontSize: '0.8rem', marginBottom: '8px' }}>Not a customer?</p>
-          <Link to="/login" style={{ fontSize: '0.85rem', fontWeight: '700', color: '#3b82f6', textDecoration: 'none' }}>
+          <Link to="/login" state={{ fromStore: slug }} style={{ fontSize: '0.85rem', fontWeight: '700', color: '#3b82f6', textDecoration: 'none' }}>
             Login as Admin
           </Link>
         </div>

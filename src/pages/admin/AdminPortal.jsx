@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { uploadImage } from '../../lib/storage';
 import {
@@ -470,16 +470,16 @@ const AdminPortal = () => {
           </div>
 
           <div style={{ borderTop: '1px solid #e2e8f0', margin: '1rem 0', paddingTop: '1rem' }}>
-            <button
-              onClick={() => navigate(`/${currentBusiness?.slug}`)}
+            <Link
+              to={`/${currentBusiness?.slug}`}
               className="admin-nav-item"
-              style={{ color: '#64748b' }}
+              style={{ color: '#64748b', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '15px' }}
             >
               <ArrowLeft size={20} /> back to store
-            </button>
+            </Link>
           </div>
         </nav>
-        <button onClick={() => { localStorage.removeItem('carthive_user'); navigate('/login'); }} className="admin-nav-item" style={{ color: '#ff4444', marginTop: 'auto' }}><LogOut size={20} /> logout</button>
+        <button onClick={() => { localStorage.removeItem('carthive_user'); navigate(currentBusiness?.slug ? `/${currentBusiness.slug}` : '/', { replace: true }); }} className="admin-nav-item" style={{ color: '#ff4444', marginTop: 'auto' }}><LogOut size={20} /> logout</button>
       </aside>
 
       <main className="admin-content">

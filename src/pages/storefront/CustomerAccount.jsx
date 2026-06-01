@@ -120,7 +120,7 @@ const CustomerAccount = () => {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    navigate(`/${slug}`);
+    navigate(`/${slug}`, { replace: true });
   };
 
   const handleSaveAddress = async (e) => {
