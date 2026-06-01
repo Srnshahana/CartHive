@@ -8,6 +8,7 @@ const Navbar = () => {
   const [business, setBusiness] = useState(null);
   const [branding, setBranding] = useState(null);
   const [user, setUser] = useState(null);
+  const [customerUser, setCustomerUser] = useState(null);
   const { cartCount } = useCart();
   const location = useLocation();
   const navigate = useNavigate();
@@ -25,6 +26,16 @@ const Navbar = () => {
     const savedUser = localStorage.getItem('carthive_user');
     if (savedUser) setUser(JSON.parse(savedUser));
     else setUser(null);
+
+    const checkCustomer = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) setCustomerUser(session.user);
+      
+      supabase.auth.onAuthStateChange((_event, session) => {
+        setCustomerUser(session?.user || null);
+      });
+    };
+    checkCustomer();
 
     if (slug) fetchBusinessInfo();
     else {
@@ -146,8 +157,13 @@ const Navbar = () => {
             <LayoutDashboard size={20} />
             <span className="auth-label-mobile">dashboard</span>
           </Link>
+        ) : customerUser && slug ? (
+          <Link to={`/${slug}/account`} className="nav-icon-link" style={{ fontSize: '0.85rem', fontWeight: '800', textDecoration: 'none', color: '#0f172a' }}>
+            <User size={20} />
+            <span className="auth-label-mobile">account</span>
+          </Link>
         ) : (
-          <Link to="/login" className="nav-icon-link" style={{ fontSize: '0.85rem', fontWeight: '800', textDecoration: 'none', color: '#0f172a' }}>
+          <Link to={slug ? `/${slug}/login` : "/login"} className="nav-icon-link" style={{ fontSize: '0.85rem', fontWeight: '800', textDecoration: 'none', color: '#0f172a' }}>
             <User size={20} />
             <span className="auth-label-mobile">login</span>
           </Link>

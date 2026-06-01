@@ -39,6 +39,32 @@ const Checkout = () => {
     }
   }, [slug, cart.length, navigate, success]);
 
+  useEffect(() => {
+    const fetchCustomerData = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          const { data: profile } = await supabase.from('customers').select('*').eq('id', session.user.id).single();
+          if (profile) {
+            setFormData(prev => ({
+              ...prev,
+              customer_name: profile.full_name || prev.customer_name,
+              email: profile.email || prev.email,
+              phone: profile.phone || prev.phone,
+              state: profile.state || prev.state,
+              district: profile.city || prev.district,
+              pincode: profile.postal_code || prev.pincode,
+              address_line: profile.address_line_1 || prev.address_line,
+            }));
+          }
+        }
+      } catch (err) {
+        console.error('Error prefilling customer data:', err);
+      }
+    };
+    fetchCustomerData();
+  }, []);
+
   const handleNextStep = (e) => {
     e.preventDefault();
     setStep('payment');
@@ -63,6 +89,21 @@ const Checkout = () => {
     setLoading(true);
 
     try {
+      // 0. Auto-save address to customer profile if logged in
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        await supabase.from('customers').upsert({
+          id: session.user.id,
+          email: session.user.email,
+          full_name: formData.customer_name,
+          phone: formData.phone,
+          address_line_1: formData.address_line,
+          city: formData.district,
+          state: formData.state,
+          postal_code: formData.pincode
+        });
+      }
+
       let receiptUrl = '';
       
       // 1. Upload Receipt Image

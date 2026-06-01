@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import { ArrowLeft, ShoppingBag, Minus, Plus, ChevronDown, ChevronUp } from 'lucide-react';
+import { ArrowLeft, ShoppingBag, Minus, Plus, ChevronDown, ChevronUp, Heart } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useStore } from '../../context/StoreContext';
 
@@ -9,8 +9,10 @@ const ProductDetails = () => {
   const { slug, id } = useParams();
   const { businessId, storeData } = useStore();
   const business = storeData;
+  const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [inWishlist, setInWishlist] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [addedCount, setAddedCount] = useState(0);
   const [activeAccordion, setActiveAccordion] = useState(null);
@@ -23,6 +25,13 @@ const ProductDetails = () => {
         setLoading(true);
         const { data: prod } = await supabase.from('products').select('*, categories(*)').eq('id', id).single();
         setProduct(prod);
+        
+        // Check wishlist status
+        const savedWishlist = localStorage.getItem('carthive_wishlist');
+        if (savedWishlist && prod) {
+          const list = JSON.parse(savedWishlist);
+          setInWishlist(list.some(item => item.id === prod.id));
+        }
       } catch (err) {
         console.error('Error:', err);
       } finally {
@@ -31,6 +40,27 @@ const ProductDetails = () => {
     };
     fetchProductData();
   }, [businessId, id]);
+
+  const handleWishlistToggle = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      alert("Please login to save items to your wishlist.");
+      navigate(`/${slug}/login`);
+      return;
+    }
+
+    const savedWishlist = localStorage.getItem('carthive_wishlist');
+    let list = savedWishlist ? JSON.parse(savedWishlist) : [];
+    
+    if (inWishlist) {
+      list = list.filter(item => item.id !== product.id);
+      setInWishlist(false);
+    } else {
+      list.push(product);
+      setInWishlist(true);
+    }
+    localStorage.setItem('carthive_wishlist', JSON.stringify(list));
+  };
 
   const toggleAccordion = (index) => {
     setActiveAccordion(activeAccordion === index ? null : index);
@@ -96,10 +126,32 @@ const ProductDetails = () => {
           <div className="details-info-new">
             {/* 1. Identity Card (White) */}
             <div className="info-card-luxury product-identity-block reveal-on-scroll" style={{ transitionDelay: '0.3s' }}>
-              <span className="magazine-label">
-                {product.categories?.name || 'exclusive collection'}
-              </span>
-              <h1 className="product-title-luxury">{product.name.toLowerCase()}</h1>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <span className="magazine-label">
+                  {product.categories?.name || 'exclusive collection'}
+                </span>
+                <button 
+                  onClick={handleWishlistToggle}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '8px',
+                    borderRadius: '50%',
+                    background: inWishlist ? '#fef2f2' : '#f8fafc',
+                    color: inWishlist ? '#ef4444' : '#64748b',
+                    transition: 'all 0.2s'
+                  }}
+                  title="Add to Wishlist"
+                >
+                  <Heart size={22} fill={inWishlist ? '#ef4444' : 'transparent'} />
+                </button>
+              </div>
+              
+              <h1 className="product-title-luxury" style={{ marginTop: '10px' }}>{product.name.toLowerCase()}</h1>
               
               <div className="luxury-price-tag" style={{ margin: 0 }}>
                 <span className="currency">₹</span>

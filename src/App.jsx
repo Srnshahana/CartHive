@@ -15,6 +15,8 @@ import ProductDetails from './pages/storefront/ProductDetails';
 import Cart from './pages/storefront/Cart';
 import Checkout from './pages/storefront/Checkout';
 import OrderTracking from './pages/storefront/OrderTracking';
+import CustomerLogin from './pages/storefront/CustomerLogin';
+import CustomerAccount from './pages/storefront/CustomerAccount';
 
 // Admin Pages
 import Login from './pages/admin/Login';
@@ -24,7 +26,7 @@ import './index.css';
 
 function App() {
   const location = useLocation();
-  const hideNavbar = location.pathname === '/' || location.pathname === '/launch' || location.pathname === '/founder' || location.pathname.startsWith('/admin') || location.pathname.startsWith('/login');
+  const hideNavbar = location.pathname === '/' || location.pathname === '/launch' || location.pathname === '/founder' || location.pathname.startsWith('/admin') || location.pathname.includes('/login') || location.pathname.includes('/account');
 
   return (
     <div className="app-shell">
@@ -46,6 +48,8 @@ function App() {
         <Route path="/:slug/cart" element={<StoreProvider><Cart /></StoreProvider>} />
         <Route path="/:slug/checkout" element={<StoreProvider><Checkout /></StoreProvider>} />
         <Route path="/:slug/track" element={<StoreProvider><OrderTracking /></StoreProvider>} />
+        <Route path="/:slug/login" element={<StoreProvider><CustomerLogin /></StoreProvider>} />
+        <Route path="/:slug/account" element={<StoreProvider><CustomerAccount /></StoreProvider>} />
         
         {/* Fallback */}
         <Route path="*" element={
