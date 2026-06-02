@@ -1233,9 +1233,9 @@ body {
   gap: 1rem;
   padding: 0.8rem 1rem;
   border-radius: 10px;
-  color: #666;
+  color: #334155;
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 600;
   text-transform: capitalize;
   transition: all 0.3s ease;
   background: transparent;

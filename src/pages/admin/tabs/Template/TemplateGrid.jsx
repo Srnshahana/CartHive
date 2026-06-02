@@ -7,18 +7,20 @@ const TemplateGrid = ({
   onViewDemo,
   onAddTemplate,
   onActivateTemplate,
+  onCustomize,
+  onDelete
 }) => {
   if (!templates.length) {
     return (
-      <div className="rounded-[32px] border border-dashed border-slate-200 bg-slate-50 p-10 text-center">
-        <p className="text-base font-semibold text-slate-700">No templates match your search.</p>
-        <p className="mt-2 text-sm text-slate-500">Try a new keyword or clear the category filter.</p>
+      <div style={{ padding: '3rem', textAlign: 'center', background: '#f8fafc', border: '2px dashed #e2e8f0', borderRadius: '32px' }}>
+        <p style={{ fontSize: '1rem', fontWeight: '600', color: '#334155' }}>No templates match your search.</p>
+        <p style={{ marginTop: '0.5rem', fontSize: '0.9rem', color: '#64748b' }}>Try a new keyword or clear the category filter.</p>
       </div>
     );
   }
 
   return (
-    <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {templates.map((template) => (
         <TemplateCard
           key={template.id}
@@ -27,6 +29,8 @@ const TemplateGrid = ({
           onViewDemo={onViewDemo}
           onAddTemplate={onAddTemplate}
           onActivateTemplate={onActivateTemplate}
+          onCustomize={onCustomize}
+          onDelete={onDelete}
         />
       ))}
     </div>

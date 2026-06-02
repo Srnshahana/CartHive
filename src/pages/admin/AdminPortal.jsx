@@ -461,7 +461,7 @@ const AdminPortal = () => {
             <button
               onClick={() => navigate(`/${currentBusiness?.slug}`)}
               className="admin-nav-item"
-              style={{ color: '#64748b' }}
+              style={{ color: '#334155' }}
             >
               <ArrowLeft size={20} /> back to store
             </button>
@@ -522,10 +522,10 @@ const AdminPortal = () => {
               </div>
             )}
             <div style={{ textAlign: 'right', marginRight: '1rem' }}>
-              <p style={{ fontSize: '0.8rem', fontWeight: '800' }}>{user?.name || currentBusiness?.name}</p>
-              <p style={{ fontSize: '0.7rem', color: '#888' }}>Store Admin</p>
+              <p style={{ fontSize: '0.8rem', fontWeight: '800', color: '#0f172a' }}>{user?.name || currentBusiness?.name}</p>
+              <p style={{ fontSize: '0.75rem', fontWeight: '500', color: '#475569' }}>Store Admin</p>
             </div>
-            <div style={{ width: '40px', height: '40px', background: '#eee', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><User size={20} color="#666" /></div>
+            <div style={{ width: '40px', height: '40px', background: '#e2e8f0', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><User size={20} color="#334155" /></div>
           </div>
         </header>
 

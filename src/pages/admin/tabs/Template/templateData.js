@@ -1,4 +1,13 @@
-export const TEMPLATE_CATEGORIES = ['All', 'Fashion', 'Electronics', 'Furniture', 'Beauty', 'Minimal', 'Lifestyle', 'Luxury', 'Artisan'];
+import t1 from '../../../../assets/template-01.png';
+import t2 from '../../../../assets/template-02.png';
+import t3 from '../../../../assets/template-03.png';
+import t4 from '../../../../assets/template-04.png';
+import t5 from '../../../../assets/template-05.png';
+import t6 from '../../../../assets/template-06.png';
+import t7 from '../../../../assets/template-07.png';
+import t8 from '../../../../assets/template-08.png';
+
+export const TEMPLATE_CATEGORIES = ['All', 'Fashion', 'Jewelry', 'Bags & Accessories', 'Shoes', 'Handmade', 'Home Decor', 'Kids & Baby', 'Gifts'];
 
 export const initialTemplates = [
   {
@@ -8,7 +17,7 @@ export const initialTemplates = [
     category: 'Fashion',
     description: 'A premium editorial storefront with refined spacing, rich typography, and a runway-ready hero.',
     demoUrl: 'https://demo.carthive.com/templates/atelier',
-    image: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&w=1200&q=80',
+    image: t1,
     tags: ['Fashion', 'Editorial', 'Luxury'],
     installed: false,
     active: false,
@@ -18,10 +27,10 @@ export const initialTemplates = [
     id: 'pulse',
     name: 'Pulse',
     author: 'Nova Themes',
-    category: 'Electronics',
+    category: 'Kids & Baby',
     description: 'High-energy product displays with bold CTA panels and a fast-moving storefront experience.',
     demoUrl: 'https://demo.carthive.com/templates/pulse',
-    image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&w=1200&q=80',
+    image: t2,
     tags: ['Electronics', 'Modern', 'Grid'],
     installed: false,
     active: false,
@@ -31,10 +40,10 @@ export const initialTemplates = [
     id: 'haven',
     name: 'Haven',
     author: 'Luxe Labs',
-    category: 'Furniture',
+    category: 'Home Decor',
     description: 'A calm and luxurious home store layout with large imagery and warm editorial structure.',
     demoUrl: 'https://demo.carthive.com/templates/haven',
-    image: 'https://images.unsplash.com/photo-1493666438817-866a91353ca9?auto=format&w=1200&q=80',
+    image: t3,
     tags: ['Furniture', 'Calm', 'Lifestyle'],
     installed: false,
     active: false,
@@ -44,10 +53,10 @@ export const initialTemplates = [
     id: 'aether',
     name: 'Aether',
     author: 'Fable Themes',
-    category: 'Beauty',
+    category: 'Jewelry',
     description: 'Soft gradients, layered imagery, and a spa-inspired product showcase for beauty brands.',
     demoUrl: 'https://demo.carthive.com/templates/aether',
-    image: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&w=1200&q=80',
+    image: t4,
     tags: ['Beauty', 'Spa', 'Delicate'],
     installed: false,
     active: false,
@@ -57,10 +66,10 @@ export const initialTemplates = [
     id: 'mono',
     name: 'Mono',
     author: 'Minimal Works',
-    category: 'Minimal',
+    category: 'Bags & Accessories',
     description: 'A clean, airy storefront with neutral palettes, typography-first product storytelling, and elegant whitespace.',
     demoUrl: 'https://demo.carthive.com/templates/mono',
-    image: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&w=1200&q=80',
+    image: t5,
     tags: ['Minimal', 'Brand', 'Editorial'],
     installed: false,
     active: false,
@@ -70,10 +79,10 @@ export const initialTemplates = [
     id: 'lumen',
     name: 'Lumen',
     author: 'Orbit Themes',
-    category: 'Lifestyle',
+    category: 'Gifts',
     description: 'Lifestyle-led homepage layouts with editorial product loops, immersive storytelling blocks, and bold hover interactions.',
     demoUrl: 'https://demo.carthive.com/templates/lumen',
-    image: 'https://images.unsplash.com/photo-1495121605193-b116b5b9c5c6?auto=format&w=1200&q=80',
+    image: t6,
     tags: ['Lifestyle', 'Editorial', 'Story'],
     installed: false,
     active: false,
@@ -83,10 +92,10 @@ export const initialTemplates = [
     id: 'nova',
     name: 'Nova',
     author: 'Polaris Studio',
-    category: 'Luxury',
+    category: 'Fashion',
     description: 'A premium boutique experience designed for jewelry, watches, and upscale retail brands.',
     demoUrl: 'https://demo.carthive.com/templates/nova',
-    image: 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&w=1200&q=80',
+    image: t7,
     tags: ['Luxury', 'Boutique', 'Premium'],
     installed: false,
     active: false,
@@ -96,10 +105,10 @@ export const initialTemplates = [
     id: 'arcadia',
     name: 'Arcadia',
     author: 'Studio Wren',
-    category: 'Artisan',
+    category: 'Handmade',
     description: 'Handmade market vibes with editorial textures, soft accent colors, and rich storytelling sections.',
     demoUrl: 'https://demo.carthive.com/templates/arcadia',
-    image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&w=1200&q=80',
+    image: t8,
     tags: ['Artisan', 'Warm', 'Craft'],
     installed: false,
     active: false,

@@ -2,13 +2,13 @@ import React from 'react';
 import { Smile } from 'lucide-react';
 
 const TemplateEmptyState = ({ title, description }) => (
-  <div className="rounded-[32px] border border-slate-200 bg-white p-10 text-center shadow-sm">
-    <div className="mx-auto inline-flex h-16 w-16 items-center justify-center rounded-3xl bg-slate-100 text-slate-700">
-      <Smile className="h-8 w-8" />
+  <div style={{ background: 'white', borderRadius: '32px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', padding: '4rem 2rem', textAlign: 'center' }}>
+    <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '56px', height: '56px', borderRadius: '50%', background: '#f8fafc', color: '#94a3b8', marginBottom: '1.25rem' }}>
+      <Smile size={28} strokeWidth={1.5} />
     </div>
-    <div className="mt-6 space-y-3">
-      <h3 className="text-2xl font-semibold text-slate-900">{title}</h3>
-      <p className="mx-auto max-w-sm text-sm leading-6 text-slate-500">{description}</p>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+      <h3 style={{ fontSize: '1.15rem', fontWeight: '600', color: '#334155' }}>{title}</h3>
+      <p style={{ maxWidth: '420px', margin: '0 auto', fontSize: '0.9rem', color: '#64748b', lineHeight: '1.7' }}>{description}</p>
     </div>
   </div>
 );
