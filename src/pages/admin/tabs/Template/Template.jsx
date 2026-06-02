@@ -148,7 +148,7 @@ const Template = ({ homeConfig, applyTemplate }) => {
   };
 
   return (
-    <div style={{ margin: '-3rem -4%', padding: '3rem 4%', background: '#f8fafc', minHeight: '100vh' }}>
+    <div style={{ width: '100%', minHeight: '100vh' }}>
       {/* Page Header */}
       <div style={{ marginBottom: '2rem' }}>
         <h1 style={{ fontSize: '2rem', fontWeight: '800', color: '#0f172a', marginBottom: '0.5rem', letterSpacing: '-0.02em' }}>Template Library</h1>

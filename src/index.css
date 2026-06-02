@@ -1194,7 +1194,7 @@ body {
 .admin-layout {
   display: flex;
   min-height: 100vh;
-  background: #fdfdfd;
+  background: #f8fafc;
   color: #111111;
   overflow-y: visible;
 }
