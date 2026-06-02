@@ -137,14 +137,20 @@ const Navbar = () => {
         )}
 
         <Link to={slug ? `/${slug}` : "/"} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none', color: '#0f172a' }}>
-          <div style={{ background: '#0f172a', width: '32px', height: '32px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            {(branding?.logo_url || business?.logo_url) ? (
+          <div style={{ background: '#0f172a', width: '32px', height: '32px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+            {!business ? (
+              <div style={{ width: '100%', height: '100%', backgroundColor: '#334155', animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite' }} />
+            ) : (branding?.logo_url || business?.logo_url) ? (
               <img src={branding?.logo_url || business?.logo_url} style={{ width: '20px', height: '20px', objectFit: 'contain' }} alt="" />
             ) : (
               <Flower size={18} color="white" />
             )}
           </div>
-          <span style={{ fontWeight: '900', fontSize: '1.2rem', letterSpacing: '-1px' }}>{business?.name || 'carthive'}</span>
+          {business ? (
+            <span style={{ fontWeight: '900', fontSize: '1.2rem', letterSpacing: '-1px' }}>{business.name}</span>
+          ) : (
+            <div style={{ width: '120px', height: '24px', borderRadius: '6px', backgroundColor: '#e2e8f0', animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite' }} />
+          )}
         </Link>
       </div>
 
