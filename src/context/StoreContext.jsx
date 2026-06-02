@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabase';
 
 const StoreContext = createContext();
 
-export const StoreProvider = ({ children }) => {
+export const StoreProvider = ({ children, hostname }) => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const [storeData, setStoreData] = useState(null);
@@ -12,23 +12,30 @@ export const StoreProvider = ({ children }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchStoreBySlug = async () => {
-      if (!slug) return;
+    const fetchStore = async () => {
+      if (!slug && !hostname) return;
       
       try {
         setLoading(true);
-        // 1. Fetch business details by slug
-        const { data: business, error: bizError } = await supabase
-          .from('businesses')
-          .select('*')
-          .eq('slug', slug)
-          .single();
+        // 1. Fetch business details by slug or custom_domain
+        let query = supabase.from('businesses').select('*');
+        if (hostname) {
+          query = query.eq('custom_domain', hostname);
+        } else {
+          query = query.eq('slug', slug);
+        }
+
+        const { data: business, error: bizError } = await query.single();
 
         if (bizError || !business) {
           console.error('Store not found:', bizError);
           setError('Store not found');
-          // If it's a platform route that accidentally matched, we might not want to redirect here
-          // but for storefront sub-routes, we should.
+          return;
+        }
+
+        // Premium Feature Gate: Block 'Launch' plans from using custom domains
+        if (hostname && business.payment_plan === 'Launch') {
+          setError('Domain Inactive');
           return;
         }
 
@@ -51,8 +58,8 @@ export const StoreProvider = ({ children }) => {
       }
     };
 
-    fetchStoreBySlug();
-  }, [slug]);
+    fetchStore();
+  }, [slug, hostname]);
 
   const value = {
     storeData,
