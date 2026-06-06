@@ -24,25 +24,9 @@ import AdminPortal from './pages/admin/AdminPortal';
 
 import './index.css';
 
-import CustomDomainApp from './components/CustomDomainApp';
-
 function App() {
   const location = useLocation();
   const hideNavbar = location.pathname === '/' || location.pathname === '/launch' || location.pathname === '/founder' || location.pathname.startsWith('/admin') || location.pathname.includes('/login') || location.pathname.includes('/account');
-
-  // Custom Domain Routing Interception
-  const hostname = window.location.hostname;
-  const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
-  const isPlatformDomain = hostname.includes('carthive.com') || hostname.includes('vercel.app');
-  const isCustomDomain = !isLocalhost && !isPlatformDomain;
-
-  if (isCustomDomain) {
-    return (
-      <div className="app-shell">
-        <CustomDomainApp hostname={hostname} />
-      </div>
-    );
-  }
 
   return (
     <div className="app-shell">
