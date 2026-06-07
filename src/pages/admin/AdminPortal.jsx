@@ -550,6 +550,7 @@ const AdminPortal = () => {
                 <Template
                   homeConfig={homeConfig}
                   applyTemplate={applyTemplate}
+                  categories={categories}
                 />
               }
             />

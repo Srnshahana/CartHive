@@ -37,17 +37,10 @@ const TemplateCard = ({
         <div className="space-y-3">
           <div>
             <h3 className="text-xl font-semibold tracking-tight text-slate-900">{template.name}</h3>
+            {template.store_name && (
+              <p className="mt-1 text-sm font-medium text-slate-700">{template.store_name}</p>
+            )}
             <p className="mt-2 text-sm text-slate-500">by {template.author}</p>
-          </div>
-
-          <p className="text-sm leading-6 text-slate-600">{template.description}</p>
-
-          <div className="flex flex-wrap gap-2">
-            {template.tags.map((tag) => (
-              <span key={tag} className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">
-                {tag}
-              </span>
-            ))}
           </div>
         </div>
 

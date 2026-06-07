@@ -1,5 +1,6 @@
 import React from 'react';
 import { Heart } from 'lucide-react';
+import TemplatePreviewMeta from '../TemplatePreviewMeta';
 
 const ArcadiaTemplate = ({ template, onApply }) => {
   return (
@@ -28,8 +29,8 @@ const ArcadiaTemplate = ({ template, onApply }) => {
           <div className="grid gap-10 lg:grid-cols-[0.65fr_1fr] lg:items-center">
             <div className="space-y-6">
               <span className="text-xs uppercase tracking-[0.35em] text-amber-700">Handcrafted Fashion</span>
-              <h1 className="text-5xl font-semibold leading-tight text-slate-950 sm:text-6xl">Warm artisan styling for the modern boutique</h1>
-              <p className="max-w-2xl text-base leading-8 text-slate-700">Elegant editorial blocks, textured imagery, and premium accessory showcases designed to feel handcrafted.</p>
+              <h1 className="text-5xl font-semibold leading-tight text-slate-950 sm:text-6xl">{template.hero_heading || 'Warm artisan styling for the modern boutique'}</h1>
+              <p className="max-w-2xl text-base leading-8 text-slate-700">{template.hero_subtext || 'Elegant editorial blocks, textured imagery, and premium accessory showcases designed to feel handcrafted.'}</p>
               <div className="flex flex-col gap-4 sm:flex-row">
                 <button className="rounded-full bg-amber-700 px-6 py-3 text-sm font-semibold text-white transition hover:bg-amber-800">Shop Handbags</button>
                 <button onClick={onApply} className="rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-950 transition hover:bg-slate-100">Preview Theme</button>
@@ -123,6 +124,8 @@ const ArcadiaTemplate = ({ template, onApply }) => {
           ))}
         </div>
       </section>
+
+      <TemplatePreviewMeta template={template} />
 
       <footer className="border-t border-amber-200 bg-amber-50 px-6 py-10 text-sm text-slate-600">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

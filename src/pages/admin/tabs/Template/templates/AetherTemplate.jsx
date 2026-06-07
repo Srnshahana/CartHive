@@ -1,5 +1,6 @@
 import React from 'react';
 import { Star } from 'lucide-react';
+import TemplatePreviewMeta from '../TemplatePreviewMeta';
 
 const AetherTemplate = ({ template, onApply }) => {
   return (
@@ -22,10 +23,10 @@ const AetherTemplate = ({ template, onApply }) => {
             <div className="space-y-6">
               <p className="text-sm uppercase tracking-[0.35em] text-rose-500">Seasonal Edit</p>
               <h1 className="text-5xl font-extrabold leading-tight tracking-tight text-slate-950 sm:text-6xl">
-                Beauty rituals for every moment
+                {template.hero_heading || 'Beauty rituals for every moment'}
               </h1>
               <p className="max-w-2xl text-lg leading-8 text-slate-600">
-                An elegant lifestyle layout with hero banners, editorial product planes, and soft modern spacing.
+                {template.hero_subtext || 'An elegant lifestyle layout with hero banners, editorial product planes, and soft modern spacing.'}
               </p>
               <div className="flex flex-col gap-4 sm:flex-row">
                 <button className="rounded-full bg-rose-500 px-6 py-3 text-sm font-semibold text-white transition hover:bg-rose-600">
@@ -130,6 +131,8 @@ const AetherTemplate = ({ template, onApply }) => {
           ))}
         </div>
       </section>
+
+      <TemplatePreviewMeta template={template} />
 
       <footer className="border-t border-slate-200 bg-white px-6 py-10 text-sm text-slate-600">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

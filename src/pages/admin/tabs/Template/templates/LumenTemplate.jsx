@@ -1,4 +1,5 @@
 import React from 'react';
+import TemplatePreviewMeta from '../TemplatePreviewMeta';
 
 const LumenTemplate = ({ template, onApply }) => {
   return (
@@ -26,10 +27,10 @@ const LumenTemplate = ({ template, onApply }) => {
             <div className="space-y-6">
               <p className="text-sm uppercase tracking-[0.35em] text-emerald-700">Bold New Arrivals</p>
               <h1 className="max-w-3xl text-5xl font-extrabold tracking-tight text-slate-950 sm:text-6xl">
-                Modern dressing for the everyday woman
+                {template.hero_heading || 'Modern dressing for the everyday woman'}
               </h1>
               <p className="max-w-2xl text-lg leading-8 text-slate-600">
-                Elegant editorial storytelling with smooth product flows, vibrant hero campaigns, and refined spacing.
+                {template.hero_subtext || 'Elegant editorial storytelling with smooth product flows, vibrant hero campaigns, and refined spacing.'}
               </p>
               <div className="flex flex-col gap-4 sm:flex-row">
                 <button className="rounded-full bg-emerald-700 px-6 py-3 text-sm font-semibold text-white transition hover:bg-emerald-800">
@@ -120,6 +121,8 @@ const LumenTemplate = ({ template, onApply }) => {
           </div>
         </div>
       </section>
+
+      <TemplatePreviewMeta template={template} />
 
       <footer className="border-t border-slate-200/10 bg-white px-6 py-10 text-sm text-slate-600">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

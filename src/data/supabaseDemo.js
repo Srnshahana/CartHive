@@ -84,6 +84,15 @@ export const supabaseDemo = {
     { id: 'c3', business_id: 'b2', name: 'Kits', product_ids: ['p3'] },
     { id: 'c4', business_id: 'b2', name: 'Organic Cones', product_ids: ['p4'] }
   ],
+  template_categories: [
+    { id: 'tc1', name: 'Fashion' },
+    { id: 'tc2', name: 'Luxury' },
+    { id: 'tc3', name: 'Minimal' },
+    { id: 'tc4', name: 'Beauty' },
+    { id: 'tc5', name: 'Lifestyle' },
+    { id: 'tc6', name: 'Artisan' },
+    { id: 'tc7', name: 'Electronics' }
+  ],
   products: [
     {
       id: 'p1',

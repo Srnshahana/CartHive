@@ -1,5 +1,6 @@
 import React from 'react';
 import { Heart, ShoppingBag } from 'lucide-react';
+import TemplatePreviewMeta from '../TemplatePreviewMeta';
 
 const HavenTemplate = ({ template, onApply }) => {
   return (
@@ -31,9 +32,9 @@ const HavenTemplate = ({ template, onApply }) => {
           <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
             <div className="space-y-6">
               <p className="text-xs uppercase tracking-[0.35em] text-rose-500">New arrivals</p>
-              <h1 className="text-5xl font-semibold leading-tight text-slate-950 sm:text-6xl">Bridal looks with soft luxurious detail</h1>
+              <h1 className="text-5xl font-semibold leading-tight text-slate-950 sm:text-6xl">{template.hero_heading || 'Bridal looks with soft luxurious detail'}</h1>
               <p className="max-w-2xl text-base leading-8 text-slate-600">
-                High-end imagery, layered hero banners, and elegant collection cards designed for fashion boutiques and bridal studios.
+                {template.hero_subtext || 'High-end imagery, layered hero banners, and elegant collection cards designed for fashion boutiques and bridal studios.'}
               </p>
               <div className="flex flex-col gap-4 sm:flex-row">
                 <button className="rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">
@@ -119,6 +120,8 @@ const HavenTemplate = ({ template, onApply }) => {
           </div>
         </div>
       </section>
+
+      <TemplatePreviewMeta template={template} />
 
       <footer className="border-t border-slate-200 bg-white px-6 py-10 text-sm text-slate-600">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

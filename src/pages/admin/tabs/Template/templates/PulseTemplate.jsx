@@ -1,5 +1,6 @@
 import React from 'react';
 import { Heart, ShoppingCart } from 'lucide-react';
+import TemplatePreviewMeta from '../TemplatePreviewMeta';
 
 const PulseTemplate = ({ template, onApply }) => {
   return (
@@ -28,9 +29,9 @@ const PulseTemplate = ({ template, onApply }) => {
           <div className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
             <div className="space-y-6 text-center lg:text-left">
               <span className="text-xs uppercase tracking-[0.35em] text-cyan-300">Gen-Z Fashion</span>
-              <h1 className="text-5xl font-semibold tracking-tight text-white sm:text-6xl">The Next Chapter in Street Style</h1>
+              <h1 className="text-5xl font-semibold tracking-tight text-white sm:text-6xl">{template.hero_heading || 'The Next Chapter in Street Style'}</h1>
               <p className="mx-auto max-w-2xl text-base leading-8 text-slate-300 lg:mx-0">
-                Bold campaign imagery, runway-ready drops, and modern shopping experiences for an influencer-approved storefront.
+                {template.hero_subtext || 'Bold campaign imagery, runway-ready drops, and modern shopping experiences for an influencer-approved storefront.'}
               </p>
               <div className="flex flex-col gap-4 sm:flex-row sm:justify-center lg:justify-start">
                 <button className="rounded-full bg-cyan-500 px-6 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400">
@@ -127,6 +128,8 @@ const PulseTemplate = ({ template, onApply }) => {
           </div>
         </div>
       </section>
+
+      <TemplatePreviewMeta template={template} />
 
       <footer className="border-t border-slate-800 bg-slate-950 px-6 py-10 text-sm text-slate-500">
         <div className="mx-auto max-w-7xl flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

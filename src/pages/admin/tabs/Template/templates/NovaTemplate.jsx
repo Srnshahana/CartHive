@@ -1,5 +1,6 @@
 import React from 'react';
 import { Star } from 'lucide-react';
+import TemplatePreviewMeta from '../TemplatePreviewMeta';
 
 const NovaTemplate = ({ template, onApply }) => {
   return (
@@ -23,10 +24,10 @@ const NovaTemplate = ({ template, onApply }) => {
           <div className="flex flex-col justify-center px-8 py-16 lg:px-16">
             <span className="text-xs uppercase tracking-[0.4em] text-slate-300">Luxury Jewelry</span>
             <h1 className="mt-6 max-w-xl text-5xl font-semibold leading-tight tracking-tight text-white sm:text-6xl">
-              Rare pieces for the modern collector
+              {template.hero_heading || 'Rare pieces for the modern collector'}
             </h1>
             <p className="mt-6 max-w-2xl text-base leading-relaxed text-slate-300">
-              Curated jewelry sets with an editorial edge, polished for premium e-commerce and luxury retail.
+              {template.hero_subtext || 'Curated jewelry sets with an editorial edge, polished for premium e-commerce and luxury retail.'}
             </p>
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
               <button className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-slate-950 transition hover:opacity-90">
@@ -144,6 +145,8 @@ const NovaTemplate = ({ template, onApply }) => {
           ))}
         </div>
       </section>
+
+      <TemplatePreviewMeta template={template} />
 
       <footer className="border-t border-white/10 bg-slate-950 px-6 py-10 text-sm text-slate-400">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

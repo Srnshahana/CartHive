@@ -7,9 +7,10 @@ import {
   ArrowRight,
   CheckCircle2,
 } from 'lucide-react';
+import { supabase } from '../../../../lib/supabase';
 import TemplateGrid from './TemplateGrid';
 import TemplateEmptyState from './TemplateEmptyState';
-import { initialTemplates, TEMPLATE_CATEGORIES } from './templateData';
+import { templateCategories as templateCategoryDefaults, templateDesigns } from '../../../../data/templateDemo';
 
 const STORAGE_KEY = 'carthive_template_library_v1';
 const RECENT_KEY = 'carthive_templates_recently_viewed';
@@ -17,12 +18,13 @@ const RECENT_KEY = 'carthive_templates_recently_viewed';
 const Template = ({ homeConfig, applyTemplate }) => {
   const navigate = useNavigate();
   const [templates, setTemplates] = useState(() => {
-    if (typeof window === 'undefined') return initialTemplates;
+    if (typeof window === 'undefined') return templateDesigns;
     const stored = window.localStorage.getItem(STORAGE_KEY);
-    return stored ? JSON.parse(stored) : initialTemplates;
+    return stored ? JSON.parse(stored) : templateDesigns;
   });
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('All');
+  const [templateCategories, setTemplateCategories] = useState(templateCategoryDefaults);
   const [activeView, setActiveView] = useState('discover');
   const [recentlyViewed, setRecentlyViewed] = useState(() => {
     if (typeof window === 'undefined') return [];
@@ -58,6 +60,28 @@ const Template = ({ homeConfig, applyTemplate }) => {
     setRecentlyViewed(updated);
     window.localStorage.setItem(RECENT_KEY, JSON.stringify(updated));
   };
+
+  useEffect(() => {
+    const fetchTemplateCategories = async () => {
+      try {
+        const { data, error } = await supabase.from('template_categories').select('*');
+        if (!error && data?.length) {
+          setTemplateCategories(data);
+        }
+      } catch (err) {
+        console.warn('Unable to load template categories from Supabase, using defaults.', err);
+      }
+    };
+
+    fetchTemplateCategories();
+  }, []);
+
+  const categoryOptions = useMemo(() => {
+    const names = templateCategories.length
+      ? templateCategories.map((category) => category.name)
+      : templateCategoryDefaults.map((category) => category.name);
+    return ['All', ...Array.from(new Set(names))];
+  }, [templateCategories]);
 
   const filteredTemplates = useMemo(() => {
     return templates.filter((template) => {
@@ -158,7 +182,7 @@ const Template = ({ homeConfig, applyTemplate }) => {
             <ChevronDown className="h-4 w-4 text-slate-500" />
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
-            {TEMPLATE_CATEGORIES.slice(0, 6).map((category) => (
+            {categoryOptions.slice(0, 6).map((category) => (
               <button
                 key={category}
                 type="button"
@@ -172,7 +196,7 @@ const Template = ({ homeConfig, applyTemplate }) => {
         </div>
       </div>
 
-      <section className="grid gap-8 xl:grid-cols-[1.95fr_0.95fr]">
+      <section className="space-y-8">
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <div className="inline-flex h-14 rounded-full border border-slate-200 bg-slate-50 p-1">
@@ -290,74 +314,6 @@ const Template = ({ homeConfig, applyTemplate }) => {
             </div>
           )}
         </div>
-
-        <aside className="space-y-6 rounded-[32px] border border-slate-200 bg-white p-6 shadow-xl">
-          <div className="rounded-[28px] bg-slate-950 p-6 text-white">
-            <p className="text-sm uppercase tracking-[0.3em] text-slate-400">Boost your workflow</p>
-            <h2 className="mt-4 text-2xl font-semibold">My templates dashboard</h2>
-            <p className="mt-3 text-sm leading-6 text-slate-300">Quick access to favorites, installed themes, and recently viewed designs from your template marketplace.</p>
-          </div>
-
-          <div className="space-y-4 rounded-[28px] border border-slate-200 bg-slate-50 p-5">
-            <div className="flex items-center justify-between gap-3">
-              <p className="text-sm uppercase tracking-[0.28em] text-slate-500">Favorites</p>
-              <span className="text-sm font-semibold text-slate-700">{favoriteTemplates.length}</span>
-            </div>
-            <div className="space-y-3">
-              {favoriteTemplates.length ? (
-                favoriteTemplates.slice(0, 3).map((template) => (
-                  <div key={template.id} className="rounded-3xl bg-white p-4">
-                    <div className="flex items-center justify-between gap-4">
-                      <div>
-                        <p className="text-sm font-semibold text-slate-900">{template.name}</p>
-                        <p className="text-xs text-slate-500">{template.author}</p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => openDemo(template.id)}
-                        className="rounded-2xl bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-200"
-                      >
-                        Preview
-                      </button>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p className="text-sm leading-6 text-slate-500">No favorites yet. Tap the heart icon on any template card to save your top picks.</p>
-              )}
-            </div>
-          </div>
-
-          <div className="space-y-4 rounded-[28px] border border-slate-200 bg-slate-50 p-5">
-            <div className="flex items-center justify-between gap-3">
-              <p className="text-sm uppercase tracking-[0.28em] text-slate-500">Recently viewed</p>
-              <span className="text-sm font-semibold text-slate-700">{recentTemplates.length}</span>
-            </div>
-            <div className="space-y-3">
-              {recentTemplates.length ? (
-                recentTemplates.map((template) => (
-                  <div key={template.id} className="rounded-3xl bg-white p-4">
-                    <div className="flex items-center justify-between gap-4">
-                      <div>
-                        <p className="text-sm font-semibold text-slate-900">{template.name}</p>
-                        <p className="text-xs text-slate-500">{template.category}</p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => openDemo(template.id)}
-                        className="rounded-2xl bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-200"
-                      >
-                        Open
-                      </button>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p className="text-sm leading-6 text-slate-500">Your preview history will appear here once you explore templates.</p>
-              )}
-            </div>
-          </div>
-        </aside>
       </section>
 
       {toast && (

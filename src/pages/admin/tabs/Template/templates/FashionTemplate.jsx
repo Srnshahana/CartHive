@@ -1,5 +1,6 @@
 import React from 'react';
 import { ShoppingBag, Star } from 'lucide-react';
+import TemplatePreviewMeta from '../TemplatePreviewMeta';
 
 export const FashionTemplate = ({ template, onApply }) => {
   return (
@@ -28,9 +29,9 @@ export const FashionTemplate = ({ template, onApply }) => {
         <div className="grid min-h-[85vh] grid-cols-1 lg:grid-cols-[0.95fr_1.05fr]">
           <div className="relative flex flex-col justify-center gap-6 px-6 py-16 lg:px-16 lg:py-24">
             <span className="text-xs uppercase tracking-[0.35em] text-slate-400">Luxury Fashion Boutique</span>
-            <h1 className="max-w-3xl text-5xl font-semibold leading-tight sm:text-6xl">Modern runway silhouettes for a couture wardrobe</h1>
+            <h1 className="max-w-3xl text-5xl font-semibold leading-tight sm:text-6xl">{template.hero_heading || 'Modern runway silhouettes for a couture wardrobe'}</h1>
             <p className="max-w-xl text-base leading-8 text-slate-300">
-              Model-led hero imagery, premium product cards, and elevated editorial sections built for a fashion-first storefront.
+              {template.hero_subtext || 'Model-led hero imagery, premium product cards, and elevated editorial sections built for a fashion-first storefront.'}
             </p>
             <div className="flex flex-col gap-4 sm:flex-row">
               <button className="rounded-full bg-amber-500 px-6 py-3 text-sm font-semibold text-slate-950 transition hover:bg-amber-400">
@@ -43,8 +44,8 @@ export const FashionTemplate = ({ template, onApply }) => {
           </div>
           <div className="relative overflow-hidden">
             <img
-              src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&w=1200&q=80"
-              alt="Fashion model"
+              src={template.hero_image || 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&w=1200&q=80'}
+              alt={template.hero_heading || 'Fashion model'}
               className="h-full w-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-950/10 to-slate-950/90" />
@@ -150,6 +151,8 @@ export const FashionTemplate = ({ template, onApply }) => {
           ))}
         </div>
       </section>
+
+      <TemplatePreviewMeta template={template} />
 
       <footer className="border-t border-slate-200 bg-slate-950 px-6 py-10 text-sm text-slate-400">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

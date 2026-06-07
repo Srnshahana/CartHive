@@ -1,5 +1,6 @@
 import React from 'react';
 import { Heart, ShoppingBag } from 'lucide-react';
+import TemplatePreviewMeta from '../TemplatePreviewMeta';
 
 const MonoTemplate = ({ template, onApply }) => {
   return (
@@ -28,9 +29,9 @@ const MonoTemplate = ({ template, onApply }) => {
           <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
             <div className="space-y-6">
               <span className="text-xs uppercase tracking-[0.35em] text-slate-500">Minimal Jewelry Store</span>
-              <h1 className="text-5xl font-semibold leading-tight text-slate-950">Clean, refined jewelry with modern polish</h1>
+              <h1 className="text-5xl font-semibold leading-tight text-slate-950">{template.hero_heading || 'Clean, refined jewelry with modern polish'}</h1>
               <p className="max-w-2xl text-base leading-8 text-slate-600">
-                A minimal storefront built around premium product imagery, quiet luxury details, and elegant whitespace.
+                {template.hero_subtext || 'A minimal storefront built around premium product imagery, quiet luxury details, and elegant whitespace.'}
               </p>
               <button onClick={onApply} className="rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">
                 Preview Collection
@@ -96,6 +97,8 @@ const MonoTemplate = ({ template, onApply }) => {
           </div>
         </div>
       </section>
+
+      <TemplatePreviewMeta template={template} />
 
       <footer className="border-t border-slate-200 bg-white px-6 py-10 text-sm text-slate-600">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

@@ -10,7 +10,6 @@ import ArcadiaTemplate from './templates/ArcadiaTemplate';
 import NovaTemplate from './templates/NovaTemplate';
 import LumenTemplate from './templates/LumenTemplate';
 import AetherTemplate from './templates/AetherTemplate';
-
 const STORAGE_KEY = 'carthive_template_library_v1';
 
 const TemplatePreview = () => {
@@ -41,6 +40,13 @@ const TemplatePreview = () => {
         window.origin,
       );
     }
+  };
+
+  const previewTemplate = {
+    ...template,
+    ...(template?.fields || {}),
+    ...(template?.config || {}),
+    image: template?.image || template?.config?.hero_image || template?.image,
   };
 
   if (!template) {
@@ -113,7 +119,7 @@ const TemplatePreview = () => {
                     aether: AetherTemplate,
                   };
                   const Selected = registry[template.id] || DesktopTemplate;
-                  return <Selected template={template} onApply={handleApplyTemplate} mode={mode} />;
+                  return <Selected template={previewTemplate} onApply={handleApplyTemplate} mode={mode} />;
                 })()}
               </div>
             </div>
@@ -133,7 +139,7 @@ const TemplatePreview = () => {
                       aether: AetherTemplate,
                     };
                     const Selected = registry[template.id] || MobileTemplate;
-                    return <Selected template={template} onApply={handleApplyTemplate} mode={mode} />;
+                    return <Selected template={previewTemplate} onApply={handleApplyTemplate} mode={mode} />;
                   })()}
                 </div>
               </div>
@@ -221,8 +227,8 @@ const DesktopTemplate = ({ template }) => {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-slate-950/30" />
         <div className="relative flex flex-col items-center justify-center h-full text-center text-white px-6">
           <p className="text-sm uppercase tracking-[0.22em] text-white/80">{template.category} storefront</p>
-          <h2 className="mt-4 text-6xl font-bold tracking-tight">{template.name}</h2>
-          <p className="mt-4 max-w-2xl text-lg text-white/90">{template.description}</p>
+          <h2 className="mt-4 text-6xl font-bold tracking-tight">{template.hero_heading || template.name}</h2>
+          <p className="mt-4 max-w-2xl text-lg text-white/90">{template.hero_subtext || template.description}</p>
           <button className={`mt-8 rounded-lg ${styles.accentColor} px-8 py-3 font-semibold text-white hover:opacity-90`}>
             Shop Now
           </button>
@@ -233,9 +239,9 @@ const DesktopTemplate = ({ template }) => {
       <div className="border-t border-slate-200 px-12 py-16 bg-white">
         <div className="space-y-6">
           <div>
-            <p className={`text-sm uppercase tracking-[0.22em] ${styles.accentText}`}>Featured Collection</p>
-            <h3 className="mt-2 text-3xl font-bold text-slate-900">Popular products</h3>
-            <p className="mt-2 text-slate-600">{template.tags.join(' • ')}</p>
+            <p className={`text-sm uppercase tracking-[0.22em] ${styles.accentText}`}>{template.banner_title || 'Featured Collection'}</p>
+            <h3 className="mt-2 text-3xl font-bold text-slate-900">{template.banner_title || 'Popular products'}</h3>
+            <p className="mt-2 text-slate-600">{template.banner_subtitle || template.tags?.join(' • ')}</p>
           </div>
           <div className={`grid gap-6 grid-cols-1 sm:grid-cols-2 ${styles.gridCols}`}>
             {[1, 2, 3, 4].map((i) => (
@@ -258,9 +264,9 @@ const DesktopTemplate = ({ template }) => {
       <div className={`border-t border-slate-200 px-12 py-16 ${styles.productBg}`}>
         <div className="max-w-3xl">
           <p className={`text-sm uppercase tracking-[0.22em] ${styles.accentText}`}>About</p>
-          <h3 className="mt-2 text-3xl font-bold text-slate-900">Our story</h3>
+          <h3 className="mt-2 text-3xl font-bold text-slate-900">{template.footer_about ? 'About this brand' : 'Our story'}</h3>
           <p className="mt-4 text-slate-600 leading-relaxed">
-            {template.description} This template is thoughtfully crafted for {template.category.toLowerCase()} retailers who demand both aesthetics and conversion optimization.
+            {template.footer_about || `${template.description} This template is thoughtfully crafted for ${template.category.toLowerCase()} retailers who demand both aesthetics and conversion optimization.`}
           </p>
         </div>
       </div>
@@ -312,8 +318,8 @@ const MobileTemplate = ({ template }) => {
         <div className="absolute inset-0" style={{ backgroundImage: `url(${template.image})`, backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.3 }} />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-slate-950/40" />
         <div className="relative flex flex-col items-center justify-center h-full text-center text-white px-4">
-          <h2 className="text-3xl font-bold">{template.name}</h2>
-          <p className="mt-2 text-sm text-white/90">{template.category}</p>
+          <h2 className="text-3xl font-bold">{template.hero_heading || template.name}</h2>
+          <p className="mt-2 text-sm text-white/90">{template.hero_subtext || template.banner_subtitle || template.category}</p>
           <button className={`mt-4 rounded-lg ${styles.accentColor} px-6 py-2 text-sm font-semibold text-white`}>
             Shop Now
           </button>
