@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Search,
@@ -10,7 +10,8 @@ import {
 import { supabase } from '../../../../lib/supabase';
 import TemplateGrid from './TemplateGrid';
 import TemplateEmptyState from './TemplateEmptyState';
-import { templateCategories as templateCategoryDefaults, templateDesigns } from '../../../../data/templateDemo';
+import { initialTemplates, TEMPLATE_CATEGORIES } from './templateData';
+import { TEMPLATE_CATEGORIES as templateCategoryDefaults } from './templateData';
 
 const STORAGE_KEY = 'carthive_template_library_v1';
 const RECENT_KEY = 'carthive_templates_recently_viewed';
@@ -20,7 +21,7 @@ const Template = ({ homeConfig, applyTemplate }) => {
   const [templates, setTemplates] = useState(() => {
     if (typeof window === 'undefined') return templateDesigns;
     const stored = window.localStorage.getItem(STORAGE_KEY);
-    return stored ? JSON.parse(stored) : templateDesigns;
+    return stored ? JSON.parse(stored) : initialTemplates;
   });
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('All');
@@ -97,7 +98,7 @@ const Template = ({ homeConfig, applyTemplate }) => {
     });
   }, [templates, searchQuery, categoryFilter]);
 
-  const installedTemplates = useMemo(() => templates.filter((template) => template.installed), [templates]);
+  const installedTemplates = useMemo(() => filteredTemplates.filter((template) => template.installed), [filteredTemplates]);
   const favoriteTemplates = useMemo(() => templates.filter((template) => template.favorite), [templates]);
   const recentTemplates = useMemo(
     () => recentlyViewed.map((id) => templates.find((template) => template.id === id)).filter(Boolean),
@@ -161,19 +162,66 @@ const Template = ({ homeConfig, applyTemplate }) => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="space-y-4">
-        <label className="relative block overflow-hidden rounded-3xl border border-slate-200 bg-slate-50">
-          <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+    <div style={{ width: '100%', minHeight: '100vh' }}>
+      {/* Page Header */}
+      <div style={{ marginBottom: '2rem' }}>
+        <h1 style={{ fontSize: '2rem', fontWeight: '800', color: '#0f172a', marginBottom: '0.5rem', letterSpacing: '-0.02em' }}>Template Library</h1>
+        <p style={{ color: '#64748b', fontSize: '1rem' }}>Discover new designs or manage your installed storefront templates.</p>
+      </div>
+
+      {/* Tabs Header */}
+      <div style={{ display: 'flex', gap: '2rem', borderBottom: '2px solid #e2e8f0', marginBottom: '2rem' }}>
+        <button
+          type="button"
+          onClick={() => setActiveView('discover')}
+          style={{
+            background: 'none', border: 'none', 
+            fontSize: '1rem', fontWeight: '600', cursor: 'pointer',
+            color: activeView === 'discover' ? '#0f172a' : '#94a3b8',
+            borderBottom: activeView === 'discover' ? '2px solid #0f172a' : '2px solid transparent',
+            paddingBottom: '0.75rem', marginBottom: '-2px', transition: 'all 0.2s ease'
+          }}
+        >
+          Discover
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveView('installed')}
+          style={{
+            background: 'none', border: 'none', 
+            fontSize: '1rem', fontWeight: '600', cursor: 'pointer',
+            color: activeView === 'installed' ? '#0f172a' : '#94a3b8',
+            borderBottom: activeView === 'installed' ? '2px solid #0f172a' : '2px solid transparent',
+            paddingBottom: '0.75rem', marginBottom: '-2px', transition: 'all 0.2s ease'
+          }}
+        >
+          My Templates
+        </button>
+      </div>
+
+      {/* Filter Row */}
+      <div style={{
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '1rem',
+  marginBottom: '2rem',
+  background: 'white',
+  padding: '1rem',
+  borderRadius: '20px',
+  border: '1px solid #e2e8f0',
+  boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.05)'
+}}>
+        <div style={{width: '100%', position: 'relative' }}>
+          <Search style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} size={18} />
           <input
             value={searchQuery}
             onChange={(event) => setSearchQuery(event.target.value)}
             placeholder="Search templates"
             className="w-full border-none bg-transparent px-12 py-4 text-sm text-slate-900 outline-none placeholder:text-slate-400"
           />
-        </label>
+        </div>
 
-        <div className="rounded-3xl border border-slate-200 bg-white p-4">
+        <div style={{ width: '100%' }} className="rounded-3xl border border-slate-200 bg-white p-4">
           <div className="flex items-center justify-between gap-2">
             <div>
               <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Filter</p>
@@ -182,7 +230,7 @@ const Template = ({ homeConfig, applyTemplate }) => {
             <ChevronDown className="h-4 w-4 text-slate-500" />
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
-            {categoryOptions.slice(0, 6).map((category) => (
+            {TEMPLATE_CATEGORIES.slice(0, 6).map((category) => (
               <button
                 key={category}
                 type="button"
@@ -196,7 +244,7 @@ const Template = ({ homeConfig, applyTemplate }) => {
         </div>
       </div>
 
-      <section className="space-y-8">
+      <section className="grid gap-8 xl:grid-cols-1">
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <div className="inline-flex h-14 rounded-full border border-slate-200 bg-slate-50 p-1">
@@ -223,37 +271,37 @@ const Template = ({ homeConfig, applyTemplate }) => {
                 <div className="rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">{filteredTemplates.length} templates</div>
               </div>
 
-              {loading ? (
-                <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-                  {Array.from({ length: 6 }).map((_, index) => (
-                    <div key={index} className="h-96 animate-pulse rounded-[28px] bg-slate-100" />
-                  ))}
-                </div>
-              ) : (
-                <TemplateGrid
-                  templates={filteredTemplates}
-                  onFavoriteToggle={toggleFavorite}
-                  onViewDemo={openDemo}
-                  onAddTemplate={addTemplate}
-                  onActivateTemplate={activateTemplate}
-                />
-              )}
-
-              {!loading && filteredTemplates.length === 0 && (
-                <div className="mt-6">
-                  <TemplateEmptyState title="No templates found" description="Try updating your search terms, clearing the filter, or selecting another category." />
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="space-y-6 rounded-[32px] border border-slate-200 bg-white p-6 shadow-xl">
-              <div className="flex items-center justify-between gap-4">
-                <div>
-                  <p className="text-sm uppercase tracking-[0.3em] text-slate-500">Installed templates</p>
-                  <h3 className="mt-2 text-xl font-semibold text-slate-950">Your active store designs</h3>
-                </div>
-                <span className="rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">{installedTemplates.length} installed</span>
+            {loading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <div key={index} style={{ height: '24rem', borderRadius: '28px', backgroundColor: '#f1f5f9', animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite' }} />
+                ))}
               </div>
+            ) : (
+              <TemplateGrid
+                templates={filteredTemplates}
+                onFavoriteToggle={toggleFavorite}
+                onViewDemo={openDemo}
+                onAddTemplate={addTemplate}
+                onActivateTemplate={activateTemplate}
+              />
+            )}
+
+            {!loading && filteredTemplates.length === 0 && (
+              <div style={{ marginTop: '1.5rem' }}>
+                <TemplateEmptyState title="No templates found" description="Try updating your search terms, clearing the filter, or selecting another category." />
+              </div>
+            )}
+          </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
+              <div>
+                <p style={{ fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.3em', color: '#64748b' }}>Installed templates</p>
+                <h3 style={{ marginTop: '0.5rem', fontSize: '1.25rem', fontWeight: '600', color: '#020617' }}>Your active store designs</h3>
+              </div>
+              <span style={{ borderRadius: '9999px', backgroundColor: '#f1f5f9', padding: '0.5rem 1rem', fontSize: '0.875rem', fontWeight: '600', color: '#334155' }}>{installedTemplates.length} installed</span>
+            </div>
 
               {installedTemplates.length === 0 ? (
                 <TemplateEmptyState
@@ -314,10 +362,11 @@ const Template = ({ homeConfig, applyTemplate }) => {
             </div>
           )}
         </div>
+
       </section>
 
       {toast && (
-        <div className="fixed bottom-6 right-6 z-50 rounded-3xl bg-slate-950 px-5 py-4 text-sm text-white shadow-2xl">
+        <div style={{ position: 'fixed', bottom: '1.5rem', right: '1.5rem', zIndex: 50, borderRadius: '1.5rem', background: '#020617', padding: '1rem 1.25rem', fontSize: '0.875rem', color: 'white', boxShadow: '0 25px 50px -12px rgb(0 0 0 / 0.25)' }}>
           {toast}
         </div>
       )}
