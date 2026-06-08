@@ -17,9 +17,7 @@ const ArcadiaTemplate = ({ template, onApply }) => {
             <button className="rounded-full bg-white p-3 text-amber-700 transition hover:bg-slate-100">
               <Heart className="h-4 w-4" />
             </button>
-            <button onClick={onApply} className="rounded-full bg-amber-700 px-5 py-2 text-sm font-semibold text-white transition hover:bg-amber-800">
-              Apply Theme
-            </button>
+            
           </div>
         </div>
       </header>

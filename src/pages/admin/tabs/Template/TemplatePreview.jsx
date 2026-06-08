@@ -66,7 +66,8 @@ const TemplatePreview = () => {
   return (
     <div className="flex h-screen flex-col bg-slate-100">
       {/* Top Control Bar */}
-      <div className="border-b border-slate-200 bg-white px-6 py-4 shadow-sm">
+      {/* <div className="border-b border-slate-200 bg-white px-6 py-4 shadow-sm"> */}
+      <div className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur px-6 py-3">
         <div className="flex items-center justify-between">
           <button
             onClick={() => navigate('/admin/templates')}
@@ -102,11 +103,13 @@ const TemplatePreview = () => {
       </div>
 
       {/* Preview Area */}
-      <div className="flex-1 overflow-auto bg-slate-100 p-6">
-        <div className="mx-auto">
+      {/* <div className="flex-1 overflow-auto bg-slate-100"> */}
+       <div className="flex-1 overflow-auto bg-slate-100 p-0">
+        <div className="w-full">
           {mode === 'desktop' ? (
-            <div className="w-full rounded-[28px] border border-white bg-white shadow-2xl overflow-hidden">
-              <div className="overflow-auto max-h-[90vh]">
+            // <div className="w-full h-full bg-white overflow-hidden">
+            <div className="w-full h-full bg-slate-100 overflow-hidden">
+            <div className="overflow-auto max-h-[90vh]">
                 {(() => {
                   const registry = {
                     atelier: FashionTemplate,

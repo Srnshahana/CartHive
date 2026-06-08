@@ -13,9 +13,7 @@ const NovaTemplate = ({ template, onApply }) => {
             <a href="#" className="hover:text-white">Editorial</a>
             <a href="#" className="hover:text-white">Lookbook</a>
           </div>
-          <button onClick={onApply} className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/20">
-            Apply Theme
-          </button>
+          
         </div>
       </header>
 

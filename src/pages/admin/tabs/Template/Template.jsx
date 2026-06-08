@@ -164,10 +164,10 @@ const Template = ({ homeConfig, applyTemplate }) => {
   return (
     <div style={{ width: '100%', minHeight: '100vh' }}>
       {/* Page Header */}
-      <div style={{ marginBottom: '2rem' }}>
+      {/* <div style={{ marginBottom: '2rem' }}>
         <h1 style={{ fontSize: '2rem', fontWeight: '800', color: '#0f172a', marginBottom: '0.5rem', letterSpacing: '-0.02em' }}>Template Library</h1>
         <p style={{ color: '#64748b', fontSize: '1rem' }}>Discover new designs or manage your installed storefront templates.</p>
-      </div>
+      </div> */}
 
       {/* Tabs Header */}
       <div style={{ display: 'flex', gap: '2rem', borderBottom: '2px solid #e2e8f0', marginBottom: '2rem' }}>
@@ -211,20 +211,40 @@ const Template = ({ homeConfig, applyTemplate }) => {
   border: '1px solid #e2e8f0',
   boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.05)'
 }}>
-        <div style={{width: '100%', position: 'relative' }}>
-          <Search style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} size={18} />
-          <input
-            value={searchQuery}
-            onChange={(event) => setSearchQuery(event.target.value)}
-            placeholder="Search templates"
-            className="w-full border-none bg-transparent px-12 py-4 text-sm text-slate-900 outline-none placeholder:text-slate-400"
-          />
-        </div>
+        <div
+  style={{
+    width: '100%',
+    background: '#fff',
+    border: '1px solid #e2e8f0',
+    borderRadius: '20px',
+    padding: '0.5rem',
+    boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+  }}
+>
+  <div style={{ width: '100%', position: 'relative' }}>
+    <Search
+      style={{
+        position: 'absolute',
+        left: '1rem',
+        top: '50%',
+        transform: 'translateY(-50%)',
+        color: '#94a3b8',
+      }}
+      size={18}
+    />
+
+    <input
+      value={searchQuery}
+      onChange={(event) => setSearchQuery(event.target.value)}
+      placeholder="Search templates"
+      className="w-full border-none bg-transparent px-12 py-4 text-sm text-slate-900 outline-none placeholder:text-slate-400"
+    />
+  </div>
+</div>
 
         <div style={{ width: '100%' }} className="rounded-3xl border border-slate-200 bg-white p-4">
           <div className="flex items-center justify-between gap-2">
             <div>
-              <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Filter</p>
               <h2 className="mt-2 text-lg font-semibold text-slate-900">Category</h2>
             </div>
             <ChevronDown className="h-4 w-4 text-slate-500" />
@@ -266,10 +286,8 @@ const Template = ({ homeConfig, applyTemplate }) => {
           </div>
 
           {activeView === 'discover' ? (
-            <div className="rounded-[32px] border border-slate-200 bg-white p-6 shadow-xl">
-              <div className="mb-6 flex items-center justify-between gap-4">
-                <div className="rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">{filteredTemplates.length} templates</div>
-              </div>
+            <div>
+              
 
             {loading ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

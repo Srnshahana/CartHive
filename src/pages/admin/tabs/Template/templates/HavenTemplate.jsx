@@ -20,9 +20,7 @@ const HavenTemplate = ({ template, onApply }) => {
             <button className="rounded-full bg-slate-100 p-3 text-slate-700 transition hover:bg-slate-200">
               <ShoppingBag className="h-4 w-4" />
             </button>
-            <button onClick={onApply} className="rounded-full bg-rose-500 px-5 py-2 text-sm font-semibold text-white transition hover:bg-rose-600">
-              Apply Theme
-            </button>
+            
           </div>
         </div>
       </header>
