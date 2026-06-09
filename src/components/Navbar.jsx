@@ -137,13 +137,15 @@ const Navbar = () => {
         )}
 
         <Link to={slug ? `/${slug}` : "/"} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none', color: '#0f172a' }}>
-          <div style={{ background: '#0f172a', width: '32px', height: '32px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+          <div style={{ width: '36px', height: '36px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', background: 'transparent' }}>
             {!business ? (
-              <div style={{ width: '100%', height: '100%', backgroundColor: '#334155', animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite' }} />
+              <div style={{ width: '100%', height: '100%', backgroundColor: '#e2e8f0', animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite' }} />
             ) : (branding?.logo_url || business?.logo_url) ? (
-              <img src={branding?.logo_url || business?.logo_url} style={{ width: '20px', height: '20px', objectFit: 'contain' }} alt="" />
+              <img src={branding?.logo_url || business?.logo_url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
             ) : (
-              <Flower size={18} color="white" />
+              <div style={{ width: '100%', height: '100%', backgroundColor: '#0f172a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Flower size={18} color="white" />
+              </div>
             )}
           </div>
           {business ? (
