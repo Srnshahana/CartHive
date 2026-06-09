@@ -18,7 +18,7 @@ const path = window.location.pathname.split("/")[1];
 console.log("SLUG:", path);
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter> 
       <CartProvider>
         <App />
       </CartProvider>

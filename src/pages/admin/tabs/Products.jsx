@@ -21,7 +21,7 @@ const Products = ({ products, categories, handleFileUpload, uploadingMap, refres
 
   const [newCategory, setNewCategory] = useState({ name: '', discription: '', cover_img: '' });
   const [editingCategory, setEditingCategory] = useState(null);
-  const [editCategoryName, setEditCategoryName] = useState('');
+  const [editCategoryData, setEditCategoryData] = useState({ name: '', discription: '', cover_img: '' });
 
   const handleLocalUpload = async (file) => {
     console.log('Starting upload for file:', file.name);
@@ -155,9 +155,13 @@ const Products = ({ products, categories, handleFileUpload, uploadingMap, refres
   };
 
   const saveEditCategory = async (id) => {
-    if (!editCategoryName.trim()) return;
+    if (!editCategoryData.name.trim()) return;
     try {
-      const { error } = await supabase.from('categories').update({ name: editCategoryName }).eq('id', id);
+      const { error } = await supabase.from('categories').update({ 
+        name: editCategoryData.name,
+        discription: editCategoryData.discription,
+        cover_img: editCategoryData.cover_img
+      }).eq('id', id);
       if (error) throw error;
       setEditingCategory(null);
       refreshData();
@@ -367,8 +371,13 @@ const Products = ({ products, categories, handleFileUpload, uploadingMap, refres
                   />
                 </div>
                 <div className="form-group">
-                  <label>Description</label>
-                  <textarea className="form-input" rows="3" placeholder="Describe your product..." value={newProduct.description} onChange={(e) => setNewProduct({...newProduct, description: e.target.value})} />
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <label style={{ margin: 0 }}>Description</label>
+                    <span style={{ fontSize: '0.75rem', color: (newProduct.description || '').length >= 75 ? '#ef4444' : '#94a3b8' }}>
+                      {(newProduct.description || '').length}/75
+                    </span>
+                  </div>
+                  <textarea className="form-input" rows="3" maxLength={75} placeholder="Describe your product (max 75 chars)..." value={newProduct.description} onChange={(e) => setNewProduct({...newProduct, description: e.target.value})} />
                 </div>
               </div>
             </div>
@@ -438,24 +447,54 @@ const Products = ({ products, categories, handleFileUpload, uploadingMap, refres
               {categories.map(cat => (
                 <div key={cat.id} style={{ background: '#f1f5f9', padding: '0.5rem 1rem', borderRadius: '12px', fontSize: '0.9rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
                   {editingCategory === cat.id ? (
-                    <div style={{ display: 'flex', gap: '0.5rem', width: '100%', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '100%', padding: '0.5rem 0' }}>
                       <input 
                         type="text" 
                         className="form-input" 
-                        style={{ flex: 1, padding: '0.25rem 0.5rem', minHeight: 'auto' }} 
-                        value={editCategoryName} 
-                        onChange={(e) => setEditCategoryName(e.target.value)}
+                        placeholder="Category Name"
+                        style={{ width: '100%', padding: '0.5rem' }} 
+                        value={editCategoryData.name} 
+                        onChange={(e) => setEditCategoryData({...editCategoryData, name: e.target.value})}
                         autoFocus
                       />
-                      <button className="nav-btn-link" style={{ padding: '0.25rem', color: '#10b981', display: 'flex' }} onClick={() => saveEditCategory(cat.id)}><Save size={16} /></button>
-                      <button className="nav-btn-link" style={{ padding: '0.25rem', color: '#64748b', display: 'flex' }} onClick={() => setEditingCategory(null)}><X size={16} /></button>
+                      <textarea 
+                        className="form-input" 
+                        rows="2" 
+                        placeholder="Brief description..."
+                        style={{ width: '100%', padding: '0.5rem' }}
+                        value={editCategoryData.discription} 
+                        onChange={(e) => setEditCategoryData({...editCategoryData, discription: e.target.value})}
+                      />
+                      <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                        {editCategoryData.cover_img && <img src={editCategoryData.cover_img} alt="" style={{ width: '40px', height: '40px', borderRadius: '8px', objectFit: 'cover' }} />}
+                        <div className="file-upload-wrapper" style={{ flex: 1, padding: '0.5rem', minHeight: '40px' }}>
+                          <Upload size={14} color="#64748b" />
+                          <span style={{ fontSize: '0.75rem' }}>{uploadingMap['edit_cat'] ? 'Uploading...' : 'Update Image'}</span>
+                          <input type="file" accept="image/*" onChange={async (e) => {
+                            if (e.target.files[0]) {
+                              const url = await handleFileUpload(e.target.files[0], true, 'products', 'edit_cat');
+                              if (url) setEditCategoryData(prev => ({...prev, cover_img: url}));
+                            }
+                          }} />
+                        </div>
+                      </div>
+                      <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', marginTop: '0.25rem' }}>
+                        <button className="btn-shop-dark" style={{ background: '#f1f5f9', color: '#64748b', border: 'none', padding: '0.4rem 0.8rem', fontSize: '0.8rem' }} onClick={() => setEditingCategory(null)}>Cancel</button>
+                        <button className="btn-shop-dark" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem' }} onClick={() => saveEditCategory(cat.id)}>Save Changes</button>
+                      </div>
                     </div>
                   ) : (
                     <>
-                      <span style={{ fontWeight: '600' }}>{cat.name}</span>
-                      <div style={{ display: 'flex', gap: '0.25rem' }}>
-                        <button className="nav-btn-link" style={{ padding: '0.25rem', display: 'flex' }} onClick={() => { setEditingCategory(cat.id); setEditCategoryName(cat.name); }}><Edit3 size={16} /></button>
-                        <button className="nav-btn-link" style={{ padding: '0.25rem', color: '#ff4444', display: 'flex' }} onClick={() => deleteCategory(cat.id)}><Trash2 size={16} /></button>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                        {cat.cover_img && <img src={cat.cover_img} alt="" style={{ width: '36px', height: '36px', borderRadius: '8px', objectFit: 'cover' }} />}
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                          <span style={{ fontWeight: '600', color: '#0f172a' }}>{cat.name}</span>
+                          {cat.discription && <span style={{ fontSize: '0.75rem', color: '#64748b', display: '-webkit-box', WebkitLineClamp: '1', WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{cat.discription}</span>}
+                        </div>
+                      </div>
+                      <div style={{ display: 'flex', gap: '0.25rem', flexShrink: 0 }}>
+                        <button className="nav-btn-link" style={{ padding: '0.35rem', display: 'flex' }} onClick={() => { setEditingCategory(cat.id); setEditCategoryData({ name: cat.name, discription: cat.discription || '', cover_img: cat.cover_img || '' }); }}><Edit3 size={16} /></button>
+                        <button className="nav-btn-link" style={{ padding: '0.35rem', color: '#ff4444', display: 'flex' }} onClick={() => deleteCategory(cat.id)}><Trash2 size={16} /></button>
                       </div>
                     </>
                   )}

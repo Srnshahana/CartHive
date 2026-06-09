@@ -275,7 +275,7 @@ const BusinessHome = () => {
                   style={{ alignItems: 'flex-start', textAlign: 'left' }}
                 >
                   <div className="category-image-container" style={{ marginBottom: '1.2rem' }}>
-                    {product.offer_price && <span className="offer-badge">SALE</span>}
+                    {Number(product.offer_price) > 0 && Number(product.offer_price) > Number(product.price) && <span className="offer-badge">SALE</span>}
                     <img src={product.image} alt={product.name} />
                     
                     {/* Transforming Cart Button (Floating) */}
@@ -336,7 +336,7 @@ const BusinessHome = () => {
                     </p>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                       <p className="product-item-price" style={{ fontWeight: '800' }}>₹{Number(product.price).toFixed(0)}</p>
-                      {product.offer_price && (
+                      {Number(product.offer_price) > 0 && Number(product.offer_price) > Number(product.price) && (
                         <p className="product-item-old-price" style={{ color: '#ef4444', textDecoration: 'line-through', opacity: 0.6 }}>
                           ₹{Number(product.offer_price).toFixed(0)}
                         </p>

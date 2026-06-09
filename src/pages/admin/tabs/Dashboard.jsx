@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../../lib/supabase';
-import { ShoppingBag, IndianRupee, Package, Clock, TrendingUp, ArrowUpRight, BarChart3, ChevronRight, Activity, Zap, Layers, Store } from 'lucide-react';
+import { ShoppingBag, IndianRupee, Package, Clock, TrendingUp, ArrowUpRight, BarChart3, ChevronRight, Activity, Zap, Layers, Store, Copy, Check } from 'lucide-react';
 
 const Dashboard = ({ products, currentBusiness, user, homeConfig, refreshData }) => {
   const [stats, setStats] = useState({
@@ -13,6 +13,7 @@ const Dashboard = ({ products, currentBusiness, user, homeConfig, refreshData })
   const [monthlyData, setMonthlyData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [businessName, setBusinessName] = useState('');
+  const [copiedUrl, setCopiedUrl] = useState(false);
   
   // UPI Edit State
   const [isEditingUpi, setIsEditingUpi] = useState(false);
@@ -116,16 +117,32 @@ const Dashboard = ({ products, currentBusiness, user, homeConfig, refreshData })
 
       {/* Premium Welcome Header */}
       <div className="dashboard-welcome-header">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#102a82', marginBottom: '8px' }}>
-          <Store size={16} />
-          <div className="admin-logo" style={{ textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.9rem', color: '#102a82' }}>Admin Dashboard</div>
-        </div>
         <h1 className="dashboard-welcome-h1">
-          Welcome back, <span style={{ color: '#102a82' }}>{businessName}</span>
+          Welcome back, <span style={{ color: '#102a82' }}>{user?.name || businessName}</span>
         </h1>
         <p className="dashboard-welcome-p">
           Here's a breakdown of your store's performance and recent activity.
         </p>
+
+        {currentBusiness?.slug && (
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', marginTop: '16px', background: 'rgba(255,255,255,0.8)', padding: '6px 6px 6px 14px', borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: '800', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em', marginRight: '4px' }}>Live Storefront:</span>
+            <span style={{ fontSize: '0.85rem', color: '#0f172a', fontWeight: '600' }}>
+              {window.location.origin}/{currentBusiness.slug}
+            </span>
+            <button 
+              onClick={() => {
+                navigator.clipboard.writeText(`${window.location.origin}/${currentBusiness.slug}`);
+                setCopiedUrl(true);
+                setTimeout(() => setCopiedUrl(false), 2000);
+              }}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '6px', border: 'none', background: copiedUrl ? '#10b981' : '#f1f5f9', color: copiedUrl ? 'white' : '#475569', borderRadius: '8px', cursor: 'pointer', transition: 'all 0.2s ease' }}
+              title="Copy Store URL"
+            >
+              {copiedUrl ? <Check size={14} strokeWidth={3} /> : <Copy size={14} />}
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Modern Stats Grid */}

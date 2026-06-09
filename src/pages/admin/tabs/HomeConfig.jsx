@@ -111,26 +111,6 @@ const HomeConfig = ({
           <h3 style={{ margin: 0, fontSize: '1.5rem', fontWeight: '800' }}>
             Live <span className="gradient-text">Store Preview</span>
           </h3>
-          <button 
-            className="btn-shop-dark btn-apply-preview" 
-            onClick={handleApply}
-            style={{ 
-              padding: '0.6rem 1.5rem', 
-              fontSize: '0.85rem', 
-              borderRadius: '10px', 
-              display: 'flex', 
-              alignItems: 'center', 
-              gap: '0.5rem',
-              background: '#102a82',
-              color: '#fff',
-              border: 'none',
-              fontWeight: '800',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease'
-            }}
-          >
-            <Star size={16} fill="#fff" /> Apply Changes to Preview
-          </button>
         </div>
         <div style={{ 
           border: '12px solid #1e293b', 
