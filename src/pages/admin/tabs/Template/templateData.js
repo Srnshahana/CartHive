@@ -132,7 +132,8 @@ refund_policy: 'If you are not satisfied, returns are accepted within 30 days wi
     description: 'Soft gradients, layered imagery, and a spa-inspired product showcase for beauty brands.',
     demoUrl: '/admin/templates/preview/aether',
     image: categoryRing,
-    hero_image: heroImg,
+    // hero_image: heroImg,
+    hero_image: "/images/store/templates/aether/hero.jpg",
     hero_heading: 'Beauty rituals with a calming editorial feel',
     hero_subtext: 'A spa-inspired online storefront built for wellness and self-care brands.',
     banner_image: bannerImg,
@@ -154,6 +155,67 @@ refund_policy: 'If you are not satisfied, returns are accepted within 30 days wi
     installed: false,
     active: false,
     favorite: false,
+    featured_categories: [
+  {
+    name: 'Skincare',
+    title: 'Daily Glow Essentials',
+    description: 'Clean beauty products for everyday radiance.',
+    image: heroImg,
+  },
+  {
+    name: 'Wellness',
+    title: 'Self-Care Rituals',
+    description: 'Relaxing products designed for mindful routines.',
+    image: bannerImg,
+  },
+  {
+    name: 'Body Care',
+    title: 'Hydration Collection',
+    description: 'Nourishing formulas for healthy skin.',
+    image: heroImg,
+  },
+  {
+    name: 'Spa',
+    title: 'Spa Favorites',
+    description: 'Premium spa-inspired beauty experiences.',
+    image: bannerImg,
+  },
+],
+
+collections: [
+  {
+    title: 'Glow Ritual Collection',
+    description: 'A curated range of products focused on healthy, radiant skin.',
+  },
+  {
+    title: 'Night Recovery Series',
+    description: 'Products designed to restore and nourish while you rest.',
+  },
+  {
+    title: 'Wellness Essentials',
+    description: 'Beauty and wellness products for everyday self-care.',
+  },
+],
+
+gallery: [
+  heroImg,
+  bannerImg,
+  heroImg,
+  bannerImg,
+],
+
+reviews: [
+  {
+    author: 'Sophia',
+    quote: 'The products feel luxurious and the shopping experience is beautiful.',
+    rating: '5.0',
+  },
+  {
+    author: 'Emma',
+    quote: 'A premium beauty store design that feels calm and elegant.',
+    rating: '5.0',
+  },
+],
   },
   {
     id: 'mono',

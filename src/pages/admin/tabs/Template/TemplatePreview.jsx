@@ -10,6 +10,8 @@ import ArcadiaTemplate from './templates/ArcadiaTemplate';
 import NovaTemplate from './templates/NovaTemplate';
 import LumenTemplate from './templates/LumenTemplate';
 import AetherTemplate from './templates/AetherTemplate';
+import AtelierClothingTemplate from './templates/AtelierClothingTemplate';
+
 const STORAGE_KEY = 'carthive_template_library_v1';
 
 const TemplatePreview = () => {
@@ -112,7 +114,7 @@ const TemplatePreview = () => {
             <div className="overflow-auto max-h-[90vh]">
                 {(() => {
                   const registry = {
-                    atelier: FashionTemplate,
+                    atelier: AtelierClothingTemplate,
                     pulse: PulseTemplate,
                     haven: HavenTemplate,
                     mono: MonoTemplate,

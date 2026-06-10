@@ -57,7 +57,7 @@ export const FashionTemplate = ({ template, onApply }) => {
         <div className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-xs uppercase tracking-[0.35em] text-amber-600">Trend edit</p>
-            <h2 className="mt-3 text-4xl font-semibold text-slate-950">Luxury pieces with editorial polish</h2>
+            <h2 className="mt-3 text-4xl font-semibold text-slate-950">Luxury sqsd pieces with editorial polish</h2>
           </div>
           <button onClick={onApply} className="self-start rounded-full border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-slate-100">
             Apply Collection
