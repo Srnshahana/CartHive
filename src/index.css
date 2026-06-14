@@ -23,6 +23,49 @@
   box-sizing: border-box;
 }
 
+
+
+/* ---------- Nova Template — Fonts & Animations ---------- */
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=Inter:wght@300;400;500&display=swap");
+
+.nova-serif {
+    font-family: "Fraunces", "Times New Roman", serif;
+    font-feature-settings: "ss01", "ss02";
+}
+
+.font-sans {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Hero image marquee — floats left to right (continuous loop) */
+@keyframes novaMarquee {
+    0%   { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(-50%, 0, 0); }
+}
+.nova-marquee {
+    animation: novaMarquee 38s linear infinite;
+    will-change: transform;
+}
+.nova-marquee:hover { animation-play-state: paused; }
+
+/* Sentence marquees — right & left */
+@keyframes novaSlideRight {
+    0%   { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(-50%, 0, 0); }
+}
+@keyframes novaSlideLeft {
+    0%   { transform: translate3d(-50%, 0, 0); }
+    100% { transform: translate3d(0, 0, 0); }
+}
+.nova-slide-right { animation: novaSlideRight 32s linear infinite; will-change: transform; }
+.nova-slide-left  { animation: novaSlideLeft  36s linear infinite; will-change: transform; }
+
+@media (prefers-reduced-motion: reduce) {
+    .nova-marquee,
+    .nova-slide-right,
+    .nova-slide-left { animation: none; }
+}
+
 body {
   background-color: var(--background);
   color: var(--text);
