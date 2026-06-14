@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, MonitorSmartphone, Monitor, Rocket, CheckCircle2 } from 'lucide-react';
 import { initialTemplates } from './templateData';
@@ -11,6 +11,7 @@ import NovaTemplate from './templates/NovaTemplate';
 import LumenTemplate from './templates/LumenTemplate';
 import AetherTemplate from './templates/AetherTemplate';
 import AtelierClothingTemplate from './templates/AtelierClothingTemplate';
+import { ScrollContainerProvider } from '../../../../context/ScrollContainerContext';
 
 const STORAGE_KEY = 'carthive_template_library_v1';
 
@@ -20,6 +21,8 @@ const TemplatePreview = () => {
   const [template, setTemplate] = useState(null);
   const [mode, setMode] = useState('desktop');
   const [applied, setApplied] = useState(false);
+  const desktopScrollRef = useRef(null);
+  const mobileScrollRef = useRef(null);
 
   useEffect(() => {
     const selected = initialTemplates.find((item) => item.id === templateId);
@@ -111,30 +114,11 @@ const TemplatePreview = () => {
           {mode === 'desktop' ? (
             // <div className="w-full h-full bg-white overflow-hidden">
             <div className="w-full h-full bg-slate-100 overflow-hidden">
-            <div className="overflow-auto max-h-[90vh]">
-                {(() => {
-                  const registry = {
-                    atelier: AtelierClothingTemplate,
-                    pulse: PulseTemplate,
-                    haven: HavenTemplate,
-                    mono: MonoTemplate,
-                    arcadia: ArcadiaTemplate,
-                    nova: NovaTemplate,
-                    lumen: LumenTemplate,
-                    aether: AetherTemplate,
-                  };
-                  const Selected = registry[template.id] || DesktopTemplate;
-                  return <Selected template={previewTemplate} onApply={handleApplyTemplate} mode={mode} />;
-                })()}
-              </div>
-            </div>
-          ) : (
-            <div className="mx-auto flex justify-center">
-              <div className="w-96 rounded-[28px] border-8 border-slate-900 bg-slate-900 shadow-2xl overflow-hidden">
-                <div className="overflow-auto bg-white max-h-[90vh]">
+              <div ref={desktopScrollRef} className="overflow-auto max-h-[90vh]">
+                <ScrollContainerProvider containerRef={desktopScrollRef}>
                   {(() => {
                     const registry = {
-                      atelier: FashionTemplate,
+                      atelier: AtelierClothingTemplate,
                       pulse: PulseTemplate,
                       haven: HavenTemplate,
                       mono: MonoTemplate,
@@ -143,9 +127,32 @@ const TemplatePreview = () => {
                       lumen: LumenTemplate,
                       aether: AetherTemplate,
                     };
-                    const Selected = registry[template.id] || MobileTemplate;
+                    const Selected = registry[template.id] || DesktopTemplate;
                     return <Selected template={previewTemplate} onApply={handleApplyTemplate} mode={mode} />;
                   })()}
+                </ScrollContainerProvider>
+              </div>
+            </div>
+          ) : (
+            <div className="mx-auto flex justify-center">
+              <div className="w-96 rounded-[28px] border-8 border-slate-900 bg-slate-900 shadow-2xl overflow-hidden">
+                <div ref={mobileScrollRef} className="overflow-auto bg-white max-h-[90vh]">
+                  <ScrollContainerProvider containerRef={mobileScrollRef}>
+                    {(() => {
+                      const registry = {
+                        atelier: FashionTemplate,
+                        pulse: PulseTemplate,
+                        haven: HavenTemplate,
+                        mono: MonoTemplate,
+                        arcadia: ArcadiaTemplate,
+                        nova: NovaTemplate,
+                        lumen: LumenTemplate,
+                        aether: AetherTemplate,
+                      };
+                      const Selected = registry[template.id] || MobileTemplate;
+                      return <Selected template={previewTemplate} onApply={handleApplyTemplate} mode={mode} />;
+                    })()}
+                  </ScrollContainerProvider>
                 </div>
               </div>
             </div>

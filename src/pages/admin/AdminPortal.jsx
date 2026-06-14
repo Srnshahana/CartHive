@@ -15,7 +15,6 @@ import Products from './tabs/Products';
 import HomeConfig from './tabs/HomeConfig';
 import Template from './tabs/Template/Template';
 import TemplatePreview from './tabs/Template/TemplatePreview';
-
 // Jewelry Assets
 import heroImg from '../../assets/hero-img.avif';
 import bannerImg from '../../assets/banner.avif';
