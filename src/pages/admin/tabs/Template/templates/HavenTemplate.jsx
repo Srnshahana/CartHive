@@ -404,7 +404,7 @@ const Header = ({ template, page, setPage, onApply, setCursor }) => {
             <ShoppingBag className="h-4 w-4" />
             <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-orange-800 text-[10px] font-medium text-stone-50">2</span>
           </button>
-          <MagneticButton onClick={onApply} testId="haven-launch" className="ml-2 hidden sm:inline-flex">Use Template</MagneticButton>
+          {/* <MagneticButton onClick={onApply} testId="haven-launch" className="ml-2 hidden sm:inline-flex">Use Template</MagneticButton> */}
           <button
             data-testid="haven-menu-toggle"
             className="rounded-full border border-emerald-950/20 p-2.5 text-emerald-950 md:hidden"
@@ -436,7 +436,7 @@ const Header = ({ template, page, setPage, onApply, setCursor }) => {
                   <ChevronRight className="h-4 w-4" />
                 </button>
               ))}
-              <MagneticButton onClick={onApply} className="mt-3 self-start">Use Template</MagneticButton>
+              {/* <MagneticButton onClick={onApply} className="mt-3 self-start">Use Template</MagneticButton> */}
             </div>
           </motion.div>
         )}

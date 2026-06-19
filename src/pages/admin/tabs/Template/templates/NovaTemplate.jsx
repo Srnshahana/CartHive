@@ -2,6 +2,57 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowUpRight, ArrowRight, Star, Plus, Menu, X } from "lucide-react";
 
+import HeroHatha from "../../../../../assets/templates/nova/hero/hero-hatha.jpg";
+import HeroPilates from "../../../../../assets/templates/nova/hero/hero-pilates.jpg";
+import HeroMeditation from "../../../../../assets/templates/nova/hero/hero-meditation.jpg";
+import HeroVinyasa from "../../../../../assets/templates/nova/hero/hero-vinyasa.jpg";
+import HeroYin from "../../../../../assets/templates/nova/hero/hero-yin.jpg";
+import HeroBreathwork from "../../../../../assets/templates/nova/hero/hero-breathwork.jpg";
+import HeroPower from "../../../../../assets/templates/nova/hero/hero-power.jpg";
+
+import AboutAllLevels from "../../../../../assets/templates/nova/about/about-all-levels.jpg";
+import AboutAdvanced from "../../../../../assets/templates/nova/about/about-advanced.jpg";
+import AboutBeginner from "../../../../../assets/templates/nova/about/about-beginner.jpg";
+
+import ClassBreathCold from "../../../../../assets/templates/nova/classes/class-breath-cold.jpg";
+import ClassRestorativeYoga from "../../../../../assets/templates/nova/classes/class-restorative-yoga.jpg";
+import ClassInfraredSauna from "../../../../../assets/templates/nova/classes/class-infrared-sauna.jpg";
+import ClassSoundBath from "../../../../../assets/templates/nova/classes/class-sound-bath.jpg";
+import ClassContrastTherapy from "../../../../../assets/templates/nova/classes/class-contrast-therapy.jpg";
+import ClassSlowVinyasa from "../../../../../assets/templates/nova/classes/class-slow-vinyasa.jpg";
+
+import ScheduleVinyasaYoga from "../../../../../assets/templates/nova/schedule/schedule-vinyasa-yoga.jpg";
+import ScheduleBreathCold from "../../../../../assets/templates/nova/schedule/schedule-breath-cold.jpg";
+import ScheduleSoundBath from "../../../../../assets/templates/nova/schedule/schedule-sound-bath.jpg";
+import ScheduleInfraredSauna from "../../../../../assets/templates/nova/schedule/schedule-infrared-sauna.jpg";
+import ScheduleMyofascialRelease from "../../../../../assets/templates/nova/schedule/schedule-myofascial-release.jpg";
+import ScheduleSlowVinyasa from "../../../../../assets/templates/nova/schedule/schedule-vinyasa.jpg";
+
+import TeacherSophiaLee from "../../../../../assets/templates/nova/teachers/teacher-sophia-lee.jpg";
+import TeacherJamesSmith from "../../../../../assets/templates/nova/teachers/teacher-james-smith.jpg";
+import TeacherOliviaBrown from "../../../../../assets/templates/nova/teachers/teacher-olivia-brown.jpg";
+import TeacherNoahWilson from "../../../../../assets/templates/nova/teachers/teacher-noah-wilson.jpg";
+import TeacherAvaDavis from "../../../../../assets/templates/nova/teachers/teacher-ava-davis.jpg";
+import TeacherMasonGarcia from "../../../../../assets/templates/nova/teachers/teacher-mason-garcia.jpg";
+
+import Gallery01 from "../../../../../assets/templates/nova/gallery/gallery-01.jpg";
+import Gallery02 from "../../../../../assets/templates/nova/gallery/gallery-02.jpg";
+import Gallery03 from "../../../../../assets/templates/nova/gallery/gallery-03.jpg";
+import Gallery04 from "../../../../../assets/templates/nova/gallery/gallery-04.jpg";
+import Gallery05 from "../../../../../assets/templates/nova/gallery/gallery-05.jpg";
+import Gallery06 from "../../../../../assets/templates/nova/gallery/gallery-06.jpg";
+import Gallery07 from "../../../../../assets/templates/nova/gallery/gallery-07.jpg";
+import Gallery08 from "../../../../../assets/templates/nova/gallery/gallery-08.jpg";
+import Gallery09 from "../../../../../assets/templates/nova/gallery/gallery-09.jpg";
+
+import TestimonialSavannah from "../../../../../assets/templates/nova/testimonials/testimonial-savannah-nguyen.jpg";
+import TestimonialEsther from "../../../../../assets/templates/nova/testimonials/testimonial-esther-howard.jpg";
+import TestimonialJenny from "../../../../../assets/templates/nova/testimonials/testimonial-jenny-wilson.jpg";
+
+import BlogYinYoga from "../../../../../assets/templates/nova/blog/blog-yin-yoga.jpg";
+import BlogRestorativeYoga from "../../../../../assets/templates/nova/blog/blog-restorative-yoga.jpg";
+import BlogGentleYoga from "../../../../../assets/templates/nova/blog/blog-gentle-yoga.jpg";
+
 /* ---------------- THEME: Dark Forest Green Premium ----------------
    #0a2418  base forest (darkest)
    #0f2e1f  deep forest (main bg)
@@ -20,19 +71,19 @@ const NAV_ITEMS = [
 ];
 
 const HERO_IMAGES = [
-  { src: "https://images.unsplash.com/photo-1545389336-cf090694435e?auto=format&fit=crop&w=900&q=80", tag: "Hatha" },
-  { src: "https://images.unsplash.com/photo-1593810450967-f9c42742e326?auto=format&fit=crop&w=900&q=80", tag: "Pilates" },
-  { src: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=900&q=80", tag: "Meditation" },
-  { src: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=900&q=80", tag: "Vinyasa" },
-  { src: "https://images.unsplash.com/photo-1588286840104-8957b019727f?auto=format&fit=crop&w=900&q=80", tag: "Yin" },
-  { src: "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80", tag: "Breathwork" },
-  { src: "https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&w=900&q=80", tag: "Power" },
+  { src: HeroHatha, tag: "Hatha" },
+  { src: HeroPilates, tag: "Pilates" },
+  { src: HeroMeditation, tag: "Meditation" },
+  { src: HeroVinyasa, tag: "Vinyasa" },
+  { src: HeroYin, tag: "Yin" },
+  { src: HeroBreathwork, tag: "Breathwork" },
+  { src: HeroPower, tag: "Power" },
 ];
 
 const ABOUT_CARDS = [
-  { img: "https://images.unsplash.com/photo-1599447421416-3414500d18a5?auto=format&fit=crop&w=900&q=80", tag: "All Levels" },
-  { img: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=900&q=80", tag: "Advanced" },
-  { img: "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&w=900&q=80", tag: "Beginner" },
+  { img: AboutAllLevels, tag: "All Levels" },
+  { img: AboutAdvanced, tag: "Advanced" },
+  { img: AboutBeginner, tag: "Beginner" },
 ];
 
 const STATS = [
@@ -42,30 +93,30 @@ const STATS = [
 ];
 
 const CLASSES = [
-  { id: "breath-cold", title: "Breath & Cold", level: "Beginner", duration: "60 min", img: "https://images.unsplash.com/photo-1593810450967-f9c42742e326?auto=format&fit=crop&w=900&q=80", desc: "A dynamic, breath-led practice that builds heat, strength and fluidity." },
-  { id: "restorative-yoga", title: "Restorative Yoga", level: "Intermediate", duration: "40 min", img: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=900&q=80", desc: "Slow, deeply held postures that release tension and restore the nervous system." },
-  { id: "infrared-sauna", title: "Infrared Sauna", level: "Advanced", duration: "40 min", img: "https://images.unsplash.com/photo-1545389336-cf090694435e?auto=format&fit=crop&w=900&q=80", desc: "Heat-based therapy that supports circulation, detoxification and recovery." },
-  { id: "sound-bath", title: "Sound Bath", level: "Intermediate", duration: "55 min", img: "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&w=900&q=80", desc: "Immersive sound healing using crystal bowls, gongs and resonant vibration." },
-  { id: "contrast-therapy", title: "Contrast Therapy", level: "Intermediate", duration: "60 min", img: "https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&w=900&q=80", desc: "Alternating heat and cold cycles for resilience and metabolic balance." },
-  { id: "slow-vinyasa", title: "Slow Vinyasa", level: "Beginner", duration: "45 min", img: "https://images.unsplash.com/photo-1588286840104-8957b019727f?auto=format&fit=crop&w=900&q=80", desc: "Movement, unhurried — half the pace of a regular class, twice the awareness." },
+  { id: "breath-cold", title: "Breath & Cold", level: "Beginner", duration: "60 min", img: ClassBreathCold, desc: "A dynamic, breath-led practice that builds heat, strength and fluidity." },
+  { id: "restorative-yoga", title: "Restorative Yoga", level: "Intermediate", duration: "40 min", img: ClassRestorativeYoga, desc: "Slow, deeply held postures that release tension and restore the nervous system." },
+  { id: "infrared-sauna", title: "Infrared Sauna", level: "Advanced", duration: "40 min", img: ClassInfraredSauna, desc: "Heat-based therapy that supports circulation, detoxification and recovery." },
+  { id: "sound-bath", title: "Sound Bath", level: "Intermediate", duration: "55 min", img: ClassSoundBath, desc: "Immersive sound healing using crystal bowls, gongs and resonant vibration." },
+  { id: "contrast-therapy", title: "Contrast Therapy", level: "Intermediate", duration: "60 min", img: ClassContrastTherapy, desc: "Alternating heat and cold cycles for resilience and metabolic balance." },
+  { id: "slow-vinyasa", title: "Slow Vinyasa", level: "Beginner", duration: "45 min", img: ClassSlowVinyasa, desc: "Movement, unhurried — half the pace of a regular class, twice the awareness." },
 ];
 
 const SCHEDULE_ROWS = [
-  { n: "01", t: "Vinyasa Yoga", img: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=600&q=80", dur: "75 min", price: "€28", desc: "The room dim enough to fall asleep in." },
-  { n: "02", t: "Breath & Cold", img: "https://images.unsplash.com/photo-1545389336-cf090694435e?auto=format&fit=crop&w=600&q=80", dur: "60 min", price: "€65", desc: "Slow, deep table work for runners and climbers." },
-  { n: "03", t: "Sound Bath", img: "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&w=600&q=80", dur: "45 min", price: "€52", desc: "The room dim enough to fall asleep in." },
-  { n: "04", t: "Infrared Sauna", img: "https://images.unsplash.com/photo-1593810450967-f9c42742e326?auto=format&fit=crop&w=600&q=80", dur: "50 min", price: "€50", desc: "Movement, unhurried." },
-  { n: "05", t: "Myofascial Release", img: "https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&w=600&q=80", dur: "31 min", price: "€40", desc: "Targeted release for deep tension." },
-  { n: "06", t: "Slow Vinyasa", img: "https://images.unsplash.com/photo-1588286840104-8957b019727f?auto=format&fit=crop&w=600&q=80", dur: "60 min", price: "€38", desc: "Half the pace of the city." },
+  { n: "01", t: "Vinyasa Yoga", img: ScheduleVinyasaYoga, dur: "75 min", price: "€28", desc: "The room dim enough to fall asleep in." },
+  { n: "02", t: "Breath & Cold", img: ScheduleBreathCold, dur: "60 min", price: "€65", desc: "Slow, deep table work for runners and climbers." },
+  { n: "03", t: "Sound Bath", img: ScheduleSoundBath, dur: "45 min", price: "€52", desc: "The room dim enough to fall asleep in." },
+  { n: "04", t: "Infrared Sauna", img: ScheduleInfraredSauna, dur: "50 min", price: "€50", desc: "Movement, unhurried." },
+  { n: "05", t: "Myofascial Release", img: ScheduleMyofascialRelease, dur: "31 min", price: "€40", desc: "Targeted release for deep tension." },
+  { n: "06", t: "Slow Vinyasa", img: ScheduleSlowVinyasa, dur: "60 min", price: "€38", desc: "Half the pace of the city." },
 ];
 
 const TEACHERS = [
-  { id: "sophia-lee", name: "Sophia Lee", style: "Yin Yoga", cred: "200hr YTT, Reiki Practitioner", img: "https://images.unsplash.com/photo-1599447421416-3414500d18a5?auto=format&fit=crop&w=700&q=80" },
-  { id: "james-smith", name: "James Smith", style: "Power Yoga", cred: "250hr YTT, Strength Training", img: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=700&q=80" },
-  { id: "olivia-brown", name: "Olivia Brown", style: "Iyengar Yoga", cred: "200hr YTT, Alignment Specialist", img: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=700&q=80" },
-  { id: "noah-wilson", name: "Noah Wilson", style: "Iyengar Yoga", cred: "200hr YTT, Alignment Specialist", img: "https://images.unsplash.com/photo-1545389336-cf090694435e?auto=format&fit=crop&w=700&q=80" },
-  { id: "ava-davis", name: "Ava Davis", style: "Restorative", cred: "500hr YTT, Trauma-Informed", img: "https://images.unsplash.com/photo-1593810450967-f9c42742e326?auto=format&fit=crop&w=700&q=80" },
-  { id: "mason-garcia", name: "Mason Garcia", style: "Aerial Yoga", cred: "300hr YTT, Heat Adaptation", img: "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=700&q=80" },
+  { id: "sophia-lee", name: "Sophia Lee", style: "Yin Yoga", cred: "200hr YTT, Reiki Practitioner", img: TeacherSophiaLee },
+  { id: "james-smith", name: "James Smith", style: "Power Yoga", cred: "250hr YTT, Strength Training", img: TeacherJamesSmith },
+  { id: "olivia-brown", name: "Olivia Brown", style: "Iyengar Yoga", cred: "200hr YTT, Alignment Specialist", img: TeacherOliviaBrown },
+  { id: "noah-wilson", name: "Noah Wilson", style: "Iyengar Yoga", cred: "200hr YTT, Alignment Specialist", img: TeacherNoahWilson },
+  { id: "ava-davis", name: "Ava Davis", style: "Restorative", cred: "500hr YTT, Trauma-Informed", img: TeacherAvaDavis },
+  { id: "mason-garcia", name: "Mason Garcia", style: "Aerial Yoga", cred: "300hr YTT, Heat Adaptation", img: TeacherMasonGarcia },
 ];
 
 const PRICING = [
@@ -75,27 +126,27 @@ const PRICING = [
 ];
 
 const GALLERY = [
-  "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1588286840104-8957b019727f?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1593810450967-f9c42742e326?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1545389336-cf090694435e?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=800&q=80",
+  Gallery01,
+  Gallery02,
+  Gallery03,
+  Gallery04,
+  Gallery05,
+  Gallery06,
+  Gallery07,
+  Gallery08,
+  Gallery09,
 ];
 
 const TESTIMONIALS = [
-  { quote: "I started attending these yoga classes during a very stressful period and the difference it has made is incredible. From the very first session, I felt supported.", author: "Savannah Nguyen", role: "Nursing Assistant", img: "https://images.unsplash.com/photo-1599447421416-3414500d18a5?auto=format&fit=crop&w=400&q=80" },
-  { quote: "I had never tried yoga before and honestly felt intimidated at first, but this class completely changed my perspective. The instructors make beginners feel comfortable.", author: "Esther Howard", role: "Marketing Coordinator", img: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=400&q=80" },
-  { quote: "These classes have transformed my overall wellbeing in ways I never expected. I joined to improve flexibility, but I gained mental clarity.", author: "Jenny Wilson", role: "President of Sales", img: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=400&q=80" },
+  { quote: "I started attending these yoga classes during a very stressful period and the difference it has made is incredible. From the very first session, I felt supported.", author: "Savannah Nguyen", role: "Nursing Assistant", img: TestimonialSavannah },
+  { quote: "I had never tried yoga before and honestly felt intimidated at first, but this class completely changed my perspective. The instructors make beginners feel comfortable.", author: "Esther Howard", role: "Marketing Coordinator", img: TestimonialEsther },
+  { quote: "These classes have transformed my overall wellbeing in ways I never expected. I joined to improve flexibility, but I gained mental clarity.", author: "Jenny Wilson", role: "President of Sales", img: TestimonialJenny },
 ];
 
 const BLOG = [
-  { slug: "yin-yoga-patience", title: "What Yin Yoga Taught Me About Patience", tag: "Nutrition", time: "5 mins read", img: "https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&w=800&q=80", excerpt: "Modern life often pulls us away from our bodies. Gentle yoga invites you back." },
-  { slug: "restorative-yoga-art", title: "Finding Balance: The Art of Restorative Yoga", tag: "Movement", time: "6 mins read", img: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=800&q=80", excerpt: "How you begin your morning shapes the energy you carry throughout the day." },
-  { slug: "gentle-yoga-life", title: "Unwinding: How Gentle Yoga Changed My Life", tag: "Mindfulness", time: "7 mins read", img: "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&w=800&q=80", excerpt: "Balance isn't something you achieve once — it's something you return to." },
+  { slug: "yin-yoga-patience", title: "What Yin Yoga Taught Me About Patience", tag: "Nutrition", time: "5 mins read", img: BlogYinYoga, excerpt: "The practice of yin yoga is a practice of patience. Holding poses for several minutes invites a deep surrender to the present moment." },
+  { slug: "restorative-yoga-art", title: "Finding Balance: The Art of Restorative Yoga", tag: "Movement", time: "6 mins read", img: BlogRestorativeYoga, excerpt: "How you begin your morning shapes the energy you carry throughout the day." },
+  { slug: "gentle-yoga-life", title: "Unwinding: How Gentle Yoga Changed My Life", tag: "Mindfulness", time: "7 mins read", img: BlogGentleYoga, excerpt: "Balance isn't something you achieve once — it's something you return to." },
 ];
 
 /* Sentences that slide across the hero — left & right */

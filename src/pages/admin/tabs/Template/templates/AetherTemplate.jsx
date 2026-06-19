@@ -276,10 +276,10 @@ const AetherTemplate = ({ template, config = {}, onApply }) => {
         </motion.div>
       </header>
 
-      <section id="home" className="relative min-h-[calc(100vh-40px)] overflow-hidden px-4 pb-16 pt-32 sm:px-6 sm:pt-36 lg:px-10 lg:pb-24">
+      <section id="home" className="relative min-h-[calc(100vh-40px)] overflow-hidden px-4 pb-16 sm:px-6 sm:pt-3 lg:px-10 lg:pb-24">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_12%_24%,rgba(204,133,113,0.26),transparent_30%),radial-gradient(circle_at_86%_18%,rgba(216,186,135,0.2),transparent_28%),linear-gradient(135deg,#fff8ef_0%,#ead9ca_52%,#f6eee2_100%)]" />
         <motion.div
-          className="absolute right-8 top-28 hidden rounded-full border border-[#15120f]/15 px-6 py-16 text-xs font-semibold uppercase tracking-[0.24em] text-[#15120f]/55 lg:block"
+          className="absolute right-8 top-2 hidden rounded-full border border-[#15120f]/15 px-6 py-16 text-xs font-semibold uppercase tracking-[0.24em] text-[#15120f]/55 lg:block"
           animate={{ y: [0, -14, 0], rotate: [0, 2, 0] }}
           transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
         >
@@ -287,7 +287,7 @@ const AetherTemplate = ({ template, config = {}, onApply }) => {
         </motion.div>
 
         <div className="relative mx-auto grid max-w-[1540px] gap-12 lg:grid-cols-[0.88fr_1.12fr] lg:items-center">
-          <motion.div className="max-w-3xl pt-8 text-center lg:pt-24 lg:text-left" variants={stagger} initial="hidden" animate="visible">
+          <motion.div className="max-w-3xl pt-0 text-center lg:pt-0 lg:text-left" variants={stagger} initial="hidden" animate="visible">
             <motion.div
               variants={fadeUp}
               className="mx-auto inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/50 px-4 py-2 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-[#9f5e50] shadow-sm backdrop-blur-xl lg:mx-0"
@@ -312,7 +312,7 @@ const AetherTemplate = ({ template, config = {}, onApply }) => {
                 {data.primary_cta || 'Shop Now'}
                 <ArrowRight className="h-4 w-4" />
               </Button>
-              <Button variant="light" onClick={onApply}>Preview Theme</Button>
+              {/* <Button variant="light" onClick={onApply}>Preview Theme</Button> */}
             </motion.div>
 
             <motion.div variants={fadeUp} className="mt-12 grid grid-cols-3 gap-3 rounded-[1.75rem] border border-white/70 bg-white/45 p-3 text-left shadow-[0_24px_80px_rgba(65,38,22,0.1)] backdrop-blur-xl">

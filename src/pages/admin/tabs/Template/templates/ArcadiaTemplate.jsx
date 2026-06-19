@@ -2,6 +2,50 @@ import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, ArrowUpRight, Star, Plus, Minus, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import TemplatePreviewMeta from '../TemplatePreviewMeta';
+import HeroSecondary from "../../../../../assets/templates/Arcadia/hero/hero-secondary.png";
+import StoryOrigin from "../../../../../assets/templates/Arcadia/story/origin.jpg";
+import StoryBrew from "../../../../../assets/templates/Arcadia/story/brew.jpg";
+import StoryRoast from "../../../../../assets/templates/Arcadia/story/roast.jpg";
+import CerroMain from "../../../../../assets/templates/arcadia/beans/cerro-main.jpg";
+import CerroBag from "../../../../../assets/templates/arcadia/beans/cerro-bag.jpg";
+
+import YirgMain from "../../../../../assets/templates/arcadia/beans/yirg-main.jpg";
+import YirgBag from "../../../../../assets/templates/arcadia/beans/yirg-bag.jpg";
+
+import GeishaMain from "../../../../../assets/templates/arcadia/beans/geisha-main.jpg";
+import GeishaBag from "../../../../../assets/templates/arcadia/beans/geisha-bag.jpg";
+
+import EspressoImg from "../../../../../assets/templates/arcadia/menu/espresso.jpg";
+import FlatWhiteImg from "../../../../../assets/templates/arcadia/menu/flat-white.jpg";
+import ColdBrewImg from "../../../../../assets/templates/arcadia/menu/cold-brew.jpg";
+import CortadoImg from "../../../../../assets/templates/arcadia/menu/cortado.jpg";
+import PourOverImg from "../../../../../assets/templates/arcadia/menu/pour-over.jpg";
+import MatchaLatteImg from "../../../../../assets/templates/arcadia/menu/matcha-latte.jpg";
+import CappuccinoImg from "../../../../../assets/templates/arcadia/menu/cappuccino.jpg";
+import AmericanoImg from "../../../../../assets/templates/arcadia/menu/americano.jpg";
+import MochaImg from "../../../../../assets/templates/arcadia/menu/mocha.jpg";
+import MacchiatoImg from "../../../../../assets/templates/arcadia/menu/macchiato.jpg";
+import IcedLatteImg from "../../../../../assets/templates/arcadia/menu/iced-latte.jpg";
+import AffogatoImg from "../../../../../assets/templates/arcadia/menu/affogato.jpg";
+import ViennaImg from "../../../../../assets/templates/arcadia/menu/vienna.jpg";
+import TurkishCoffeeImg from "../../../../../assets/templates/arcadia/menu/turkish-coffee.jpg";
+import ChaiLatteImg from "../../../../../assets/templates/arcadia/menu/chai-latte.jpg";
+import HotChocolateImg from "../../../../../assets/templates/arcadia/menu/hot-chocolate.jpg";
+import VanillaLatteImg from "../../../../../assets/templates/arcadia/menu/vanilla-latte.jpg";
+import CaramelMacchiatoImg from "../../../../../assets/templates/arcadia/menu/caramel-macchiato.jpg";
+import IrishCoffeeImg from "../../../../../assets/templates/arcadia/menu/irish-coffee.jpg";
+import DripCoffeeImg from "../../../../../assets/templates/arcadia/menu/drip-coffee.jpg";
+import DecafEspressoImg from "../../../../../assets/templates/arcadia/menu/decaf-espresso.jpg";
+import HoneyLatteImg from "../../../../../assets/templates/arcadia/menu/honey-latte.jpg";
+import LavenderLatteImg from "../../../../../assets/templates/arcadia/menu/lavender-latte.jpg";
+import NitroColdBrewImg from "../../../../../assets/templates/arcadia/menu/nitro-cold-brew.jpg";
+import IcedAmericanoImg from "../../../../../assets/templates/arcadia/menu/iced-americano.jpg";
+import EspressoTonicImg from "../../../../../assets/templates/arcadia/menu/espresso-tonic.jpg";
+
+
+import PourOverGuideImg from "../../../../../assets/templates/arcadia/journal/pour-over-guide.jpg";
+import YirgacheffeTripImg from "../../../../../assets/templates/arcadia/journal/yirgacheffe-trip.jpg";
+import RoastLevelsImg from "../../../../../assets/templates/arcadia/journal/roast-levels.jpg";
 
 const NAV = [
   { id: 'story', label: 'Our Story' },
@@ -12,55 +56,80 @@ const NAV = [
 ];
 
 const MENU = [
-  { name: 'Espresso',         desc: 'Single origin, dark roast, chocolate finish',     price: '$4.50', img: 'https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?auto=format&fit=crop&w=700&q=80' },
-  { name: 'Flat White',       desc: 'Velvet milk, double ristretto, hazelnut top',     price: '$5.20', img: 'https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=700&q=80' },
-  { name: 'Cold Brew',        desc: '18-hour steep, citrus & cane',                     price: '$5.80', img: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=700&q=80' },
-  { name: 'Cortado',          desc: 'Equal parts espresso & steam, soft body',          price: '$4.80', img: 'https://images.unsplash.com/photo-1534687941688-651ccaafbff8?auto=format&fit=crop&w=700&q=80' },
-  { name: 'Pour Over',        desc: 'Hand-poured V60, ever-changing single origins',    price: '$6.40', img: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=700&q=80' },
-  { name: 'Matcha Latte',     desc: 'Ceremonial-grade, oat milk, honey rim',            price: '$6.00', img: 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?auto=format&fit=crop&w=700&q=80' },
-  { name: 'Cappuccino',       desc: 'Equal thirds, dry foam crown, cocoa dust',         price: '$5.00', img: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=700&q=80' },
-  { name: 'Americano',        desc: 'Double shot, hot water, long finish',              price: '$4.20', img: 'https://images.unsplash.com/photo-1551030173-122aabc4489c?auto=format&fit=crop&w=700&q=80' },
-  { name: 'Mocha',            desc: 'Espresso, Valrhona ganache, steamed milk',         price: '$5.80', img: 'https://images.unsplash.com/photo-1542990253-a781e04c0082?auto=format&fit=crop&w=700&q=80' },
-  { name: 'Macchiato',        desc: 'Ristretto marked with a dollop of foam',           price: '$4.40', img: 'https://images.unsplash.com/photo-1485808191679-5f86510681a2?auto=format&fit=crop&w=700&q=80' },
-  { name: 'Iced Latte',       desc: 'Cold milk, double shot, slow pour over ice',       price: '$5.50', img: 'https://images.unsplash.com/photo-1517959105821-eaf2591984ca?auto=format&fit=crop&w=700&q=80' },
-  { name: 'Affogato',         desc: 'Vanilla bean gelato, fresh espresso poured over',  price: '$7.20', img: 'https://images.unsplash.com/photo-1581873372796-635b67ca2008?auto=format&fit=crop&w=700&q=80' },
-  { name: 'Vienna',           desc: 'Espresso topped with whipped cream',               price: '$5.40', img: 'https://images.unsplash.com/photo-1525088553748-01d6e210e00b?auto=format&fit=crop&w=700&q=80' },
-  { name: 'Turkish Coffee',   desc: 'Cezve-brewed, unfiltered, cardamom whisper',       price: '$5.20', img: 'https://images.unsplash.com/photo-1497636577773-f1231844b336?auto=format&fit=crop&w=700&q=80' },
-  { name: 'Chai Latte',       desc: 'House-brewed masala chai, cardamom, ginger',       price: '$5.40', img: 'https://images.unsplash.com/photo-1571934811356-5cc061b6821f?auto=format&fit=crop&w=700&q=80' },
-  { name: 'Hot Chocolate',    desc: '70% dark Belgian, whole milk, salt flake',         price: '$5.60', img: 'https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?auto=format&fit=crop&w=700&q=80' },
-  { name: 'Vanilla Latte',    desc: 'Tahitian vanilla, double shot, oat milk',          price: '$5.80', img: 'https://images.unsplash.com/photo-1497636577773-f1231844b336?auto=format&fit=crop&w=700&q=80' },
-  { name: 'Caramel Macchiato',desc: 'Vanilla milk, espresso, slow caramel drizzle',     price: '$6.20', img: 'https://images.unsplash.com/photo-1572286258217-215cf8e08812?auto=format&fit=crop&w=700&q=80' },
-  { name: 'Irish Coffee',     desc: 'Hot coffee, brown sugar, cream float, whiskey',    price: '$8.40', img: 'https://images.unsplash.com/photo-1514631819-a1be9b2532dc?auto=format&fit=crop&w=700&q=80' },
-  { name: 'Drip Coffee',      desc: 'Today\u2019s house roast, batch-brewed by the cup', price: '$3.80', img: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=700&q=80' },
-  { name: 'Decaf Espresso',   desc: 'Swiss-water decaf, same depth, no buzz',           price: '$4.50', img: 'https://images.unsplash.com/photo-1521017432531-fbd92d768814?auto=format&fit=crop&w=700&q=80' },
-  { name: 'Honey Latte',      desc: 'Wildflower honey, espresso, steamed milk',         price: '$5.90', img: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=700&q=80' },
-  { name: 'Lavender Latte',   desc: 'House lavender syrup, oat milk, double shot',      price: '$6.20', img: 'https://images.unsplash.com/photo-1561882468-9110e03e0f78?auto=format&fit=crop&w=700&q=80' },
-  { name: 'Nitro Cold Brew',  desc: 'Cold brew on nitro tap, cascading cream head',     price: '$6.40', img: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=700&q=80' },
-  { name: 'Iced Americano',   desc: 'Double shot, ice water, lemon peel option',        price: '$4.60', img: 'https://images.unsplash.com/photo-1554415707-6e8cfc93fe23?auto=format&fit=crop&w=700&q=80' },
-  { name: 'Espresso Tonic',   desc: 'Tonic water, single shot, orange twist',           price: '$5.60', img: 'https://images.unsplash.com/photo-1551030173-122aabc4489c?auto=format&fit=crop&w=700&q=80' },
+  { name: 'Espresso',          desc: 'Single origin, dark roast, chocolate finish',          price: '$4.50', img: EspressoImg },
+  { name: 'Flat White',        desc: 'Velvet milk, double ristretto, hazelnut top',          price: '$5.20', img: FlatWhiteImg },
+  { name: 'Cold Brew',         desc: '18-hour steep, citrus & cane',                          price: '$5.80', img: ColdBrewImg },
+  { name: 'Cortado',           desc: 'Equal parts espresso & steam, soft body',               price: '$4.80', img: CortadoImg },
+  { name: 'Pour Over',         desc: 'Hand-poured V60, ever-changing single origins',         price: '$6.40', img: PourOverImg },
+  { name: 'Matcha Latte',      desc: 'Ceremonial-grade matcha, oat milk, honey rim',          price: '$6.00', img: MatchaLatteImg },
+  { name: 'Cappuccino',        desc: 'Equal thirds, dry foam crown, cocoa dust',              price: '$5.00', img: CappuccinoImg },
+  { name: 'Americano',         desc: 'Double shot, hot water, long finish',                   price: '$4.20', img: AmericanoImg },
+  { name: 'Mocha',             desc: 'Espresso, dark chocolate ganache, steamed milk',        price: '$5.80', img: MochaImg },
+  { name: 'Macchiato',         desc: 'Ristretto marked with a dollop of foam',                price: '$4.40', img: MacchiatoImg },
+  { name: 'Iced Latte',        desc: 'Cold milk, double shot, slow pour over ice',            price: '$5.50', img: IcedLatteImg },
+  { name: 'Affogato',          desc: 'Vanilla bean gelato, fresh espresso poured over',       price: '$7.20', img: AffogatoImg },
+  { name: 'Vienna',            desc: 'Espresso topped with whipped cream',                     price: '$5.40', img: ViennaImg },
+  { name: 'Turkish Coffee',    desc: 'Cezve-brewed, unfiltered, cardamom whisper',            price: '$5.20', img: TurkishCoffeeImg },
+  { name: 'Chai Latte',        desc: 'House-brewed masala chai, cardamom, ginger',            price: '$5.40', img: ChaiLatteImg },
+  { name: 'Hot Chocolate',     desc: '70% dark Belgian chocolate, steamed milk',              price: '$5.60', img: HotChocolateImg },
+  { name: 'Vanilla Latte',     desc: 'Madagascar vanilla, double shot, silky milk',           price: '$5.80', img: VanillaLatteImg },
+  { name: 'Caramel Macchiato', desc: 'Vanilla milk, espresso, caramel drizzle',               price: '$6.20', img: CaramelMacchiatoImg },
+  { name: 'Irish Coffee',      desc: 'Hot coffee, brown sugar, cream float',                  price: '$8.40', img: IrishCoffeeImg },
+  { name: 'Drip Coffee',       desc: 'Today’s house roast, batch-brewed by the cup',          price: '$3.80', img: DripCoffeeImg },
+  { name: 'Decaf Espresso',    desc: 'Swiss-water decaf, same depth, no buzz',                price: '$4.50', img: DecafEspressoImg },
+  { name: 'Honey Latte',       desc: 'Wildflower honey, espresso, steamed milk',              price: '$5.90', img: HoneyLatteImg },
+  { name: 'Lavender Latte',    desc: 'House lavender syrup, oat milk, double shot',           price: '$6.20', img: LavenderLatteImg },
+  { name: 'Nitro Cold Brew',   desc: 'Cold brew on nitro tap, cascading cream head',          price: '$6.40', img: NitroColdBrewImg },
+  { name: 'Iced Americano',    desc: 'Double shot, ice water, crisp finish',                  price: '$4.60', img: IcedAmericanoImg },
+  { name: 'Espresso Tonic',    desc: 'Tonic water, espresso, orange twist',                   price: '$5.60', img: EspressoTonicImg },
 ];
 
+
+
 const BEANS = [
-  { name: 'Cerro Azul', region: 'Honduras', altitude: '1,650 m', process: 'Washed', notes: 'Caramel · Almond · Plum',
-    img: 'https://images.unsplash.com/photo-1559525839-d9acfd3920f1?auto=format&fit=crop&w=900&q=80',
-    bagImg: 'https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?auto=format&fit=crop&w=900&q=80',
-    description: 'Grown on the cool slopes of Marcala by the Rodríguez family, Cerro Azul is fermented for 36 hours and dried slowly on raised beds. Cup it black: stewed plums and toasted almond, settling into a long caramel finish.' },
-  { name: 'Yirgacheffe', region: 'Ethiopia', altitude: '2,100 m', process: 'Natural', notes: 'Jasmine · Bergamot · Peach',
-    img: 'https://images.unsplash.com/photo-1610889556528-9a770e32642f?auto=format&fit=crop&w=900&q=80',
-    bagImg: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=900&q=80',
-    description: 'From the Konga cooperative in Gedeo, this lot dries cherry-on under highland sun. The cup arrives floral and bright — jasmine on the nose, peach in the body, bergamot tea on the tail.' },
-  { name: 'Geisha Lot 04', region: 'Panama', altitude: '1,800 m', process: 'Honey', notes: 'Honey · Rose · Citrus',
-    img: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=900&q=80',
-    bagImg: 'https://images.unsplash.com/photo-1559496417-e7f25cb247f3?auto=format&fit=crop&w=900&q=80',
-    description: 'A micro-lot of 80 kg from Hacienda La Esmeralda. Honey-processed Geisha is delicate and perfumed — rose petal, white grape, candied lemon. We brew it as a slow V60 to keep every note intact.' },
+  {
+    name: 'Cerro Azul',
+    region: 'Honduras',
+    altitude: '1,650 m',
+    process: 'Washed',
+    notes: 'Caramel · Almond · Plum',
+    img: CerroMain,
+    bagImg: CerroBag,
+    description:
+      'A balanced Honduran coffee with notes of stewed plum, toasted almond, and rich caramel sweetness. Smooth and approachable, it shines both as a filter brew and a comforting daily espresso.'
+  },
+
+  {
+    name: 'Yirgacheffe',
+    region: 'Ethiopia',
+    altitude: '2,100 m',
+    process: 'Natural',
+    notes: 'Jasmine · Bergamot · Peach',
+    img: YirgMain,
+    bagImg: YirgBag,
+    description:
+      'Bright, floral, and expressive. This Ethiopian coffee opens with jasmine aromas, followed by juicy peach sweetness and delicate bergamot tea notes that linger long after each sip.'
+  },
+
+  {
+    name: 'Geisha Reserve',
+    region: 'Panama',
+    altitude: '1,800 m',
+    process: 'Honey',
+    notes: 'Honey · Rose · Citrus',
+    img: GeishaMain,
+    bagImg: GeishaBag,
+    description:
+      'An elegant and aromatic coffee with layers of rose petals, honey sweetness, and vibrant citrus. Best enjoyed as a slow pour-over to fully appreciate its delicate character.'
+  },
 ];
 
 const JOURNAL = [
-  { tag: 'Brewing', title: 'A slow guide to the perfect pour over', img: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=900&q=80',
+  { tag: 'Brewing', title: 'A slow guide to the perfect pour over', img: PourOverGuideImg,
     excerpt: 'Water at 94°C, a 30-second bloom, and a steady spiral pour. The difference between rushed and ritual is two minutes — and a cup that tastes like the farm it came from.', time: '5 min' },
-  { tag: 'Origin', title: 'Walking the highlands of Yirgacheffe', img: 'https://images.unsplash.com/photo-1442550528560-79e74b39d8b8?auto=format&fit=crop&w=900&q=80',
+  { tag: 'Origin', title: 'Walking the highlands of Yirgacheffe', img: YirgacheffeTripImg,
     excerpt: 'At 2,100 metres the air thins and cherries ripen slowly. We spent a week with the Konga cooperative, drying beans on raised beds and tasting the season in every lot.', time: '7 min' },
-  { tag: 'Craft', title: 'What roast level really means', img: 'https://images.unsplash.com/photo-1497515114629-f71d768fd07c?auto=format&fit=crop&w=900&q=80',
+  { tag: 'Craft', title: 'What roast level really means', img: RoastLevelsImg,
     excerpt: 'Light, medium, dark — the words are easy, the choice is not. A roast curve decides whether you taste blueberry, caramel, or smoke. We pull every batch at first crack plus a heartbeat.', time: '4 min' },
 ];
 
@@ -255,68 +324,21 @@ const ArcadiaTemplate = ({ template, onApply }) => {
       </section>
 
       {/* PRODUCT STICKER */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-[#f3ead9] via-[#ebe0c8] to-[#f3ead9] py-16 lg:py-24">
-        <div className="mx-auto grid max-w-7xl items-center gap-8 px-6 lg:grid-cols-12 lg:px-8">
-          <div className="lg:col-span-5">
-            <p className="arc-sans text-xs uppercase tracking-[0.35em] text-[#5b6b3a]">New · Limited Run</p>
-            <h2 className="arc-serif mt-5 text-[clamp(2.25rem,5vw,4.5rem)] leading-[1.02]">
-              Cold Brew, <span className="italic text-[#5b6b3a]">canned.</span>
-            </h2>
-            <p className="arc-sans mt-5 max-w-md text-base leading-7 text-[#2b1e15]/75">
-              18-hour slow steep, nitrogen-finished, and sealed in a sleek matte can. All the depth of the cafe pour, none of the wait.
-            </p>
-            <div className="mt-7 flex flex-wrap gap-2 arc-sans text-[10px] uppercase tracking-[0.25em]">
-              <span className="rounded-full border border-[#2b1e15]/20 bg-white/60 px-3 py-1">Nitro</span>
-              <span className="rounded-full border border-[#2b1e15]/20 bg-white/60 px-3 py-1">No Sugar</span>
-              <span className="rounded-full border border-[#5b6b3a]/40 bg-[#5b6b3a]/10 px-3 py-1 text-[#5b6b3a]">Single Origin</span>
-            </div>
-            <button onClick={onApply} className="arc-sans mt-8 inline-flex items-center gap-2 rounded-full bg-[#2b1e15] px-7 py-4 text-xs uppercase tracking-[0.25em] text-[#f3ead9] transition hover:scale-105 hover:bg-[#5b6b3a]">
-              Pre-Order · $6 <ArrowUpRight className="h-3.5 w-3.5" />
-            </button>
-          </div>
+      {/* PRODUCT STICKER */}
+<section className="relative overflow-hidden py-16 lg:py-24">
+  <div className="mx-auto max-w-7xl px-6 lg:px-8">
+    
+    <div className="flex justify-center">
+      <img
+        src={HeroSecondary}
+        alt="Cold Brew Can"
+        className="w-full max-w-[700px] object-contain"
+        draggable="false"
+      />
+    </div>
 
-          <div className="relative lg:col-span-7">
-            <div className="relative mx-auto aspect-[5/6] w-full max-w-[560px]">
-              <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" aria-hidden="true">
-                <span className="ring-pulse absolute left-1/2 top-1/2 block h-[280px] w-[280px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#2b1e15]/20" style={{ animationDelay: '0s' }} />
-                <span className="ring-pulse absolute left-1/2 top-1/2 block h-[280px] w-[280px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#5b6b3a]/30" style={{ animationDelay: '1s' }} />
-                <span className="ring-pulse absolute left-1/2 top-1/2 block h-[280px] w-[280px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#c9a96e]/40" style={{ animationDelay: '2s' }} />
-              </div>
-
-              <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-                <span className="splash-pop absolute left-[52%] top-[18%] h-4 w-4 rounded-full bg-[#2b1e15]" style={{ '--sx': '-40px', '--sy': '-90px', animationDelay: '0s' }} />
-                <span className="splash-pop absolute left-[48%] top-[20%] h-2.5 w-2.5 rounded-full bg-[#3a2618]" style={{ '--sx': '60px', '--sy': '-110px', animationDelay: '0.4s' }} />
-                <span className="splash-pop absolute left-[55%] top-[16%] h-3 w-3 rounded-full bg-[#2b1e15]" style={{ '--sx': '20px', '--sy': '-140px', animationDelay: '0.9s' }} />
-                <span className="splash-pop absolute left-[45%] top-[22%] h-1.5 w-1.5 rounded-full bg-[#3a2618]" style={{ '--sx': '-80px', '--sy': '-60px', animationDelay: '1.4s' }} />
-                <span className="splash-pop absolute left-[58%] top-[19%] h-2 w-2 rounded-full bg-[#2b1e15]" style={{ '--sx': '100px', '--sy': '-70px', animationDelay: '1.8s' }} />
-                <span className="splash-pop absolute left-[50%] top-[15%] h-3.5 w-3.5 rounded-full bg-[#2b1e15]" style={{ '--sx': '-10px', '--sy': '-160px', animationDelay: '2.2s' }} />
-              </div>
-
-              <svg viewBox="0 0 400 300" className="pointer-events-none absolute left-1/2 top-[6%] z-0 h-[55%] w-[110%] -translate-x-1/2" aria-hidden="true">
-                <defs><linearGradient id="splashGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#3a2618" /><stop offset="100%" stopColor="#2b1e15" /></linearGradient></defs>
-                <path d="M180,250 C 140,200 60,200 50,140 C 45,90 100,80 130,110 C 110,60 150,20 200,30 C 230,35 240,70 230,100 C 270,70 330,90 340,140 C 350,200 270,210 240,250 Z" fill="url(#splashGrad)" opacity="0.92" />
-                <circle cx="80" cy="60" r="9" fill="#2b1e15" />
-                <circle cx="100" cy="35" r="5" fill="#2b1e15" opacity="0.85" />
-                <circle cx="310" cy="55" r="11" fill="#2b1e15" />
-                <circle cx="340" cy="30" r="6" fill="#2b1e15" opacity="0.85" />
-                <circle cx="200" cy="10" r="7" fill="#2b1e15" />
-              </svg>
-
-              <motion.div initial={{ opacity: 0, y: 40, rotate: -25 }} whileInView={{ opacity: 1, y: 0, rotate: -14 }} viewport={{ once: true }} transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-                className="absolute left-[10%] top-[18%] z-10 w-[78%]">
-                <div className="product-float overflow-hidden rounded-[28px] shadow-2xl ring-1 ring-[#2b1e15]/10">
-                  <img src="https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=900&q=85" alt="Hand holding cold brew coffee can" className="block h-full w-full object-cover" />
-                </div>
-                <div className="pointer-events-none absolute inset-0 rounded-[28px] bg-gradient-to-tr from-transparent via-white/10 to-white/30" />
-              </motion.div>
-
-              <span className="pointer-events-none absolute left-[6%] top-[60%] h-4 w-3 rounded-full bg-[#2b1e15]" style={{ transform: 'rotate(-25deg)' }} />
-              <span className="pointer-events-none absolute right-[4%] top-[68%] h-5 w-3.5 rounded-full bg-[#2b1e15]" style={{ transform: 'rotate(18deg)' }} />
-              <span className="pointer-events-none absolute left-[18%] bottom-[2%] h-4 w-3 rounded-full bg-[#1a120c]" style={{ transform: 'rotate(35deg)' }} />
-            </div>
-          </div>
-        </div>
-      </section>
+  </div>
+</section>
 
       {/* STORY */}
       <section id="story" className="mx-auto max-w-7xl px-6 py-24 lg:px-8 scroll-mt-24">
@@ -335,10 +357,10 @@ const ArcadiaTemplate = ({ template, onApply }) => {
 
         <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {[
-            { img: 'https://images.unsplash.com/photo-1442550528560-79e74b39d8b8?auto=format&fit=crop&w=900&q=80', tag: 'Origin' },
-            { img: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=900&q=80', tag: 'Brew' },
-            { img: 'https://images.unsplash.com/photo-1497515114629-f71d768fd07c?auto=format&fit=crop&w=900&q=80', tag: 'Roast' },
-          ].map((c, i) => (
+  { img: StoryOrigin, tag: 'Origin' },
+  { img: StoryBrew, tag: 'Brew' },
+  { img: StoryRoast, tag: 'Roast' },
+].map((c, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 50, scale: 0.95 }} whileInView={{ opacity: 1, y: 0, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.12, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               className="group relative overflow-hidden rounded-[28px]">
               <img src={c.img} alt={c.tag} className="aspect-[4/5] w-full object-cover transition duration-[1200ms] group-hover:scale-110" />

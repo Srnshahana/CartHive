@@ -159,7 +159,7 @@ const AtelierClothingTemplate = ({ template = {}, onApply }) => {
               <ShoppingBag className="h-4 w-4" />
               <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-[#a4452f]" />
             </button>
-            {onApply && (
+            {/* {onApply && (
               <button
                 onClick={onApply}
                 data-testid="apply-template-btn"
@@ -167,7 +167,7 @@ const AtelierClothingTemplate = ({ template = {}, onApply }) => {
               >
                 Apply
               </button>
-            )}
+            )} */}
           </div>
         </div>
       </header>

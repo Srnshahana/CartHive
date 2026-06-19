@@ -226,7 +226,7 @@ const Header = ({ brand, go, onApply }) => {
             <ShoppingBag className="h-4 w-4" />
             <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-stone-900 text-[10px] text-white">2</span>
           </button>
-          <button onClick={onApply} className="magnet ml-2 hidden rounded-full bg-stone-900 px-5 py-2 text-xs uppercase tracking-[0.2em] text-white hover:bg-stone-700 sm:inline-block" data-testid="apply-template-btn">Apply</button>
+          {/* <button onClick={onApply} className="magnet ml-2 hidden rounded-full bg-stone-900 px-5 py-2 text-xs uppercase tracking-[0.2em] text-white hover:bg-stone-700 sm:inline-block" data-testid="apply-template-btn">Apply</button> */}
         </div>
       </div>
       {open && (
@@ -395,7 +395,7 @@ const HomePage = ({ template, brand, go, onApply }) => {
             <button onClick={() => go('category', { slug: 'rings' })} className="magnet group inline-flex items-center gap-3 rounded-full bg-stone-900 px-7 py-4 text-xs uppercase tracking-[0.3em] text-white hover:bg-stone-700" data-testid="hero-shop-btn">
               Shop the collection <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
             </button>
-            <button onClick={onApply} className="text-xs uppercase tracking-[0.3em] text-stone-700 underline-offset-8 hover:underline">Use this template</button>
+            {/* <button onClick={onApply} className="text-xs uppercase tracking-[0.3em] text-stone-700 underline-offset-8 hover:underline">Use this template</button> */}
           </div>
         </div>
 

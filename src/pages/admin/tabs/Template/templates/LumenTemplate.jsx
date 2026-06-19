@@ -10,6 +10,26 @@ import { FaXTwitter } from 'react-icons/fa6';
 
 import TemplatePreviewMeta from '../TemplatePreviewMeta';
 
+/* HERO */
+import HeroFashion from "../../../../../assets/templates/lumen/hero/hero-fashion.jpg";
+
+/* COLLECTIONS */
+import OuterwearImg from "../../../../../assets/templates/lumen/collections/outerwear.jpg";
+import KnitwearImg from "../../../../../assets/templates/lumen/collections/knitwear.jpg";
+import DenimImg from "../../../../../assets/templates/lumen/collections/denim.jpg";
+import BasicsImg from "../../../../../assets/templates/lumen/collections/basics.jpg";
+
+/* PRODUCTS */
+import FieldOvershirtImg from "../../../../../assets/templates/lumen/products/field-overshirt.jpg";
+import LoopKnitImg from "../../../../../assets/templates/lumen/products/loop-knit.jpg";
+import LumenDenimImg from "../../../../../assets/templates/lumen/products/denim.jpg";
+import SoftCrewImg from "../../../../../assets/templates/lumen/products/soft-crew.jpg";
+import TrailCardiganImg from "../../../../../assets/templates/lumen/products/trail-cardigan.jpg";
+import LinenTrouserImg from "../../../../../assets/templates/lumen/products/linen-trouser.jpg";
+
+/* STORY */
+import StoryImg from "../../../../../assets/templates/lumen/story/story.jpg";
+
 /* ---------- Theme tokens ---------- */
 // const SAGE = '#5d6e54';
 // const SAGE_DEEP = '#2f3a2a';
@@ -42,31 +62,31 @@ const SANS = {
 
 /* ---------- Data ---------- */
 const COLLECTIONS = [
-  { slug: 'outerwear', name: 'Outerwear', count: 14, img: 'https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&w=1200&q=80' },
-  { slug: 'knitwear',  name: 'Knitwear',  count: 22, img: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&w=1200&q=80' },
-  { slug: 'denim',     name: 'Denim',     count: 18, img: 'https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&w=1200&q=80' },
-  { slug: 'basics',    name: 'Basics',    count: 31, img: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&w=1200&q=80' },
+  { slug: 'outerwear', name: 'Outerwear', count: 14, img: OuterwearImg },
+  { slug: 'knitwear',  name: 'Knitwear',  count: 22, img: KnitwearImg },
+  { slug: 'denim',     name: 'Denim',     count: 18, img: DenimImg },
+  { slug: 'basics',    name: 'Basics',    count: 31, img: BasicsImg },
 ];
 
 const PRODUCTS = [
-  { id: 'p1', name: 'Field Overshirt', price: 168, tag: 'Recycled Cotton', img: 'https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&w=900&q=80' },
-  { id: 'p2', name: 'Loop Knit Sweater', price: 142, tag: 'Regenerated Wool', img: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&w=900&q=80' },
-  { id: 'p3', name: 'Atelier Denim', price: 188, tag: 'Hemp Blend', img: 'https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&w=900&q=80' },
-  { id: 'p4', name: 'Soft Crew Tee', price: 48, tag: 'Organic Cotton', img: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&w=900&q=80' },
-  { id: 'p5', name: 'Trail Cardigan', price: 210, tag: 'Recycled Wool', img: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&w=900&q=80' },
-  { id: 'p6', name: 'Linen Trouser', price: 158, tag: 'Linen 100%', img: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&w=900&q=80' },
+  { id: 'p1', name: 'Field Overshirt', price: 168, tag: 'Recycled Cotton', img: FieldOvershirtImg },
+  { id: 'p2', name: 'Loop Knit Sweater', price: 142, tag: 'Regenerated Wool', img: LoopKnitImg },
+  { id: 'p3', name: 'Lumen Denim', price: 188, tag: 'Hemp Blend', img: LumenDenimImg },
+  { id: 'p4', name: 'Soft Crew Tee', price: 48, tag: 'Organic Cotton', img: SoftCrewImg },
+  { id: 'p5', name: 'Trail Cardigan', price: 210, tag: 'Recycled Wool', img: TrailCardiganImg },
+  { id: 'p6', name: 'Linen Trouser', price: 158, tag: 'Linen 100%', img: LinenTrouserImg },
 ];
 
 const PROCESS = [
   { step: '01', title: 'Source', text: 'We reclaim post-consumer textiles and pair them with low-impact fibers.', icon: Recycle },
   { step: '02', title: 'Design', text: 'Each piece is patterned for longevity and re-circulation, not seasonality.', icon: Sparkles },
-  { step: '03', title: 'Make', text: 'Cut and sewn in small batches by certified partner ateliers.', icon: Leaf },
+  { step: '03', title: 'Make', text: 'Cut and sewn in small batches by certified partner lumen.', icon: Leaf },
   { step: '04', title: 'Return', text: 'Send your worn pieces back. We restore, resell, or recycle — never landfill.', icon: Globe2 },
 ];
 
 const FAQS = [
   { q: 'What does "circular fashion" mean for Lumen?', a: 'Every garment is designed to come back to us — to be resold, repaired, or broken down into new fiber. Nothing is made to be discarded.' },
-  { q: 'Where are your clothes made?', a: 'All Lumen pieces are produced in family-run ateliers in Portugal and Italy under GOTS and Fair Wear certifications.' },
+  { q: 'Where are your clothes made?', a: 'All Lumen pieces are produced in family-run lumens in Portugal and Italy under GOTS and Fair Wear certifications.' },
   { q: 'Do you offer take-back?', a: 'Yes. Return any Lumen piece in any condition and receive store credit toward your next purchase.' },
   { q: 'How should I care for my pieces?', a: 'Cold wash, line dry, and store folded. We include a care card with every order — it makes a real difference.' },
 ];
@@ -280,8 +300,8 @@ const LumenTemplate = ({ template, onApply }) => {
       </header>
 
       {/* HERO */}
-      <section className="relative overflow-hidden pt-32">
-        <div className="mx-auto max-w-[1400px] px-6 pt-16 pb-12">
+      <section className="relative overflow-hidden">
+        <div className="mx-auto max-w-[1400px] px-6 pb-12">
           <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
             <div className="fade-up">
               <p className="text-xs uppercase tracking-[0.5em]" style={{ color: SAGE }}>— Circular Wardrobe · 2026</p>
@@ -295,13 +315,13 @@ const LumenTemplate = ({ template, onApply }) => {
                 <a href="#collections" className="group inline-flex items-center gap-3 rounded-full px-7 py-4 text-xs uppercase tracking-[0.3em] text-white transition hover:opacity-90" style={{ background: SAGE_DEEP }} data-testid="hero-shop-btn">
                   Shop the collection <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
                 </a>
-                <button onClick={onApply} className="text-xs uppercase tracking-[0.3em] underline-offset-8 hover:underline">Try this theme</button>
+                {/* <button onClick={onApply} className="text-xs uppercase tracking-[0.3em] underline-offset-8 hover:underline">Try this theme</button> */}
               </div>
             </div>
 
             <div className="relative">
               <div className="relative overflow-hidden rounded-[40px]">
-                <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&w=1400&q=80" alt="Hero" className="h-[640px] w-full object-cover" />
+                <img src={HeroFashion} alt="Hero" className="h-[640px] w-full object-cover" />
               </div>
               {/* Floating spinning badge */}
               <div className="absolute -left-8 -top-8 bob" style={{ color: SAGE }}>
@@ -447,7 +467,7 @@ const LumenTemplate = ({ template, onApply }) => {
             </div>
             <div className="relative">
               <div className="overflow-hidden rounded-[40px]">
-                <img src="https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&w=1400&q=80" alt="Atelier" className="h-[600px] w-full object-cover" />
+                <img src={StoryImg} alt="Lumen" className="h-[600px] w-full object-cover" />
               </div>
               <div className="absolute -bottom-6 -left-6 spin-slow" style={{ color: CREAM }}>
                 <CircleBadge text=" RE-LOOP · RE-WEAR · RE-MAKE · " size={150} />

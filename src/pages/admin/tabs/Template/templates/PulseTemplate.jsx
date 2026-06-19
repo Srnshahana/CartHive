@@ -231,9 +231,9 @@ const Header = ({ template, page, setPage, onApply }) => {
           >
             <Heart className="h-4 w-4" />
           </button>
-          <NeonButton onClick={onApply} testId="pulse-launch" className="hidden sm:inline-flex">
+          {/* <NeonButton onClick={onApply} testId="pulse-launch" className="hidden sm:inline-flex">
             Use Template
-          </NeonButton>
+          </NeonButton> */}
           <button
             data-testid="pulse-menu-toggle"
             className="rounded-full border border-white/10 p-2.5 text-white md:hidden"
