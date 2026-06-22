@@ -140,7 +140,7 @@ const TemplatePreview = () => {
                   <ScrollContainerProvider containerRef={mobileScrollRef}>
                     {(() => {
                       const registry = {
-                        atelier: FashionTemplate,
+                        atelier: AtelierClothingTemplate,
                         pulse: PulseTemplate,
                         haven: HavenTemplate,
                         mono: MonoTemplate,

@@ -17,12 +17,19 @@ import { FaXTwitter } from 'react-icons/fa6';
 
 import TemplatePreviewMeta from '../TemplatePreviewMeta';
 
+import RingsHero from '../../../../../assets/templates/mono/hero/rings-hero.jpg';
+import NecklacesHero from '../../../../../assets/templates/mono/hero/necklaces-hero.jpg';
+import EarringsHero from '../../../../../assets/templates/mono/hero/earrings-hero.jpg';
+import BraceletsHero from '../../../../../assets/templates/mono/hero/bracelets-hero.jpg';
+
+
+
 /* ========== DATA ========== */
 const CATEGORIES = [
-  { slug: 'rings',     name: 'Rings',     tagline: 'Sculpted to the finger',  hero: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&w=1600&q=80' },
-  { slug: 'necklaces', name: 'Necklaces', tagline: 'A line at the collarbone', hero: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&w=1600&q=80' },
-  { slug: 'earrings',  name: 'Earrings',  tagline: 'A whisper near the ear',   hero: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&w=1600&q=80' },
-  { slug: 'bracelets', name: 'Bracelets', tagline: 'A weight at the wrist',    hero: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&w=1600&q=80' },
+  { slug: 'rings',     name: 'Rings',     tagline: 'Sculpted to the finger',  hero: RingsHero },
+  { slug: 'necklaces', name: 'Necklaces', tagline: 'A line at the collarbone', hero: NecklacesHero },
+  { slug: 'earrings',  name: 'Earrings',  tagline: 'A whisper near the ear',   hero: EarringsHero },
+  { slug: 'bracelets', name: 'Bracelets', tagline: 'A weight at the wrist',    hero: BraceletsHero },
 ];
 
 const TAGS = ['Best Seller', 'New', 'Limited', 'Bridal', 'Everyday', 'Editor\u2019s'];
@@ -161,7 +168,7 @@ const MonoTemplate = ({ template, onApply }) => {
   const go = (page, params = {}) => setView({ page, ...params });
 
   return (
-    <div className="w-full bg-[#f4efe7] text-stone-900" style={{ fontFamily: '"Inter", system-ui, sans-serif' }}>
+    <div className="w-full bg-[#0b1020] text-slate-100" style={{ fontFamily: '"Inter", system-ui, sans-serif' }}>
       <GlobalStyles />
       <TopBar />
       <Header brand={brand} go={go} onApply={onApply} />
@@ -179,7 +186,7 @@ const MonoTemplate = ({ template, onApply }) => {
 
 /* ========== TOP BAR ========== */
 const TopBar = () => (
-  <div data-testid="top-bar" className="overflow-hidden border-b border-stone-300/60 bg-stone-900 py-2 text-[11px] uppercase tracking-[0.4em] text-stone-100">
+  <div data-testid="top-bar" className="overflow-hidden border-b border-indigo-500/20 bg-[#050816] py-2 text-[11px] uppercase tracking-[0.4em] text-stone-100">
     <div className="anim-marquee flex gap-12 whitespace-nowrap px-6">
       {Array.from({ length: 6 }).map((_, i) => (
         <span key={i} className="flex items-center gap-12">
@@ -196,18 +203,18 @@ const TopBar = () => (
 const Header = ({ brand, go, onApply }) => {
   const [open, setOpen] = useState(false);
   return (
-    <header className="sticky top-0 z-40 border-b border-stone-300/60 bg-[#f4efe7]/95 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-indigo-500/20 bg-[#0b1020]/95 backdrop-blur">
       <div className="mx-auto flex max-w-[1400px] items-center justify-between px-6 py-6">
         <button className="md:hidden" onClick={() => setOpen(!open)} data-testid="mobile-menu-toggle">
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
-        <button onClick={() => go('home')} className="text-2xl tracking-tight" style={SERIF} data-testid="brand-logo">
-          {brand}<span className="text-stone-500">.</span>
+        <button onClick={() => go('home')} className="text-2xl tracking-tight text-white" style={SERIF} data-testid="brand-logo">
+          {brand}<span className="text-violet-400">.</span>
         </button>
         <nav className="hidden items-center gap-10 md:flex" data-testid="primary-nav">
-          <button onClick={() => go('home')} className="underline-grow text-sm text-stone-700 hover:text-stone-950" data-testid="nav-home">Home</button>
+          <button onClick={() => go('home')} className="underline-grow text-sm text-slate-300 hover:text-violet-300" data-testid="nav-home">Home</button>
           <div className="group relative">
-            <button className="underline-grow text-sm text-stone-700 hover:text-stone-950">Shop</button>
+            <button className="underline-grow text-sm text-slate-300 hover:text-violet-300">Shop</button>
             <div className="invisible absolute left-1/2 mt-4 w-56 -translate-x-1/2 rounded-2xl border border-stone-200 bg-white p-3 opacity-0 shadow-xl transition group-hover:visible group-hover:opacity-100">
               {CATEGORIES.map(c => (
                 <button key={c.slug} onClick={() => go('category', { slug: c.slug })} className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm text-stone-700 hover:bg-stone-100" data-testid={`nav-cat-${c.slug}`}>
@@ -216,21 +223,21 @@ const Header = ({ brand, go, onApply }) => {
               ))}
             </div>
           </div>
-          <button onClick={() => go('journal')} className="underline-grow text-sm text-stone-700 hover:text-stone-950" data-testid="nav-journal">Journal</button>
-          <button onClick={() => go('home')} className="underline-grow text-sm text-stone-700 hover:text-stone-950" data-testid="nav-contact">Contact</button>
+          <button onClick={() => go('journal')} className="underline-grow text-sm text-slate-300 hover:text-violet-300" data-testid="nav-journal">Journal</button>
+          <button onClick={() => go('home')} className="underline-grow text-sm text-slate-300 hover:text-violet-300" data-testid="nav-contact">Contact</button>
         </nav>
         <div className="flex items-center gap-1">
-          <button className="magnet rounded-full p-2 hover:bg-stone-200/60" data-testid="search-btn"><Search className="h-4 w-4" /></button>
-          <button className="magnet rounded-full p-2 hover:bg-stone-200/60" data-testid="wishlist-btn"><Heart className="h-4 w-4" /></button>
-          <button className="magnet relative rounded-full p-2 hover:bg-stone-200/60" data-testid="cart-btn">
+          <button className="magnet rounded-full p-2 hover:bg-slate-800/60" data-testid="search-btn"><Search className="h-4 w-4" /></button>
+          <button className="magnet rounded-full p-2 hover:bg-slate-800/60" data-testid="wishlist-btn"><Heart className="h-4 w-4" /></button>
+          <button className="magnet relative rounded-full p-2 hover:bg-slate-800/60" data-testid="cart-btn">
             <ShoppingBag className="h-4 w-4" />
-            <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-stone-900 text-[10px] text-white">2</span>
+            <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-gradient-to-r from-indigo-600 to-violet-600 text-[10px] text-white">2</span>
           </button>
-          {/* <button onClick={onApply} className="magnet ml-2 hidden rounded-full bg-stone-900 px-5 py-2 text-xs uppercase tracking-[0.2em] text-white hover:bg-stone-700 sm:inline-block" data-testid="apply-template-btn">Apply</button> */}
+          {/* <button onClick={onApply} className="magnet ml-2 hidden rounded-full bg-gradient-to-r from-indigo-600 to-violet-600 px-5 py-2 text-xs uppercase tracking-[0.2em] text-white hover:from-indigo-500 hover:to-violet-500 sm:inline-block" data-testid="apply-template-btn">Apply</button> */}
         </div>
       </div>
       {open && (
-        <div className="border-t border-stone-300/60 px-6 py-4 md:hidden" data-testid="mobile-nav">
+        <div className="border-t border-indigo-500/20 px-6 py-4 md:hidden" data-testid="mobile-nav">
           <div className="flex flex-col gap-3 text-sm">
             <button onClick={() => { go('home'); setOpen(false); }}>Home</button>
             {CATEGORIES.map(c => <button key={c.slug} onClick={() => { go('category', { slug: c.slug }); setOpen(false); }}>{c.name}</button>)}
@@ -246,7 +253,7 @@ const Header = ({ brand, go, onApply }) => {
 const Footer = ({ brand, go }) => {
   const [legal, setLegal] = useState(null);
   return (
-    <footer className="border-t border-stone-300/60 bg-stone-950 text-stone-300">
+    <footer className="border-t border-indigo-500/20 bg-[#050816] text-stone-300">
       <div className="mx-auto max-w-[1400px] px-6 py-20">
         <Reveal>
           <h2 className="max-w-3xl text-5xl leading-[1.05] tracking-tight text-white md:text-7xl" style={SERIF}>
@@ -288,7 +295,7 @@ const Footer = ({ brand, go }) => {
             </ul>
           </div>
         </div>
-        <div className="mt-16 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-stone-500 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-16 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-violet-400 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} {brand}. All rights reserved.</p>
           <p>Crafted with care · Made in NYC</p>
         </div>
@@ -304,11 +311,11 @@ const Footer = ({ brand, go }) => {
       </div>
 
       {legal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/80 p-6" onClick={() => setLegal(null)} data-testid="legal-modal">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#050816]/80 p-6" onClick={() => setLegal(null)} data-testid="legal-modal">
           <div onClick={(e) => e.stopPropagation()} className="anim-fadeUp max-h-[80vh] w-full max-w-2xl overflow-y-auto rounded-3xl bg-[#f4efe7] p-10 text-stone-800">
             <div className="flex items-start justify-between gap-6">
               <h3 className="text-3xl" style={SERIF}>{legal === 'privacy' ? 'Privacy Policy' : 'Terms & Conditions'}</h3>
-              <button onClick={() => setLegal(null)} className="rounded-full p-2 hover:bg-stone-200"><X className="h-5 w-5" /></button>
+              <button onClick={() => setLegal(null)} className="rounded-full p-2 hover:bg-slate-800"><X className="h-5 w-5" /></button>
             </div>
             <div className="mt-6 space-y-4 text-sm leading-7 text-stone-700">
               {legal === 'privacy' ? (
@@ -344,7 +351,7 @@ const FloatingLetters = ({ text }) => {
   const rots = ['-22deg','18deg','-12deg','25deg','-30deg','14deg','-8deg','20deg','-18deg','10deg','-25deg','22deg'];
   return (
     <h1
-      className="select-none text-[18vw] leading-[0.85] tracking-tight text-stone-900 md:text-[14vw]"
+      className="select-none text-[18vw] leading-[0.85] tracking-tight text-white md:text-[14vw]"
       style={SERIF}
       data-testid="floating-brand-letters"
       aria-label={text}
@@ -376,7 +383,7 @@ const HomePage = ({ template, brand, go, onApply }) => {
       {/* HERO — letters fall from top and form the brand name */}
       <section className="relative overflow-hidden">
         <div className="mx-auto max-w-[1400px] px-6 pt-16 pb-12 text-center">
-          <p className="anim-fadeUp text-xs uppercase tracking-[0.5em] text-stone-500" style={{ animationDelay: '1.6s' }}>
+          <p className="anim-fadeUp text-xs uppercase tracking-[0.5em] text-violet-400" style={{ animationDelay: '1.6s' }}>
             {template?.hero_heading ? '' : 'Fine Jewelry · Volume 07'}
           </p>
 
@@ -392,7 +399,7 @@ const HomePage = ({ template, brand, go, onApply }) => {
 
           {/* CTAs */}
           <div className="anim-fadeUp mt-10 flex flex-wrap items-center justify-center gap-4" style={{ animationDelay: `${0.12 * brand.length + 0.6}s` }}>
-            <button onClick={() => go('category', { slug: 'rings' })} className="magnet group inline-flex items-center gap-3 rounded-full bg-stone-900 px-7 py-4 text-xs uppercase tracking-[0.3em] text-white hover:bg-stone-700" data-testid="hero-shop-btn">
+            <button onClick={() => go('category', { slug: 'rings' })} className="magnet group inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-indigo-600 to-violet-600 px-7 py-4 text-xs uppercase tracking-[0.3em] text-white hover:from-indigo-500 hover:to-violet-500" data-testid="hero-shop-btn">
               Shop the collection <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
             </button>
             {/* <button onClick={onApply} className="text-xs uppercase tracking-[0.3em] text-stone-700 underline-offset-8 hover:underline">Use this template</button> */}
@@ -407,8 +414,8 @@ const HomePage = ({ template, brand, go, onApply }) => {
                 <button onClick={() => go('category', { slug: c.slug })} className="lift block w-full overflow-hidden rounded-[28px]" style={{ animation: `float ${5 + i}s ease-in-out infinite`, animationDelay: `${i * 0.4}s` }}>
                   <img src={c.hero} alt={c.name} className="img-zoom h-80 w-full object-cover" />
                   <div className="bg-white/90 px-4 py-3 text-left backdrop-blur">
-                    <p className="text-xs uppercase tracking-[0.3em] text-stone-500">0{i+1}</p>
-                    <p className="mt-1 text-lg" style={SERIF}>{c.name}</p>
+                    <p className="text-xs uppercase tracking-[0.3em] text-violet-400">0{i+1}</p>
+                    <p className="mt-1 text-violet-600" style={SERIF}>{c.name}</p>
                   </div>
                 </button>
               </Reveal>
@@ -418,7 +425,7 @@ const HomePage = ({ template, brand, go, onApply }) => {
       </section>
 
       {/* MARQUEE BAND */}
-      <section className="overflow-hidden border-y border-stone-300/60 bg-stone-900 py-8 text-stone-100">
+      <section className="overflow-hidden border-y border-indigo-500/20 bg-gradient-to-r from-indigo-600 to-violet-600 py-8 text-stone-100">
         <div className="anim-marquee flex whitespace-nowrap">
           {Array.from({ length: 4 }).map((_, i) => (
             <span key={i} className="flex items-center gap-10 px-10 text-5xl md:text-7xl" style={SERIF}>
@@ -437,19 +444,19 @@ const HomePage = ({ template, brand, go, onApply }) => {
       <section className="mx-auto max-w-[1400px] px-6 py-24">
         <div className="grid gap-10 lg:grid-cols-[0.4fr_0.6fr] lg:items-start">
           <Reveal className="lg:sticky lg:top-32">
-            <p className="text-xs uppercase tracking-[0.5em] text-stone-500">— 01 / Collections</p>
+            <p className="text-xs uppercase tracking-[0.5em] text-violet-400">— 01 / Collections</p>
             <h2 className="mt-4 text-5xl leading-[1.05] tracking-tight md:text-6xl" style={SERIF}>
-              Four shapes.<br /><em className="text-stone-500">One language.</em>
+              Four shapes.<br /><em className="text-violet-400">One language.</em>
             </h2>
           </Reveal>
-          <div className="divide-y divide-stone-300/60 border-y border-stone-300/60">
+          <div className="divide-y divide-stone-300/60 border-y border-indigo-500/20">
             {CATEGORIES.map((c, i) => (
               <Reveal key={c.slug} delay={i * 0.08}>
-                <button onClick={() => go('category', { slug: c.slug })} className="group grid w-full grid-cols-[40px_1fr_auto] items-center gap-6 py-8 text-left transition hover:bg-stone-200/40" data-testid={`collection-${c.slug}`}>
-                  <span className="text-xs text-stone-500">0{i + 1}</span>
+                <button onClick={() => go('category', { slug: c.slug })} className="group grid w-full grid-cols-[40px_1fr_auto] items-center gap-6 py-8 text-left transition hover:bg-slate-800/40" data-testid={`collection-${c.slug}`}>
+                  <span className="text-xs text-violet-400">0{i + 1}</span>
                   <div>
                     <h3 className="text-4xl tracking-tight transition group-hover:translate-x-2 md:text-5xl" style={SERIF}>{c.name}</h3>
-                    <p className="mt-1 text-sm text-stone-500">{c.tagline} · {ALL_PRODUCTS.filter(p=>p.cat===c.slug).length} pieces</p>
+                    <p className="mt-1 text-sm text-violet-400">{c.tagline} · {ALL_PRODUCTS.filter(p=>p.cat===c.slug).length} pieces</p>
                   </div>
                   <div className="flex items-center gap-4">
                     <div className="hidden h-20 w-20 overflow-hidden rounded-2xl sm:block">
@@ -465,12 +472,12 @@ const HomePage = ({ template, brand, go, onApply }) => {
       </section>
 
       {/* BEST LOVED */}
-      <section className="bg-stone-100/60 py-24">
+      <section className="bg-indigo-950/40 py-24">
         <div className="mx-auto max-w-[1400px] px-6">
           <Reveal>
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div>
-                <p className="text-xs uppercase tracking-[0.5em] text-stone-500">— 02 / Selected pieces</p>
+                <p className="text-xs uppercase tracking-[0.5em] text-violet-400">— 02 / Selected pieces</p>
                 <h2 className="mt-4 text-5xl tracking-tight md:text-6xl" style={SERIF}>Best loved.</h2>
               </div>
               <button onClick={() => go('category', { slug: 'rings' })} className="magnet inline-flex items-center gap-2 text-xs uppercase tracking-[0.3em] hover:underline">View all <ArrowRight className="h-4 w-4" /></button>
@@ -491,18 +498,18 @@ const HomePage = ({ template, brand, go, onApply }) => {
             </div>
           </Reveal>
           <Reveal delay={0.2}>
-            <p className="text-xs uppercase tracking-[0.5em] text-stone-500">— 03 / Our craft</p>
+            <p className="text-xs uppercase tracking-[0.5em] text-violet-400">— 03 / Our craft</p>
             <h2 className="mt-4 text-5xl leading-tight tracking-tight md:text-6xl" style={SERIF}>
-              A studio of <em className="text-stone-500">six hands</em>, working slowly.
+              A studio of <em className="text-violet-400">six hands</em>, working slowly.
             </h2>
             <p className="mt-6 max-w-xl text-base leading-8 text-stone-600">
               Each piece is cast, finished, and inspected by hand at our studio in lower Manhattan. We design in small editions, source responsibly, and resist the urge to make more than feels right.
             </p>
-            <div className="mt-10 grid grid-cols-3 gap-6 border-t border-stone-300/60 pt-8">
+            <div className="mt-10 grid grid-cols-3 gap-6 border-t border-indigo-500/20 pt-8">
               {[{k:'12+',v:'Years of craft'},{k:'100%',v:'Recycled gold'},{k:'40+',v:'Countries shipped'}].map(s => (
                 <div key={s.v}>
                   <p className="text-4xl tracking-tight" style={SERIF}>{s.k}</p>
-                  <p className="mt-2 text-xs uppercase tracking-[0.2em] text-stone-500">{s.v}</p>
+                  <p className="mt-2 text-xs uppercase tracking-[0.2em] text-violet-400">{s.v}</p>
                 </div>
               ))}
             </div>
@@ -511,7 +518,7 @@ const HomePage = ({ template, brand, go, onApply }) => {
       </section>
 
       {/* TESTIMONIALS */}
-      <section className="bg-stone-900 py-24 text-stone-100">
+      <section className="bg-gradient-to-r from-indigo-600 to-violet-600 py-24 text-stone-100">
         <div className="mx-auto max-w-[1400px] px-6">
           <Reveal><p className="text-xs uppercase tracking-[0.5em] text-white/50">— 04 / Kind words</p></Reveal>
           <div className="mt-12 grid gap-12 lg:grid-cols-3">
@@ -536,7 +543,7 @@ const HomePage = ({ template, brand, go, onApply }) => {
       </section>
 
       {/* TRUST */}
-      <section className="border-y border-stone-300/60 bg-[#f4efe7]">
+      <section className="border-y border-indigo-500/20 bg-[#f4efe7]">
         <div className="mx-auto grid max-w-[1400px] grid-cols-2 gap-6 px-6 py-10 text-sm md:grid-cols-4">
           {[{icon:Truck,l:'Free worldwide shipping'},{icon:ShieldCheck,l:'Lifetime warranty'},{icon:RotateCcw,l:'30-day returns'},{icon:Star,l:'4.9 / 5 rating'}].map(({icon:Icon,l},i) => (
             <Reveal key={l} delay={i * 0.08}><div className="flex items-center gap-3 text-stone-700"><Icon className="h-5 w-5" />{l}</div></Reveal>
@@ -549,7 +556,7 @@ const HomePage = ({ template, brand, go, onApply }) => {
         <Reveal>
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="text-xs uppercase tracking-[0.5em] text-stone-500">— 05 / Follow along</p>
+              <p className="text-xs uppercase tracking-[0.5em] text-violet-400">— 05 / Follow along</p>
               <h2 className="mt-4 text-5xl tracking-tight md:text-6xl" style={SERIF}>@{brand.toLowerCase().replace(/\s/g,'')}</h2>
             </div>
             <a href="#" className="magnet inline-flex items-center gap-2 text-xs uppercase tracking-[0.3em] hover:underline"><FaInstagram className="h-4 w-4" /> See more</a>
@@ -560,7 +567,7 @@ const HomePage = ({ template, brand, go, onApply }) => {
             <Reveal key={i} delay={i * 0.06}>
               <a href="#" className="group relative block aspect-square overflow-hidden rounded-2xl">
                 <img src={`https://images.unsplash.com/${p}?auto=format&w=600&q=80`} alt={`Instagram ${i+1}`} className="img-zoom h-full w-full object-cover" />
-                <div className="absolute inset-0 flex items-center justify-center bg-stone-900/0 opacity-0 transition group-hover:bg-stone-900/40 group-hover:opacity-100"><FaInstagram className="h-5 w-5 text-white" /></div>
+                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-r from-indigo-600 to-violet-600/0 opacity-0 transition group-hover:bg-gradient-to-r from-indigo-600 to-violet-600/40 group-hover:opacity-100"><FaInstagram className="h-5 w-5 text-white" /></div>
               </a>
             </Reveal>
           ))}
@@ -568,15 +575,15 @@ const HomePage = ({ template, brand, go, onApply }) => {
       </section>
 
       {/* NEWSLETTER */}
-      <section className="bg-stone-100/60 py-24">
+      <section className="bg-indigo-950/40 py-24">
         <div className="mx-auto max-w-3xl px-6 text-center">
           <Reveal>
-            <p className="text-xs uppercase tracking-[0.5em] text-stone-500">— 06 / Stay close</p>
+            <p className="text-xs uppercase tracking-[0.5em] text-violet-400">— 06 / Stay close</p>
             <h2 className="mt-4 text-5xl tracking-tight md:text-7xl" style={SERIF}>Join the list.</h2>
             <p className="mx-auto mt-6 max-w-xl text-base leading-8 text-stone-600">Early access to new collections, private events, and 10% off your first order.</p>
             <form onSubmit={(e)=>e.preventDefault()} className="mx-auto mt-10 flex max-w-md flex-col gap-3 sm:flex-row" data-testid="newsletter-form">
               <input type="email" placeholder="Your email" className="flex-1 rounded-full border border-stone-300 bg-white px-5 py-3.5 text-sm focus:border-stone-900 focus:outline-none" data-testid="newsletter-email" />
-              <button type="submit" className="magnet rounded-full bg-stone-900 px-7 py-3.5 text-xs uppercase tracking-[0.3em] text-white hover:bg-stone-700" data-testid="newsletter-submit">Subscribe</button>
+              <button type="submit" className="magnet rounded-full bg-gradient-to-r from-indigo-600 to-violet-600 px-7 py-3.5 text-xs uppercase tracking-[0.3em] text-white hover:from-indigo-500 hover:to-violet-500" data-testid="newsletter-submit">Subscribe</button>
             </form>
           </Reveal>
         </div>
@@ -586,7 +593,7 @@ const HomePage = ({ template, brand, go, onApply }) => {
       <section id="contact" className="mx-auto max-w-[1400px] px-6 py-24">
         <div className="grid gap-12 lg:grid-cols-2">
           <Reveal>
-            <p className="text-xs uppercase tracking-[0.5em] text-stone-500">— 07 / Get in touch</p>
+            <p className="text-xs uppercase tracking-[0.5em] text-violet-400">— 07 / Get in touch</p>
             <h2 className="mt-4 text-5xl tracking-tight md:text-6xl" style={SERIF}>Visit. Write. Call.</h2>
             <div className="mt-10 space-y-4 text-sm text-stone-700">
               <p className="flex items-center gap-3"><MapPin className="h-4 w-4" /> 24 Mercer Street, Studio 3, NYC</p>
@@ -595,14 +602,14 @@ const HomePage = ({ template, brand, go, onApply }) => {
             </div>
           </Reveal>
           <Reveal delay={0.15}>
-            <form onSubmit={(e)=>e.preventDefault()} className="space-y-4 rounded-[28px] border border-stone-300/60 bg-white p-8" data-testid="contact-form">
+            <form onSubmit={(e)=>e.preventDefault()} className="space-y-4 rounded-[28px] border border-indigo-500/20 bg-white p-8" data-testid="contact-form">
               <div className="grid gap-4 sm:grid-cols-2">
                 <input type="text" placeholder="Name" className="rounded-full border border-stone-300 px-5 py-3 text-sm focus:border-stone-900 focus:outline-none" data-testid="contact-name" />
                 <input type="email" placeholder="Email" className="rounded-full border border-stone-300 px-5 py-3 text-sm focus:border-stone-900 focus:outline-none" data-testid="contact-email" />
               </div>
               <input type="text" placeholder="Subject" className="w-full rounded-full border border-stone-300 px-5 py-3 text-sm focus:border-stone-900 focus:outline-none" data-testid="contact-subject" />
               <textarea placeholder="Message" rows={5} className="w-full rounded-3xl border border-stone-300 px-5 py-3 text-sm focus:border-stone-900 focus:outline-none" data-testid="contact-message" />
-              <button type="submit" className="magnet w-full rounded-full bg-stone-900 px-6 py-3 text-xs uppercase tracking-[0.3em] text-white hover:bg-stone-700" data-testid="contact-submit">Send message</button>
+              <button type="submit" className="magnet w-full rounded-full bg-gradient-to-r from-indigo-600 to-violet-600 px-6 py-3 text-xs uppercase tracking-[0.3em] text-white hover:from-indigo-500 hover:to-violet-500" data-testid="contact-submit">Send message</button>
             </form>
           </Reveal>
         </div>
@@ -614,17 +621,17 @@ const HomePage = ({ template, brand, go, onApply }) => {
 /* ========== PRODUCT CARD ========== */
 const ProductCard = ({ p, index }) => (
   <div className="group" data-testid={`product-card-${p.id}`}>
-    <div className="lift relative overflow-hidden rounded-[28px] bg-stone-200">
+    <div className="lift relative overflow-hidden rounded-[28px] bg-slate-800">
       <img src={p.img} alt={p.name} className="img-zoom h-[420px] w-full object-cover" />
-      <span className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1 text-[10px] uppercase tracking-[0.3em] text-stone-900">{p.tag}</span>
-      <button className="absolute right-4 top-4 rounded-full bg-white/95 p-2.5 transition hover:bg-stone-900 hover:text-white" data-testid={`wishlist-${p.id}`}><Heart className="h-4 w-4" /></button>
-      <button className="absolute inset-x-4 bottom-4 translate-y-12 rounded-full bg-stone-900 px-6 py-3 text-xs uppercase tracking-[0.3em] text-white opacity-0 transition duration-500 group-hover:translate-y-0 group-hover:opacity-100" data-testid={`add-cart-${p.id}`}>Add to bag</button>
+      <span className="absolute left-4 top-4 rounded-full bg-slate-900/95 px-3 py-1 text-[10px] uppercase tracking-[0.3em] text-white">{p.tag}</span>
+      <button className="absolute right-4 top-4 rounded-full bg-slate-900/95 p-2.5 transition hover:bg-gradient-to-r from-indigo-600 to-violet-600 hover:text-white" data-testid={`wishlist-${p.id}`}><Heart className="h-4 w-4" /></button>
+      <button className="absolute inset-x-4 bottom-4 translate-y-12 rounded-full bg-gradient-to-r from-indigo-600 to-violet-600 px-6 py-3 text-xs uppercase tracking-[0.3em] text-white opacity-0 transition duration-500 group-hover:translate-y-0 group-hover:opacity-100" data-testid={`add-cart-${p.id}`}>Add to bag</button>
     </div>
     <div className="mt-5 flex items-start justify-between gap-4">
       <div>
-        {index && <p className="text-[11px] uppercase tracking-[0.3em] text-stone-500">— {String(index).padStart(2,'0')}</p>}
+        {index && <p className="text-[11px] uppercase tracking-[0.3em] text-violet-400">— {String(index).padStart(2,'0')}</p>}
         <h3 className="mt-1 text-2xl tracking-tight" style={SERIF}>{p.name}</h3>
-        <p className="mt-1 text-sm text-stone-500">{p.material}</p>
+        <p className="mt-1 text-sm text-violet-400">{p.material}</p>
       </div>
       <span className="text-lg tracking-tight" style={SERIF}>${p.price}</span>
     </div>
@@ -660,8 +667,8 @@ const CategoryPage = ({ slug, go }) => {
   return (
     <>
       <div className="mx-auto max-w-[1400px] px-6 pt-10">
-        <button onClick={() => go('home')} className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-stone-500 hover:text-stone-900" data-testid="back-home">
-          <ArrowLeft className="h-4 w-4" /> Home / <span className="text-stone-900">{cat.name}</span>
+        <button onClick={() => go('home')} className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-violet-400 hover:text-white" data-testid="back-home">
+          <ArrowLeft className="h-4 w-4" /> Home / <span className="text-white">{cat.name}</span>
         </button>
       </div>
 
@@ -682,7 +689,7 @@ const CategoryPage = ({ slug, go }) => {
           <div className="grid gap-8 lg:grid-cols-[0.55fr_0.45fr]">
             <Reveal><div className="overflow-hidden rounded-[40px]"><img src={cat.hero} alt={cat.name} className="anim-reveal h-[600px] w-full object-cover" /></div></Reveal>
             <div className="flex flex-col justify-end">
-              <p className="anim-fadeUp text-xs uppercase tracking-[0.5em] text-stone-500">Collection · 02</p>
+              <p className="anim-fadeUp text-xs uppercase tracking-[0.5em] text-violet-400">Collection · 02</p>
               <FloatingLetters text={cat.name} />
               <p className="anim-fadeUp mt-6 max-w-md text-base leading-8 text-stone-600" style={{ animationDelay: `${0.12 * cat.name.length + 0.4}s` }}>{cat.tagline}. Designed to rest exactly where it should.</p>
             </div>
@@ -691,7 +698,7 @@ const CategoryPage = ({ slug, go }) => {
       )}
       {heroVariant === 2 && (
         <section className="mx-auto mt-16 max-w-[1400px] px-6 text-center">
-          <p className="anim-fadeUp text-xs uppercase tracking-[0.5em] text-stone-500">Collection · 03</p>
+          <p className="anim-fadeUp text-xs uppercase tracking-[0.5em] text-violet-400">Collection · 03</p>
           <FloatingLetters text={cat.name} />
           <p className="anim-fadeUp mx-auto mt-6 max-w-xl text-base leading-8 text-stone-600" style={{ animationDelay: `${0.12 * cat.name.length + 0.4}s` }}>{cat.tagline}. From everyday studs to sculptural drops.</p>
           <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-4">
@@ -702,7 +709,7 @@ const CategoryPage = ({ slug, go }) => {
       {heroVariant === 3 && (
         <section className="mt-8">
           <div className="mx-auto max-w-[1400px] px-6">
-            <p className="anim-fadeUp text-xs uppercase tracking-[0.5em] text-stone-500">Collection · 04</p>
+            <p className="anim-fadeUp text-xs uppercase tracking-[0.5em] text-violet-400">Collection · 04</p>
             <FloatingLetters text={cat.name} />
             <p className="anim-fadeUp mt-6 max-w-md text-base leading-8 text-stone-600" style={{ animationDelay: `${0.12 * cat.name.length + 0.4}s` }}>{cat.tagline}. Cuffs, chains, and bangles for layering.</p>
           </div>
@@ -714,17 +721,17 @@ const CategoryPage = ({ slug, go }) => {
 
       {/* TOOLBAR */}
       <section className="mx-auto mt-20 max-w-[1400px] px-6">
-        <div className="flex flex-wrap items-center justify-between gap-4 border-y border-stone-300/60 py-5">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-y border-indigo-500/20 py-5">
           <div className="flex flex-wrap items-center gap-2" data-testid="category-filters">
-            <span className="mr-2 inline-flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-stone-500"><Filter className="h-3.5 w-3.5" /> Filter</span>
+            <span className="mr-2 inline-flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-violet-400"><Filter className="h-3.5 w-3.5" /> Filter</span>
             {tags.map(t => (
-              <button key={t} onClick={() => setTag(t)} className={`magnet rounded-full px-4 py-1.5 text-xs uppercase tracking-[0.2em] ${tag===t ? 'bg-stone-900 text-white' : 'bg-stone-200/60 text-stone-700 hover:bg-stone-300'}`} data-testid={`filter-${t}`}>{t}</button>
+              <button key={t} onClick={() => setTag(t)} className={`magnet rounded-full px-4 py-1.5 text-xs uppercase tracking-[0.2em] ${tag===t ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white' : 'bg-slate-800/60 text-stone-700 hover:bg-stone-300'}`} data-testid={`filter-${t}`}>{t}</button>
             ))}
           </div>
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-stone-500">
+            <div className="flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-violet-400">
               <SlidersHorizontal className="h-3.5 w-3.5" /> Sort
-              <select value={sort} onChange={(e)=>setSort(e.target.value)} className="rounded-full bg-transparent text-stone-900 focus:outline-none" data-testid="sort-select">
+              <select value={sort} onChange={(e)=>setSort(e.target.value)} className="rounded-full bg-transparent text-white focus:outline-none" data-testid="sort-select">
                 <option value="featured">Featured</option>
                 <option value="low">Price: Low to High</option>
                 <option value="high">Price: High to Low</option>
@@ -732,12 +739,12 @@ const CategoryPage = ({ slug, go }) => {
               </select>
             </div>
             <div className="hidden gap-1 sm:flex">
-              <button onClick={()=>setViewMode('grid')} className={`rounded-full px-3 py-1.5 text-xs ${viewMode==='grid'?'bg-stone-900 text-white':'text-stone-500'}`} data-testid="view-grid">Grid</button>
-              <button onClick={()=>setViewMode('list')} className={`rounded-full px-3 py-1.5 text-xs ${viewMode==='list'?'bg-stone-900 text-white':'text-stone-500'}`} data-testid="view-list">List</button>
+              <button onClick={()=>setViewMode('grid')} className={`rounded-full px-3 py-1.5 text-xs ${viewMode==='grid'?'bg-gradient-to-r from-indigo-600 to-violet-600 text-white':'text-violet-400'}`} data-testid="view-grid">Grid</button>
+              <button onClick={()=>setViewMode('list')} className={`rounded-full px-3 py-1.5 text-xs ${viewMode==='list'?'bg-gradient-to-r from-indigo-600 to-violet-600 text-white':'text-violet-400'}`} data-testid="view-list">List</button>
             </div>
           </div>
         </div>
-        <p className="mt-4 text-xs uppercase tracking-[0.3em] text-stone-500">Showing {pageItems.length} of {filtered.length}</p>
+        <p className="mt-4 text-xs uppercase tracking-[0.3em] text-violet-400">Showing {pageItems.length} of {filtered.length}</p>
       </section>
 
       {/* PRODUCTS */}
@@ -747,19 +754,19 @@ const CategoryPage = ({ slug, go }) => {
             {pageItems.map((p, i) => <Reveal key={p.id} delay={(i % 3) * 0.08}><ProductCard p={p} index={(page-1)*PER_PAGE + i + 1} /></Reveal>)}
           </div>
         ) : (
-          <div className="divide-y divide-stone-300/60 border-y border-stone-300/60" data-testid="products-list">
+          <div className="divide-y divide-stone-300/60 border-y border-indigo-500/20" data-testid="products-list">
             {pageItems.map((p, i) => (
               <Reveal key={p.id} delay={i*0.05}>
                 <div className="grid grid-cols-[60px_120px_1fr_auto] items-center gap-6 py-6" data-testid={`product-row-${p.id}`}>
-                  <span className="text-xs text-stone-500">{String((page-1)*PER_PAGE+i+1).padStart(2,'0')}</span>
+                  <span className="text-xs text-violet-400">{String((page-1)*PER_PAGE+i+1).padStart(2,'0')}</span>
                   <div className="h-24 w-24 overflow-hidden rounded-2xl"><img src={p.img} alt={p.name} className="h-full w-full object-cover" /></div>
                   <div>
-                    <h3 className="text-2xl tracking-tight" style={SERIF}>{p.name}</h3>
-                    <p className="text-sm text-stone-500">{p.material} · {p.tag}</p>
+                    <h3 className="text-2xl tracking-tight text-white" style={SERIF}>{p.name}</h3>
+                    <p className="text-sm text-violet-400">{p.material} · {p.tag}</p>
                   </div>
                   <div className="flex items-center gap-6">
                     <span className="text-lg" style={SERIF}>${p.price}</span>
-                    <button className="magnet rounded-full bg-stone-900 px-5 py-2 text-xs uppercase tracking-[0.3em] text-white hover:bg-stone-700">Add</button>
+                    <button className="magnet rounded-full bg-gradient-to-r from-indigo-600 to-violet-600 px-5 py-2 text-xs uppercase tracking-[0.3em] text-white hover:from-indigo-500 hover:to-violet-500">Add</button>
                   </div>
                 </div>
               </Reveal>
@@ -768,27 +775,27 @@ const CategoryPage = ({ slug, go }) => {
         )}
 
         {filtered.length === 0 && (
-          <div className="py-24 text-center text-sm text-stone-500" data-testid="empty-state">No pieces match this filter.</div>
+          <div className="py-24 text-center text-sm text-violet-400" data-testid="empty-state">No pieces match this filter.</div>
         )}
       </section>
 
       {/* PAGINATION */}
       {totalPages > 1 && (
         <section className="mx-auto max-w-[1400px] px-6 pb-24">
-          <div className="flex items-center justify-center gap-2 border-t border-stone-300/60 pt-10" data-testid="pagination">
-            <button disabled={page===1} onClick={()=>setPage(page-1)} className="rounded-full border border-stone-300 px-5 py-2 text-xs uppercase tracking-[0.3em] disabled:opacity-30 hover:bg-stone-200/60" data-testid="page-prev">Prev</button>
+          <div className="flex items-center justify-center gap-2 border-t border-indigo-500/20 pt-10" data-testid="pagination">
+            <button disabled={page===1} onClick={()=>setPage(page-1)} className="rounded-full border border-stone-300 px-5 py-2 text-xs uppercase tracking-[0.3em] disabled:opacity-30 hover:bg-slate-800/60" data-testid="page-prev">Prev</button>
             {Array.from({length: totalPages}).map((_,i) => (
-              <button key={i} onClick={()=>setPage(i+1)} className={`magnet h-10 w-10 rounded-full text-sm ${page===i+1?'bg-stone-900 text-white':'border border-stone-300 hover:bg-stone-200/60'}`} data-testid={`page-${i+1}`}>{i+1}</button>
+              <button key={i} onClick={()=>setPage(i+1)} className={`magnet h-10 w-10 rounded-full text-sm ${page===i+1?'bg-gradient-to-r from-indigo-600 to-violet-600 text-white':'border border-stone-300 hover:bg-slate-800/60'}`} data-testid={`page-${i+1}`}>{i+1}</button>
             ))}
-            <button disabled={page===totalPages} onClick={()=>setPage(page+1)} className="rounded-full border border-stone-300 px-5 py-2 text-xs uppercase tracking-[0.3em] disabled:opacity-30 hover:bg-stone-200/60" data-testid="page-next">Next</button>
+            <button disabled={page===totalPages} onClick={()=>setPage(page+1)} className="rounded-full border border-stone-300 px-5 py-2 text-xs uppercase tracking-[0.3em] disabled:opacity-30 hover:bg-slate-800/60" data-testid="page-next">Next</button>
           </div>
         </section>
       )}
 
       {/* CROSS-SELL */}
-      <section className="bg-stone-100/60 py-20">
+      <section className="bg-indigo-950/40 py-20">
         <div className="mx-auto max-w-[1400px] px-6">
-          <Reveal><p className="text-xs uppercase tracking-[0.5em] text-stone-500">Also explore</p></Reveal>
+          <Reveal><p className="text-xs uppercase tracking-[0.5em] text-violet-400">Also explore</p></Reveal>
           <div className="mt-8 grid gap-4 sm:grid-cols-3">
             {CATEGORIES.filter(c => c.slug !== slug).map((c,i) => (
               <Reveal key={c.slug} delay={i*0.1}>
@@ -816,8 +823,8 @@ const JournalPage = ({ go }) => {
   return (
     <>
       <section className="mx-auto max-w-[1400px] px-6 pt-16 pb-12">
-        <button onClick={() => go('home')} className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-stone-500 hover:text-stone-900" data-testid="journal-back-home">
-          <ArrowLeft className="h-4 w-4" /> Home / <span className="text-stone-900">Journal</span>
+        <button onClick={() => go('home')} className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-violet-400 hover:text-white" data-testid="journal-back-home">
+          <ArrowLeft className="h-4 w-4" /> Home / <span className="text-white">Journal</span>
         </button>
         <div className="mt-12 grid items-end gap-8 lg:grid-cols-2">
           <FloatingLetters text="Journal." />
@@ -833,10 +840,10 @@ const JournalPage = ({ go }) => {
                 <img src={featured.cover} alt={featured.title} className="img-zoom h-[560px] w-full object-cover" />
               </div>
               <div>
-                <p className="text-xs uppercase tracking-[0.5em] text-stone-500">Featured · {featured.cat}</p>
+                <p className="text-xs uppercase tracking-[0.5em] text-violet-400">Featured · {featured.cat}</p>
                 <h2 className="mt-4 text-5xl leading-[1.05] tracking-tight md:text-6xl" style={SERIF}>{featured.title}</h2>
                 <p className="mt-6 max-w-xl text-base leading-8 text-stone-600">{featured.excerpt}</p>
-                <div className="mt-8 flex items-center gap-6 text-xs uppercase tracking-[0.3em] text-stone-500">
+                <div className="mt-8 flex items-center gap-6 text-xs uppercase tracking-[0.3em] text-violet-400">
                   <span className="inline-flex items-center gap-2"><User className="h-3.5 w-3.5" /> {featured.author}</span>
                   <span className="inline-flex items-center gap-2"><Clock className="h-3.5 w-3.5" /> {featured.read}</span>
                   <span>{featured.date}</span>
@@ -849,9 +856,9 @@ const JournalPage = ({ go }) => {
       </section>
 
       <section className="mx-auto max-w-[1400px] px-6">
-        <div className="flex flex-wrap gap-2 border-y border-stone-300/60 py-5" data-testid="journal-tags">
+        <div className="flex flex-wrap gap-2 border-y border-indigo-500/20 py-5" data-testid="journal-tags">
           {['All', 'Craft', 'Styling', 'Ethics', 'Editorial', 'Care'].map((t, i) => (
-            <button key={t} className={`magnet rounded-full px-4 py-1.5 text-xs uppercase tracking-[0.2em] ${i===0?'bg-stone-900 text-white':'bg-stone-200/60 text-stone-700 hover:bg-stone-300'}`}>{t}</button>
+            <button key={t} className={`magnet rounded-full px-4 py-1.5 text-xs uppercase tracking-[0.2em] ${i===0?'bg-gradient-to-r from-indigo-600 to-violet-600 text-white':'bg-slate-800/60 text-stone-700 hover:bg-stone-300'}`}>{t}</button>
           ))}
         </div>
       </section>
@@ -863,10 +870,10 @@ const JournalPage = ({ go }) => {
               <button onClick={() => go('article', { id: post.id })} className="group text-left" data-testid={`journal-card-${post.id}`}>
                 <div className="overflow-hidden rounded-[28px]"><img src={post.cover} alt={post.title} className="img-zoom h-[360px] w-full object-cover" /></div>
                 <div className="mt-5">
-                  <p className="text-[11px] uppercase tracking-[0.3em] text-stone-500">— {String(i+2).padStart(2,'0')} · {post.cat}</p>
+                  <p className="text-[11px] uppercase tracking-[0.3em] text-violet-400">— {String(i+2).padStart(2,'0')} · {post.cat}</p>
                   <h3 className="mt-2 text-3xl leading-tight tracking-tight transition group-hover:translate-x-1" style={SERIF}>{post.title}</h3>
                   <p className="mt-3 text-sm leading-7 text-stone-600">{post.excerpt}</p>
-                  <div className="mt-4 flex items-center gap-4 text-[11px] uppercase tracking-[0.3em] text-stone-500">
+                  <div className="mt-4 flex items-center gap-4 text-[11px] uppercase tracking-[0.3em] text-violet-400">
                     <span>{post.date}</span><span>·</span><span>{post.read}</span>
                   </div>
                 </div>
@@ -877,22 +884,22 @@ const JournalPage = ({ go }) => {
       </section>
 
       <section className="mx-auto max-w-[1400px] px-6 pb-24">
-        <div className="flex items-center justify-center gap-2 border-t border-stone-300/60 pt-10" data-testid="journal-pagination">
+        <div className="flex items-center justify-center gap-2 border-t border-indigo-500/20 pt-10" data-testid="journal-pagination">
           <button className="rounded-full border border-stone-300 px-5 py-2 text-xs uppercase tracking-[0.3em] opacity-30">Prev</button>
-          {[1,2,3].map(n => <button key={n} className={`magnet h-10 w-10 rounded-full text-sm ${n===1?'bg-stone-900 text-white':'border border-stone-300 hover:bg-stone-200/60'}`}>{n}</button>)}
-          <button className="rounded-full border border-stone-300 px-5 py-2 text-xs uppercase tracking-[0.3em] hover:bg-stone-200/60">Next</button>
+          {[1,2,3].map(n => <button key={n} className={`magnet h-10 w-10 rounded-full text-sm ${n===1?'bg-gradient-to-r from-indigo-600 to-violet-600 text-white':'border border-stone-300 hover:bg-slate-800/60'}`}>{n}</button>)}
+          <button className="rounded-full border border-stone-300 px-5 py-2 text-xs uppercase tracking-[0.3em] hover:bg-slate-800/60">Next</button>
         </div>
       </section>
 
-      <section className="bg-stone-100/60 py-24">
+      <section className="bg-indigo-950/40 py-24">
         <div className="mx-auto max-w-3xl px-6 text-center">
           <Reveal>
-            <p className="text-xs uppercase tracking-[0.5em] text-stone-500">The Letter</p>
+            <p className="text-xs uppercase tracking-[0.5em] text-violet-400">The Letter</p>
             <h2 className="mt-4 text-5xl tracking-tight md:text-7xl" style={SERIF}>Read, monthly.</h2>
             <p className="mx-auto mt-6 max-w-xl text-base leading-8 text-stone-600">A short note from the studio with new writing, behind-the-scenes, and quiet drops.</p>
             <form onSubmit={(e)=>e.preventDefault()} className="mx-auto mt-10 flex max-w-md flex-col gap-3 sm:flex-row">
               <input type="email" placeholder="Your email" className="flex-1 rounded-full border border-stone-300 bg-white px-5 py-3.5 text-sm focus:border-stone-900 focus:outline-none" />
-              <button type="submit" className="magnet rounded-full bg-stone-900 px-7 py-3.5 text-xs uppercase tracking-[0.3em] text-white hover:bg-stone-700">Subscribe</button>
+              <button type="submit" className="magnet rounded-full bg-gradient-to-r from-indigo-600 to-violet-600 px-7 py-3.5 text-xs uppercase tracking-[0.3em] text-white hover:from-indigo-500 hover:to-violet-500">Subscribe</button>
             </form>
           </Reveal>
         </div>
@@ -908,13 +915,13 @@ const ArticlePage = ({ id, go }) => {
   return (
     <>
       <section className="mx-auto max-w-3xl px-6 pt-16">
-        <button onClick={() => go('journal')} className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-stone-500 hover:text-stone-900" data-testid="article-back">
+        <button onClick={() => go('journal')} className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-violet-400 hover:text-white" data-testid="article-back">
           <ArrowLeft className="h-4 w-4" /> Journal
         </button>
         <Reveal delay={0.1}>
-          <p className="mt-10 text-xs uppercase tracking-[0.5em] text-stone-500">{post.cat}</p>
+          <p className="mt-10 text-xs uppercase tracking-[0.5em] text-violet-400">{post.cat}</p>
           <h1 className="mt-4 text-5xl leading-[1.05] tracking-tight md:text-6xl" style={SERIF}>{post.title}</h1>
-          <div className="mt-6 flex flex-wrap items-center gap-6 text-xs uppercase tracking-[0.3em] text-stone-500">
+          <div className="mt-6 flex flex-wrap items-center gap-6 text-xs uppercase tracking-[0.3em] text-violet-400">
             <span className="inline-flex items-center gap-2"><User className="h-3.5 w-3.5" /> {post.author}</span>
             <span className="inline-flex items-center gap-2"><Clock className="h-3.5 w-3.5" /> {post.read}</span>
             <span>{post.date}</span>
@@ -945,16 +952,16 @@ const ArticlePage = ({ id, go }) => {
         </Reveal>
       </article>
 
-      <section className="bg-stone-100/60 py-20">
+      <section className="bg-indigo-950/40 py-20">
         <div className="mx-auto max-w-[1400px] px-6">
-          <Reveal><p className="text-xs uppercase tracking-[0.5em] text-stone-500">Keep reading</p></Reveal>
+          <Reveal><p className="text-xs uppercase tracking-[0.5em] text-violet-400">Keep reading</p></Reveal>
           <div className="mt-8 grid gap-8 md:grid-cols-3">
             {related.map((r,i) => (
               <Reveal key={r.id} delay={i * 0.1}>
                 <button onClick={() => go('article', { id: r.id })} className="group text-left" data-testid={`related-${r.id}`}>
                   <div className="overflow-hidden rounded-[24px]"><img src={r.cover} alt={r.title} className="img-zoom h-72 w-full object-cover" /></div>
                   <h3 className="mt-4 text-2xl tracking-tight" style={SERIF}>{r.title}</h3>
-                  <p className="mt-1 text-xs uppercase tracking-[0.3em] text-stone-500">{r.date} · {r.read}</p>
+                  <p className="mt-1 text-xs uppercase tracking-[0.3em] text-violet-400">{r.date} · {r.read}</p>
                 </button>
               </Reveal>
             ))}
